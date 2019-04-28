@@ -18,7 +18,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     public function boot()
     {
         Telescope::auth(function ($request) {
-            return app()->environment('local') || TwitchUtils::getDbUser()->uid == env('ADMIN_UID');
+            return app()->environment('local') || TwitchUtils::getDbUser()->uid == config('whitelist.admin_id');
         });
     }
 

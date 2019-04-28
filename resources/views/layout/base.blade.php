@@ -37,7 +37,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ \App\Helpers::isRoute('subscriber', 'active') }}" href="{{ route('subscriber') }}">Subscriber</a>
                             </li>
-                            @if(\App\Utils\TwitchUtils::getDbUser()->uid == env('ADMIN_UID'))
+                            @if(\App\Utils\TwitchUtils::getDbUser()->uid == config('whitelist.admin_id'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('horizon.index', ['view' => 'dashboard']) }}">Horizon</a>
                             </li>
