@@ -15,6 +15,31 @@
     <meta name="msapplication-TileColor" content="#4b367c">
     <meta name="theme-color" content="#4b367c">
 
+
+    <!-- COMMON TAGS -->
+    <meta charset="utf-8">
+    <title>Subscription Whitelist</title>
+    <!-- Search Engine -->
+    <meta name="description" content="Twitch subscription restricted whitelists">
+    <meta name="image" content="https://whitelist.gorymoon.se/site.png">
+    <!-- Schema.org for Google -->
+    <meta itemprop="name" content="Subscription Whitelist">
+    <meta itemprop="description" content="Twitch subscription restricted whitelists">
+    <meta itemprop="image" content="https://whitelist.gorymoon.se/site.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Subscription Whitelist">
+    <meta name="twitter:description" content="Twitch subscription restricted whitelists">
+    <meta name="twitter:site" content="@Gory_Moon">
+    <!-- Open Graph general (Facebook, Pinterest & Google+) -->
+    <meta name="og:title" content="Subscription Whitelist">
+    <meta name="og:description" content="Twitch subscription restricted whitelists">
+    <meta name="og:image" content="https://whitelist.gorymoon.se/site.png">
+    <meta name="og:url" content="https://whitelist.gorymoon.se/">
+    <meta name="og:site_name" content="Subscription Whitelist">
+    <meta name="og:type" content="website">
+
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
