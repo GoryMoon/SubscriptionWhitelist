@@ -22,7 +22,6 @@ class MainController extends Controller
     }
 
     public function profileDelete() {
-        dd(request());
         try {
             $user = TwitchUtils::getDbUser();
             if (!is_null($user)) {
