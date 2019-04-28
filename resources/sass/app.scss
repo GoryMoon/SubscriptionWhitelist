@@ -1,0 +1,70 @@
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/src/index';
+
+@import "~bootstrap4-toggle/css/bootstrap4-toggle.css";
+
+@font-face {
+  font-family: $font-family-sans-serif;
+  font-display: auto;
+  src: local('Roboto'), url('https://fonts.googleapis.com/css?family=Roboto');
+}
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.toggle-on {
+  right: unset;
+}
+
+.toggle-off {
+  left: unset;
+}
+
+input[readonly] {
+  background-color: $input-bg !important;
+}
+
+textarea {
+  resize: none;
+}
+
+.cursor:not(.disabled) {
+  cursor: pointer;
+}
+
+.page-link.active {
+  z-index: 1;
+  color: #fff !important;
+  background-color: #4b367c;
+  border-color: #4b367c;
+}
+
+.page-item:first-child {
+  margin-left: 0;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.page-item:last-child {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.page-item.disabled {
+  color: #6c757d;
+  pointer-events: none;
+  cursor: auto;
+  background-color: #fff;
+  border-color: #dee2e6;
+}
+
