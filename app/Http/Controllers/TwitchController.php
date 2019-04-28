@@ -101,7 +101,7 @@ class TwitchController extends Controller
         $db_user = TwitchUtils::getDbUser();
         SyncUser::dispatch($db_user);
         $channel = $db_user->channel;
-        if (!is_null($channel) && $channel->enabled && $channel->sync) {
+        if (!is_null($channel) && isset($channel) && $channel->enabled && $channel->sync) {
             SyncChannel::dispatch($channel);
         }
 
