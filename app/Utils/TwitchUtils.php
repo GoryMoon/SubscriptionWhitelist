@@ -276,6 +276,8 @@ class TwitchUtils
                     $db_user->display_name = $user->display_name;
                     $db_user->save();
                 }
+            } else if (!is_null($db_channel)) {
+                $db_channel->delete();
             }
         }
         return true;
