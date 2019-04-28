@@ -17,7 +17,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function boot()
     {
-        Horizon::auth(function ($request) {
+        Telescope::auth(function ($request) {
             return app()->environment('local') || TwitchUtils::getDbUser()->uid == env('ADMIN_UID');
         });
     }
