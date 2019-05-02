@@ -11,6 +11,7 @@
     <div class="row">
         <div class="mr-auto ml-auto text-center">
             <h1>Login</h1>
+            <p>To get started adding a name to whitelists or setup your own whitelist you need to login.</p>
             <span class="small d-block mb-2">
                 By authorizing with Twitch you accept that information is stored to<br>
                 link your twitch account to one or more provided usernames that you<br>
