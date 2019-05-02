@@ -103,10 +103,10 @@
         </div>
         <footer class="d-flex justify-content-center mt-auto">
             <div class="text-center pt-3">
-                Copyright &copy; {{ date('Y') }}
-                | <span class="text-nowrap"><a href="{{ route('home') }}">Subscription Whitelist</a></span>
-                | <span class="text-nowrap">Made by: <a href="https://twitter.com/Gory_moon">@Gory_Moon</a></span>
-                | <span class="text-nowrap"><a href="https://paypal.me/GustafJ"><fa :icon="['fab','paypal']"></fa><span class="sr-only">PayPal Donate</span></a></span>
+                <span class="text-nowrap">Copyright &copy; {{ date('Y') }}
+                | <a href="{{ route('home') }}">Subscription Whitelist</a></span>
+                | <span class="text-nowrap">Made by: <a href="https://twitter.com/Gory_moon">@Gory_Moon</a>
+                | <a href="https://paypal.me/GustafJ"><fa :icon="['fab','paypal']"></fa><span class="sr-only">PayPal Donate</span></a></span>
             </div>
         </footer>
     </div>
