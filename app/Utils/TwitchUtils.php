@@ -26,13 +26,14 @@ class TwitchUtils
 
     private $db_user;
 
-    private static $testing = true;
+    private static $testing;
 
     /**
      * @return TwitchUtils
      */
     private static function instance() {
         if (is_null(self::$instance)) {
+            self::$testing = config('whitelist.testing');
             self::$instance = new TwitchUtils;
         }
         return self::$instance;
