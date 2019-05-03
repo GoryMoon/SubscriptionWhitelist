@@ -10,6 +10,9 @@
         <li class="nav-item">
             <a class="nav-link {{ \App\Helpers::isRoute('broadcaster.list', 'active') }}" href="{{ route('broadcaster.list') }}">Userlist</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ \App\Helpers::isRoute('broadcaster.stats', 'active') }}" href="{{ route('broadcaster.stats') }}">Stats</a>
+        </li>
     </ul>
     @yield('b_content')
 @endsection

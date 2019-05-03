@@ -30,18 +30,20 @@ Route::middleware('twitch')->group(function () {
     Route::put('/subscriber/{channel}', 'SubscriberController@subscriberSave')->name('subscriber.save');
     Route::delete('/subscriber/{channel}', 'SubscriberController@subscriberDelete')->name('subscriber.delete');
 
-    Route::middleware('broadcaster')->group(function () {
-        Route::get('/broadcaster', 'BroadcasterController@index')->name('broadcaster');
-        Route::post('/broadcaster', 'BroadcasterController@updateSettings')->name('broadcaster.settings');
-        Route::post('/broadcaster/contact', 'BroadcasterController@contact')->name('broadcaster.contact');
+    Route::middleware('broadcaster')->prefix('broadcaster')->group(function () {
+        Route::get('/', 'BroadcasterController@index')->name('broadcaster');
+        Route::post('/', 'BroadcasterController@updateSettings')->name('broadcaster.settings');
+        Route::post('/contact', 'BroadcasterController@contact')->name('broadcaster.contact');
 
-        Route::get('/broadcaster/list', 'BroadcasterController@userlist')->name('broadcaster.list');
-        Route::get('/broadcaster/list/data', 'BroadcasterController@userlistData');
-        Route::get('/broadcaster/list/stats', 'BroadcasterController@stats');
-        Route::post('/broadcaster/list/add', 'BroadcasterController@addUser')->name('broadcaster.list.add');
-        Route::post('/broadcaster/list/sync', 'BroadcasterController@sync');
-        Route::delete('/broadcaster/list/invalid', 'BroadcasterController@removeInvalid');
-        Route::delete('/broadcaster/list/all', 'BroadcasterController@removeAll');
-        Route::delete('/broadcaster/list/{id}', 'BroadcasterController@removeEntry');
+        Route::get('/list', 'BroadcasterController@userlist')->name('broadcaster.list');
+        Route::get('/list/data', 'BroadcasterController@userlistData');
+        Route::get('/list/stats', 'BroadcasterController@listStats');
+        Route::post('/list/add', 'BroadcasterController@addUser')->name('broadcaster.list.add');
+        Route::post('/list/sync', 'BroadcasterController@sync');
+        Route::delete('/list/invalid', 'BroadcasterController@removeInvalid');
+        Route::delete('/list/all', 'BroadcasterController@removeAll');
+        Route::delete('/list/{id}', 'BroadcasterController@removeEntry');
+
+        Route::get('/stats', 'BroadcasterController@stats')->name('broadcaster.stats');
     });
 });

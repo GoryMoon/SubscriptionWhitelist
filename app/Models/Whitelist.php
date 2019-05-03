@@ -30,6 +30,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Whitelist whereUsername($value)
  * @method static Builder|Whitelist whereValid($value)
  * @mixin Eloquent
+ * @property-read bool $is_subscriber
+ * @property-read bool $is_valid
  */
 class Whitelist extends Model
 {

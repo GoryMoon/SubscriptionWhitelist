@@ -6,7 +6,9 @@ use App\Jobs\SyncChannel;
 use App\Mail\Contact;
 use App\Models\Whitelist;
 use App\Utils\TwitchUtils;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -143,7 +145,7 @@ class BroadcasterController extends Controller
         return DB::table('whitelists')->selectRaw('COUNT(id) as num')->where('channel_id', $id);
     }
 
-    public function stats() {
+    public function listStats() {
         $channel = TwitchUtils::getDbUser()->channel;
         $total = self::getStatBase($channel->id);
         $subs = self::getStatBase($channel->id)->whereNotNull('user_id');
@@ -220,5 +222,29 @@ class BroadcasterController extends Controller
 
         SyncChannel::dispatch($channel);
         return response()->json();
+    }
+
+    public function stats() {
+        $channel = TwitchUtils::getDbUser()->channel;
+        $data = $channel->stats()->get();
+
+        $stats = $data->countBy(function ($time) {
+            return $time->created_at->minute(0)->second(0)->toDateTimeString();
+        });
+
+        $formatted = array();
+        $time = Carbon::now()->minute(0)->second(0);
+        for ($i = 0; $i < 48; $i++) {
+            $formatted[] = [
+                'time' => Carbon::make($time)->format('Y-m-d\TH:i:sP'),
+                'requests' => $stats->get($time->format("Y-m-d H:i:s"), 0)
+            ];
+            $time->subHour();
+        }
+
+        return view('broadcaster.stats', [
+            'stats' => json_encode($formatted),
+            'total' => $channel->requests
+        ]);
     }
 }

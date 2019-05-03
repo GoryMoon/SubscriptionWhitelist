@@ -42,6 +42,9 @@ library.add(
 import BootstrapVue from 'bootstrap-vue';
 Vue.use(BootstrapVue);
 
+import Raphael from 'raphael/raphael'
+global.Raphael = Raphael
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -58,6 +61,7 @@ Vue.component('add-user-component', require('./components/AddUserComponent.vue')
 Vue.component('user-list-component', require('./components/UserListComponent').default);
 Vue.component('remove-account-component', require('./components/RemoveAccountComponent').default);
 Vue.component('sub-manage-component', require('./components/SubManageComponent').default);
+Vue.component('request-chart-component', require('./components/RequestChartComponent').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

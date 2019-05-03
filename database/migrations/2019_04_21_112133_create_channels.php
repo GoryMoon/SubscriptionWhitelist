@@ -20,6 +20,7 @@ class CreateChannels extends Migration
             $table->boolean('sync')->default(false);
             $table->string('sync_option')->default('7day');
             $table->boolean('whitelist_dirty')->default(true);
+            $table->unsignedBigInteger('requests')->default(0);
             $table->timestamps();
         });
     }

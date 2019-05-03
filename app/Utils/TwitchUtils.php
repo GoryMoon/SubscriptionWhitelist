@@ -26,6 +26,8 @@ class TwitchUtils
 
     private $db_user;
 
+    private static $testing = true;
+
     /**
      * @return TwitchUtils
      */
@@ -209,8 +211,7 @@ class TwitchUtils
      * @return bool
      */
     public static function isUserSubscribedToChannel($user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        // TODO testing without subs, add ! below
-        return self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
+        return self::$testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
     }
 
     /**
@@ -234,13 +235,13 @@ class TwitchUtils
      * @return bool
      */
     public static function isBroadcaster($type) {
-        // TODO testing without subs, remove ! below
-        return $type != "";
+        return self::$testing ? true : $type != "";
     }
 
     /**
      * @param $user
      * @return bool
+     * @throws Exception
      */
     public static function handleDbUserLogin($user) {
         $db_user = self::getDbUser($user->id);

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\CleanRequestStats;
 use App\Jobs\SyncDispatcher;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -33,6 +34,7 @@ class Kernel extends ConsoleKernel
         $schedule->job(new SyncDispatcher('1day'))->daily();
         $schedule->job(new SyncDispatcher('2day'))->tuesdays()->fridays();
         $schedule->job(new SyncDispatcher('7day'))->weekly();
+        $schedule->job(new CleanRequestStats())->daily();
     }
 
     /**
