@@ -13,7 +13,7 @@
     <div class="card">
         <div class="card-body">
             <p>Total amount of request to your links: <span class="font-weight-bold">{{ $total }}</span></p>
-            <h5>Requests made the last 48-hours:</h5>
+            <h5>Requests made in the last 48-hours:</h5>
             <request-chart-component
                     data="{{ $stats }}"
             ></request-chart-component>
