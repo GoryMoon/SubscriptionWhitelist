@@ -53,7 +53,7 @@
                     }
                 },
                 law: {
-                    countryCode: '{{ geoip()->getLocation()->getAttribute('iso_code') }}',
+                    countryCode: '{{ geoip()->getLocation(Request::ip())->getAttribute('iso_code') }}',
                     regionalLaw: false
                 },
                 location: false
