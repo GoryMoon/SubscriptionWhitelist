@@ -22,6 +22,8 @@ Route::middleware('twitch')->group(function () {
     Route::delete('/profile', 'MainController@profileDelete')->name('profile.delete');
     Route::post('/logout', 'TwitchController@logout')->name('logout');
 
+    Route::get('/admin/stats', 'AdminController@stats')->name('admin.stats');
+
     Route::get('/channel/', 'SubscriberController@subscriberRedirect')->name('subscriber.redirect');
     Route::get('/channel/{channel}', 'SubscriberController@subscriberAdd')->name('subscriber.add');
     Route::post('/channel/{channel}', 'SubscriberController@subscriberAddSave')->name('subscriber.add.save');

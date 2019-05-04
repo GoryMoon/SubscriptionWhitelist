@@ -69,6 +69,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('telescope') }}">Telescope</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ \App\Helpers::isRoute('admin.stats', 'active') }}" href="{{ route('admin.stats') }}">Stats</a>
+                            </li>
                             @endif
                         </ul>
                         <ul class="navbar-nav ml-auto">
