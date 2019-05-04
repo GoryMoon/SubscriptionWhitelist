@@ -1,5 +1,7 @@
 <?php
 
+use Torann\GeoIP\GeoIPServiceProvider;
+
 return [
 
     /*
@@ -176,6 +178,7 @@ return [
         App\Providers\TelescopeServiceProvider::class,
         App\Providers\HorizonServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Torann\GeoIP\GeoIPServiceProvider::class,
 
     ],
 
@@ -228,7 +231,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
-        'Hashids' => Vinkla\Hashids\Facades\Hashids::class
+        'Hashids' => Vinkla\Hashids\Facades\Hashids::class,
+        'GeoIP' => Torann\GeoIP\Facades\GeoIP::class,
 
     ],
 
