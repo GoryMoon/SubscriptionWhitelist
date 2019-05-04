@@ -145,12 +145,16 @@ class BroadcasterController extends Controller
         return DB::table('whitelists')->selectRaw('COUNT(id) as num')->where('channel_id', $id);
     }
 
-    public function listStats() {
+    private function getStats() {
         $channel = TwitchUtils::getDbUser()->channel;
         $total = self::getStatBase($channel->id);
         $subs = self::getStatBase($channel->id)->whereNotNull('user_id');
         $custom = self::getStatBase($channel->id)->whereNull('user_id');
-        $result = self::getStatBase($channel->id)->where('valid', false)->unionAll($custom)->unionAll($subs)->unionAll($total)->get();
+        return self::getStatBase($channel->id)->where('valid', false)->unionAll($custom)->unionAll($subs)->unionAll($total)->get();
+    }
+
+    public function listStats() {
+        $result = $this->getStats();
         return response()->json([
             'total' => $result[3]->num,
             'subscribers' => $result[2]->num,
@@ -241,10 +245,17 @@ class BroadcasterController extends Controller
             ];
             $time->subHour();
         }
+        $result = $this->getStats();
 
         return view('broadcaster.stats', [
             'stats' => json_encode($formatted),
-            'total' => $channel->requests
+            'total' => $channel->requests,
+            'whitelist' => (object)[
+                'total' => $result[3]->num,
+                'subscribers' => $result[2]->num,
+                'custom' => $result[1]->num,
+                'invalid' => $result[0]->num
+            ]
         ]);
     }
 }

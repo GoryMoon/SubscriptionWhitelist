@@ -12,7 +12,23 @@
     <h1>Whitelist Request Statistics</h1>
     <div class="card">
         <div class="card-body">
-            <p>Total amount of request to your links: <span class="font-weight-bold">{{ $total }}</span></p>
+            <ul>
+                <li>
+                    Total amount of requests: @bold{{ $total }}@endbold
+                </li>
+                <li>
+                    Total amount on whitelist: @bold{{ $whitelist->total }}@endbold
+                </li>
+                <li>
+                    Total amount of subscriber names: @bold{{ $whitelist->subscribers }}@endbold
+                </li>
+                <li>
+                    Total amount of custom names: @bold{{ $whitelist->custom }}@endbold
+                </li>
+                <li>
+                    Total amount of invalid subscriptions: @bold{{ $whitelist->invalid }}@endbold
+                </li>
+            </ul>
             <h5>Requests made in the last 48-hours:</h5>
             <request-chart-component
                     data="{{ $stats }}"

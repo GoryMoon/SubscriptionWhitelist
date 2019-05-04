@@ -9,16 +9,16 @@
             <span>Whitelist info:</span>
             <ul>
                 <li>
-                    Total amount on whitelists: {{ infoData.total }}
+                    Total amount on whitelist: <span class="font-weight-bold">{{ infoData.total }}</span>
                 </li>
                 <li>
-                    Total amount of subscribers: {{ infoData.subscribers }}
+                    Total amount of subscriber names: <span class="font-weight-bold">{{ infoData.subscribers }}</span>
                 </li>
                 <li>
-                    Total amount of custom names: {{ infoData.custom }}
+                    Total amount of custom names: <span class="font-weight-bold">{{ infoData.custom }}</span>
                 </li>
                 <li>
-                    Total amount of invalid subscriptions: {{ infoData.invalid }}
+                    Total amount of invalid subscriptions: <span class="font-weight-bold">{{ infoData.invalid }}</span>
                 </li>
             </ul>
             <b-button variant="primary" class="mt-1" @click="updateList">

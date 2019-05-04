@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Channel;
 use App\Models\RequestStat;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -12,6 +13,14 @@ class AdminController extends Controller
     {
         $this->middleware('twitch');
         $this->middleware('admin');
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Database\Query\Builder
+     */
+    private static function getStatBase(){
+        return DB::table('whitelists')->selectRaw('COUNT(id) as num');
     }
 
     public function stats() {
@@ -36,10 +45,25 @@ class AdminController extends Controller
             $time->subHour();
         }
 
+        $channels = Channel::count();
+        $total = self::getStatBase();
+        $subs = self::getStatBase()->whereNotNull('user_id');
+        $custom = self::getStatBase()->whereNull('user_id');
+        $result = self::getStatBase()->where('valid', false)->unionAll($custom)->unionAll($subs)->unionAll($total)->get();
+
         return view('admin.stats', [
             'stats' => json_encode($formatted),
-            'total' => $requests
+            'total' => $requests,
+            'channels' => $channels,
+            'whitelist' => (object)[
+                'total' => $result[3]->num,
+                'subscribers' => $result[2]->num,
+                'custom' => $result[1]->num,
+                'invalid' => $result[0]->num
+            ]
         ]);
+
+
     }
 
 }
