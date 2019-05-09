@@ -16,6 +16,8 @@ Route::get('/login/authorize', 'TwitchController@authorizeTwitch')->name('login.
 
 Route::get('/token', 'TwitchController@token')->name('token');
 
+Route::get('/privacy-tos', 'MainController@privacy')->name('privacy');
+
 Route::middleware('twitch')->group(function () {
     Route::get('/', 'MainController@home')->name('home');
     Route::get('/profile', 'MainController@profile')->name('profile');

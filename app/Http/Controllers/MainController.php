@@ -37,4 +37,10 @@ class MainController extends Controller
 
         return redirect()->route('login')->with('success', 'Successfully removed account');
     }
+
+    public function privacy() {
+        return view('privacy_tos', [
+            'home' => route('home')
+        ]);
+    }
 }

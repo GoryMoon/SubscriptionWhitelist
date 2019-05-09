@@ -23,20 +23,20 @@
     <meta name="description" content="Twitch subscription restricted whitelists">
     <meta name="image" content="https://whitelist.gorymoon.se/site.png">
     <!-- Schema.org for Google -->
-    <meta itemprop="name" content="Subscription Whitelist">
+    <meta itemprop="name" content="Subscriber Whitelist">
     <meta itemprop="description" content="Twitch subscription restricted whitelists">
     <meta itemprop="image" content="https://whitelist.gorymoon.se/site.png">
     <!-- Twitter -->
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Subscription Whitelist">
+    <meta name="twitter:title" content="Subscriber Whitelist">
     <meta name="twitter:description" content="Twitch subscription restricted whitelists">
     <meta name="twitter:site" content="@Gory_Moon">
     <!-- Open Graph general (Facebook, Pinterest & Google+) -->
-    <meta name="og:title" content="Subscription Whitelist">
+    <meta name="og:title" content="Subscriber Whitelist">
     <meta name="og:description" content="Twitch subscription restricted whitelists">
     <meta name="og:image" content="https://whitelist.gorymoon.se/site.png">
     <meta name="og:url" content="https://whitelist.gorymoon.se/">
-    <meta name="og:site_name" content="Subscription Whitelist">
+    <meta name="og:site_name" content="Subscriber Whitelist">
     <meta name="og:type" content="website">
 
     <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
@@ -125,10 +125,10 @@
             @yield('content')
         </div>
         <footer class="d-flex justify-content-center mt-auto">
-            <div class="text-center pt-3">
-                <span class="text-nowrap">Copyright &copy; {{ date('Y') }}
-                | <a href="{{ route('home') }}">Subscription Whitelist</a></span>
-                | <span class="text-nowrap">Made by: <a href="https://twitter.com/Gory_moon">@Gory_Moon</a>
+            <div class="text-center pt-3 px-2 pb-1">
+                <span class="text-nowrap">Copyright &copy; {{ date('Y') }} <a href="{{ route('home') }}">Subscription Whitelist</a></span>
+                <fa class="text-muted" icon="grip-lines-vertical"></fa> <a href="{{ route('privacy') }}" class="text-nowrap">Privacy Policy & Terms of Service</a>
+                <fa class="text-muted" icon="grip-lines-vertical"></fa> <span class="text-nowrap">Made by: <a href="https://twitter.com/Gory_moon">@Gory_Moon</a>
                 | <a href="https://paypal.me/GustafJ"><fa :icon="['fab','paypal']"></fa><span class="sr-only">PayPal Donate</span></a></span>
             </div>
         </footer>

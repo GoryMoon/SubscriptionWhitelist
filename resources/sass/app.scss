@@ -11,6 +11,8 @@
 
 @import "~bootstrap4-toggle/css/bootstrap4-toggle.css";
 
+$enable-responsive-font-sizes: true;
+
 @font-face {
   font-family: $font-family-sans-serif;
   font-display: auto;
@@ -96,3 +98,14 @@ textarea {
 }
 
 svg { width: 100%; }
+
+
+
+.privacy.card-columns {
+  @include media-breakpoint-only(sm) {
+    column-count: 1;
+  }
+  @include media-breakpoint-up(md) {
+    column-count: 2;
+  }
+}

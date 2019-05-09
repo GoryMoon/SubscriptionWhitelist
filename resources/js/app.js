@@ -29,14 +29,15 @@ import {
     faAngleRight,
     faAngleDoubleLeft,
     faAngleDoubleRight,
-    faEdit
+    faEdit,
+    faGripLinesVertical
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
     faSort, faSortUp, faSortDown, faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight,
-    faEdit, faPaypal
+    faEdit, faPaypal, faGripLinesVertical
     );
 
 import BootstrapVue from 'bootstrap-vue';
@@ -62,6 +63,7 @@ Vue.component('user-list-component', require('./components/UserListComponent').d
 Vue.component('remove-account-component', require('./components/RemoveAccountComponent').default);
 Vue.component('sub-manage-component', require('./components/SubManageComponent').default);
 Vue.component('request-chart-component', require('./components/RequestChartComponent').default);
+Vue.component('show-email-component', require('./components/ShowEmailComponent').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -17,11 +17,7 @@
             </p>
             <a class="btn btn-primary" href="{{ route('login.authorize') }}"><fa :icon="['fab','twitch']"></fa> Authorize with Twitch</a>
             <span class="small d-block mt-2">
-                By authorizing with Twitch you accept that information is stored to<br>
-                link your twitch account to one or more provided usernames that you<br>
-                want to whitelist to one or more broadcasters.<br>
-                You can delete your information at anytime in your profile when logged in,<br>
-                doing so will remove your username/usernames from any whitelists.
+                By authorizing with Twitch you accept our <a href="{{ route('privacy') }}">Privacy Policy &amp; Terms of Service</a>
             </span>
         </div>
     </div>
