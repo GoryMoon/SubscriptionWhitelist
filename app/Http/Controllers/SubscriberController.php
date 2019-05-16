@@ -120,7 +120,7 @@ class SubscriberController extends Controller
                     if ($this->checkWhitelisted($channel)) {
                         return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
                     }
-                    if ($this->checkIfOwn($channel)) {
+                    if ($this->checkIfOwn($owner)) {
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
