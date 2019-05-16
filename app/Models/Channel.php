@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
  * App\Models\Channel
  *
  * @property int $id
- * @property int $enabled
+ * @property bool $enabled
  * @property mixed|null $valid_plans
  * @property int $sync
  * @property string $sync_option

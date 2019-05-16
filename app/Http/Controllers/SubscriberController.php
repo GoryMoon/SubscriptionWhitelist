@@ -85,6 +85,9 @@ class SubscriberController extends Controller
             if (!is_null($owner)) {
                 $channel = $owner->channel;
                 if (!is_null($channel)) {
+                    if (!$channel->enabled) {
+                        return $this->redirectError(['add' => "This channel's whitelist isn't enabled"]);
+                    }
                     if ($this->checkWhitelisted($channel)) {
                         return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
                     }
@@ -117,6 +120,9 @@ class SubscriberController extends Controller
             if (!is_null($owner)) {
                 $channel = $owner->channel;
                 if (!is_null($channel)) {
+                    if (!$channel->enabled) {
+                        return $this->redirectError(['add' => "This channel's whitelist isn't enabled"]);
+                    }
                     if ($this->checkWhitelisted($channel)) {
                         return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
                     }
