@@ -194,8 +194,7 @@ class SubscriberController extends Controller
     }
 
     public function subscriberDelete($channelHash) {
-        dd($channelHash);
-        if (!is_null($channelHash)) {
+            if (!is_null($channelHash)) {
             $ids = Hashids::decode($channelHash);
             if (count($ids) > 0) {
                 $channel = Channel::whereId($ids[0])->first();
