@@ -8,6 +8,7 @@
             <div class="card-body">
                 <h2 class="card-title">Privacy Policy</h2>
                 <div class="card-text">
+                    <p>This website isn't affiliated in any way with Twitch or any of it's affiliates</p>
                     <p>Your privacy is important to us. It is Subscriber Whitelist's policy to respect your privacy regarding any information we may collect from you across our website, <a href="{{ $home }}">{{ $home }}</a>, and other sites we own and operate.</p>
                     <p>We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.</p>
                     <p>We only retain collected information for as long as you have an account with us. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorised access, disclosure, copying, use or modification.</p>
@@ -17,7 +18,7 @@
                         <li>For all users:
                             <ul>
                                 <li>Twitch Id - To verify your subscriptions and identify you on login</li>
-                                <li>Twitch Display Name - To show your logged in</li>
+                                <li>Twitch Display Name - To show when you're logged in</li>
                                 <li>Twitch Broadcaster Type - To determine if you are a broadcaster or not</li>
                                 <li>Zero or more provided usernames for the whitelists</li>
                             </ul>
