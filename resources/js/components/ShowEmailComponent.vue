@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             show: false,
-            b_email: "d2hpdGVsaXN0QGdvcnltb29uLnNl"
+            b_email: "d2hpdGVsaXN0QGdvcnltb29uLnNl" //Base64 encoded email
         }
     },
     computed: {
