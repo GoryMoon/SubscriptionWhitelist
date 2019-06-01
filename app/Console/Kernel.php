@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('telescope:prune')->daily();
 
         $schedule->job(new SyncDispatcher('1day'))->daily();
-        $schedule->job(new SyncDispatcher('2day'))->daily()->tuesdays()->fridays();
+        $schedule->job(new SyncDispatcher('2day'))->daily()->days([2, 5]);
         $schedule->job(new SyncDispatcher('7day'))->weekly();
         $schedule->job(new CleanRequestStats())->daily();
     }
