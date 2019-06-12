@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SyncAllMinecraftNames;
 use App\Jobs\SyncChannel;
 use App\Mail\Contact;
 use App\Models\Whitelist;
@@ -174,12 +175,15 @@ class BroadcasterController extends Controller
             response()->json('Invalid user', 403);
         }
 
+        $whitelist = [];
         foreach(array_filter($inputs['usernames']) as $user) {
             $entry = new Whitelist;
             $entry->username = $user;
             $entry->channel()->associate($channel);
             $entry->save();
+            $whitelist[] = $entry;
         }
+        SyncAllMinecraftNames::dispatch($channel, $whitelist);
 
         return redirect()->route('broadcaster.list')->with('success', 'Names successfully added to the whitelist');
     }
@@ -214,6 +218,8 @@ class BroadcasterController extends Controller
         }
         $name = $entry->username;
         $entry->delete();
+        $channel->whitelist_dirty = true;
+        $channel->save();
 
         return response()->json([ 'user' => $name ]);
     }
@@ -230,9 +236,8 @@ class BroadcasterController extends Controller
 
     public function stats() {
         $channel = TwitchUtils::getDbUser()->channel;
-        $data = $channel->stats()->get();
 
-        $stats = $data->countBy(function ($time) {
+        $stats = $channel->stats->countBy(function ($time) {
             return $time->created_at->minute(0)->second(0)->toDateTimeString();
         });
 

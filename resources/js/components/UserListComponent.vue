@@ -173,12 +173,17 @@ export default {
 
                 },
                 {
-                    name: 'is_valid',
+                    name: 'status',
                     title: 'Status',
                     formatter: (val) => {
-                        return val ?
+                        let status = val.valid ?
                             '<i class="fas fa-check text-success" data-toggle="tooltip" data-placement="top" title="Valid subscription"></i>':
-                            '<i class="fas fa-times text-danger" data-toggle="tooltip" data-placement="top" title="Invalid subscription"></i>'
+                            '<i class="fas fa-times text-danger" data-toggle="tooltip" data-placement="top" title="Invalid subscription"></i>';
+                        let minecraft = val.minecraft !== "" ?
+                            '<img class="minecraft_logo" src="/images/minecraft_logo.png" data-toggle="tooltip" data-placement="top" title="Minecraft name: ' + val.minecraft + '">':
+                            '';
+
+                        return status + "  " + minecraft;
                     },
                     width: '90px',
                     sortField: 'valid'
@@ -223,7 +228,7 @@ export default {
             this.$refs.vuetable.changePage(page);
         },
         onRowClass(dataItem, index) {
-            return !dataItem.is_valid ? 'table-danger': ''
+            return !dataItem.status.valid ? 'table-danger': ''
         },
         onFilterSet (filterText) {
             this.moreParams = {

@@ -39,11 +39,11 @@ vf0l5c53cd7k701jeu18oyhp8bqpt7zg</textarea>
 </div>
 <hr>
 <div class="form-group">
-    <label for="mw_link">JSON array link</label>
+    <label for="mw_link">JSON whitelist link</label>
     <input class="form-control selectable" id="mw_link" readonly type="text" value="{{ $base_url }}minecraft_whitelist">
 </div>
 <div class="form-group">
-    <label for="mw_example">JSON array example</label>
+    <label for="mw_example">JSON whitelist example</label>
     <textarea id="mw_example" class="form-control" cols="30" rows="10" readonly>
 [
     {

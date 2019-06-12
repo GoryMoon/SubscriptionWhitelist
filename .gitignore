@@ -9,7 +9,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-/api
 /public/js
 /public/css
 /public/fonts
@@ -29,14 +28,6 @@ yarn-error.log
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
-
-# CMake
-cmake-build-debug/
-cmake-build-release/
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml

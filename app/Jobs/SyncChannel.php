@@ -28,11 +28,16 @@ class SyncChannel implements ShouldQueue
      * Create a new job instance.
      *
      * @param Channel $channel
+     * @param null $whitelists
      */
-    public function __construct(Channel $channel)
+    public function __construct(Channel $channel, $whitelists = null)
     {
-        $this->whitelists = $channel->whitelist;
         $this->channel = $channel;
+        if (is_null($whitelists)) {
+            $this->whitelists = $channel->whitelist;
+        } else {
+            $this->whitelists = $whitelists;
+        }
     }
 
     /**
@@ -50,8 +55,8 @@ class SyncChannel implements ShouldQueue
             if (is_null($entry->user)) {
                 continue;
             }
-            if ($checked >= 600) {
-                SyncChannel::dispatch(array_slice($this->whitelists, $i))->delay(now()->addMinutes(5));
+            if ($checked >= 550) {
+                SyncChannel::dispatch($this->channel, array_slice($this->whitelists, $i))->delay(now()->addMinutes(5));
                 break;
             }
             $subbed = TwitchUtils::checkIfSubbed($entry->user->uid, $this->channel, $owner->uid);

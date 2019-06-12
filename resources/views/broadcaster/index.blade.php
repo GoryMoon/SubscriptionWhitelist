@@ -94,10 +94,10 @@
             <h3>List links</h3>
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active d-none" id="pills-general-tab" data-toggle="pill" href="#pills-general" role="tab" aria-controls="pills-general" aria-selected="true">General</a>
+                    <a class="nav-link active" id="pills-general-tab" data-toggle="pill" href="#pills-general" role="tab" aria-controls="pills-general" aria-selected="true">General</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled d-none" id="pills-minecraft-tab" data-toggle="pill" href="#pills-minecraft" role="tab" aria-controls="pills-minecraft" aria-selected="false">Minecraft</a>
+                    <a class="nav-link" id="pills-minecraft-tab" data-toggle="pill" href="#pills-minecraft" role="tab" aria-controls="pills-minecraft" aria-selected="false">Minecraft</a>
                 </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
@@ -105,8 +105,7 @@
                     @include('broadcaster.links.general')
                 </div>
                 <div class="tab-pane fade" id="pills-minecraft" role="tabpanel" aria-labelledby="pills-minecraft-tab">
-                    <h1 class="display-1 text-danger">Not yet implemented</h1>
-                    {{-- @include('broadcaster.links.minecraft')--}}
+                    @include('broadcaster.links.minecraft')
                 </div>
             </div>
         </div>

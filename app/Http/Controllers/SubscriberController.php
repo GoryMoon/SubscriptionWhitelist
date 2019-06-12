@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SyncMinecraftName;
 use App\Models\Channel;
 use App\Models\TwitchUser;
 use App\Models\Whitelist;
@@ -182,6 +183,7 @@ class SubscriberController extends Controller
 
                     $whitelist->username = $validData[$name];
                     $whitelist->save();
+                    SyncMinecraftName::dispatch($whitelist);
 
                     self::dirty($channel);
 
