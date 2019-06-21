@@ -141,6 +141,7 @@ class SubscriberController extends Controller
                     $whitelist->user()->associate($db_user);
                     $whitelist->channel()->associate($channel);
                     $whitelist->save();
+                    SyncMinecraftName::dispatch($whitelist);
 
                     self::dirty($channel);
 
