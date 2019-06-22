@@ -13,6 +13,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use romanzipp\Twitch\Twitch;
 
@@ -56,7 +57,7 @@ class TwitchUtils
     /**
      * @return \Illuminate\Config\Repository|mixed
      */
-    private static function getClientId() {
+    public static function getClientId() {
         return config('twitch-api.client_id');
     }
 
@@ -182,11 +183,14 @@ class TwitchUtils
             }
         }
         if ($response == false) {
+            Log::info("$user_id not subbed to $channel_id", [$response]);
             return false;
         }
         if (!in_array($response->sub_plan, $valid_plans)) {
+            Log::info("$user_id don't have valid sub_plan", [$response, $valid_plans]);
             return false;
         }
+        Log::info("$user_id is subscribed to $channel_id", [$response]);
         return true;
     }
 
@@ -197,6 +201,7 @@ class TwitchUtils
      * @return bool
      */
     public static function checkIfSubbed($user_id, $channel, $uid) {
+        Log::info("Check is subbed", [$channel]);
         if (is_null($channel->valid_plans)) {
             return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
         } else {
