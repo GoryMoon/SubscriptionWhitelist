@@ -183,14 +183,14 @@ class TwitchUtils
             }
         }
         if ($response == false) {
-            Log::info("$user_id not subbed to $channel_id", [$response]);
+            Log::debug("$user_id not subbed to $channel_id", [$response]);
             return false;
         }
         if (!in_array($response->sub_plan, $valid_plans)) {
-            Log::info("$user_id don't have valid sub_plan", [$response, $valid_plans]);
+            Log::debug("$user_id don't have valid sub_plan", [$response, $valid_plans]);
             return false;
         }
-        Log::info("$user_id is subscribed to $channel_id", [$response]);
+        Log::debug("$user_id is subscribed to $channel_id", [$response]);
         return true;
     }
 
@@ -201,7 +201,7 @@ class TwitchUtils
      * @return bool
      */
     public static function checkIfSubbed($user_id, $channel, $uid) {
-        Log::info("Check is subbed", [$channel]);
+        Log::debug("Check is subbed", [$channel]);
         if (is_null($channel->valid_plans)) {
             return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
         } else {
