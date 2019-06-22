@@ -40,7 +40,7 @@ class SyncChannel extends Command
     {
         $channel_name = $this->argument('channel');
 
-        $channel = TwitchUser::with('name', $channel_name)->channel;
+        $channel = TwitchUser::where('name', $channel_name)->first()->channel;
         \App\Jobs\SyncChannel::dispatch($channel);
     }
 }
