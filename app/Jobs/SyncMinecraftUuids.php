@@ -41,7 +41,7 @@ class SyncMinecraftUuids implements ShouldQueue
         }
 
         $channel = null;
-        for ($i = 0; $i < count($$this->users); $i++) {
+        for ($i = 0; $i < count($this->users); $i++) {
             $user = $this->users[$i];
             $user->uuid;
             if ($requests >= 550) {

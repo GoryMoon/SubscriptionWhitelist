@@ -322,6 +322,7 @@ class TwitchUtils
      */
     public static function tokenRefresh($refresh_token) {
         if (is_null($refresh_token)) {
+            Log::debug("Refresh token is null, aborting refresh");
             return false;
         }
 
@@ -336,9 +337,11 @@ class TwitchUtils
                 ]
             ]);
         } catch (RequestException $exception) {
+            Log::debug("Token refresh errored", [$exception]);
             return false;
         }
 
+        Log::debug("Token refreshed", [$response]);
         $response = json_decode($response->getBody());
 
         $user = self::getDbUser();
