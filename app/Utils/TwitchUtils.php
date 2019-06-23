@@ -126,8 +126,7 @@ class TwitchUtils
                 return null;
             }
 
-            //Should never get here, the session is gone and no access token is available
-            $request = $this->getHelix()->getAuthedUser($accessToken);
+            $request = $this->getHelix()->withToken($accessToken)->getAuthedUser();
             if ($request->success()) {
                 $this->authed_user = $request->shift();
             } else {
