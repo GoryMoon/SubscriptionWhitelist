@@ -24,6 +24,9 @@
             <b-button variant="primary" class="mt-1" @click="updateList">
                 <fa icon="sync"></fa> Refresh List
             </b-button>
+            <b-button :variant="timerToggle ? 'primary': 'outline-primary'" class="mt-1" :pressed.sync="timerToggle" @click="toggleUpdateInterval">
+                <fa icon="sync" :spin="timerToggle"></fa> Auto Refresh List
+            </b-button>
             <b-button variant="primary" class="mt-1" @click="sync">
                 <fa icon="sync"></fa> Sync Subscriptions
             </b-button>
@@ -165,6 +168,8 @@ export default {
     },
     data() {
         return {
+            timerToggle: true,
+            timer: '',
             perPage: 15,
             fields: [
                 {
@@ -218,6 +223,9 @@ export default {
             }
         }
     },
+    created() {
+        this.enableUpdateInterval();
+    },
     methods: {
         onPageinationData(data) {
             this.$refs.pagination.setPaginationData(data);
@@ -240,12 +248,27 @@ export default {
             this.moreParams = {};
             this.$nextTick(() => this.$refs.vuetable.refresh());
         },
+        toggleUpdateInterval() {
+            if (this.timerToggle) {
+                this.enableUpdateInterval();
+            } else {
+                this.disableUpdateInterval();
+            }
+        },
+        disableUpdateInterval() {
+            clearInterval(this.timer);
+            this.timer = '';
+        },
+        enableUpdateInterval() {
+            this.timer = setInterval(this.updateList, 30000);
+        },
         updateList: _.debounce(function () {
             this.$refs.vuetable.refresh();
             this.$bvToast.toast("Userlist refreshed", {
                 title: 'Subscriber Whitelist',
                 variant: 'success',
-                solid: true
+                solid: true,
+                autoHideDelay: 1000
             });
         }, 1000, { leading: true, trailing: false}),
         sync: _.debounce(function () {
@@ -319,6 +342,9 @@ export default {
                 this.infoData = response.data;
             });
         }
+    },
+    beforeDestroy() {
+        this.disableUpdateInterval();
     },
     tableClass: 'table table-striped table-bordered',
     ascendingIcon: 'glyphicon glyphicon-chevron-up',
