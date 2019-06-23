@@ -67,8 +67,8 @@
                     <label for="sync_options">Sync options</label>
                     <select class="custom-select" name="sync_option" id="sync_option">
                         <option {{ $sync_option == "1day" ? 'selected' : '' }} value="1day">Every day</option>
-                        <option {{ $sync_option == "2day" ? 'selected' : '' }} value="2day">Every twice a week</option>
-                        <option {{ $sync_option == "7day" ? 'selected' : '' }} value="7day">Every week</option>
+                        <option {{ $sync_option == "2day" ? 'selected' : '' }} value="2day">Twice a week</option>
+                        <option {{ $sync_option == "7day" ? 'selected' : '' }} value="7day">Once a week</option>
                     </select>
                 </div>
                 <hr>

@@ -67,4 +67,12 @@ class TwitchUser extends Model
         $this->save();
     }
 
+    public function setAccessTokenAttribute($value) {
+        if (is_null($value)) {
+            $this->attributes['access_token'] = null;
+        } else {
+            $this->attributes['access_token'] = encrypt($value);
+        }
+    }
+
 }

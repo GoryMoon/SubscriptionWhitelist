@@ -44,8 +44,23 @@ class TwitchUtils
     /**
      * @return mixed
      */
-    public static function getAccessToken() {
+    public static function getSessionAccessToken() {
         return Session::get('access_token');
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getDBAccessToken() {
+        $user = self::getDbUser(null, false);
+        if (!is_null($user) && !is_null($user->access_token)) {
+            try {
+                return decrypt($user->access_token);
+            } catch (DecryptException $e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     /**
@@ -131,7 +146,7 @@ class TwitchUtils
                 $this->authed_user = $session_user;
                 return $this->authed_user;
             }
-            $accessToken = self::getAccessToken();
+            $accessToken = self::getSessionAccessToken();
             if (!$auth || is_null($accessToken)) {
                 return null;
             }
@@ -327,7 +342,7 @@ class TwitchUtils
             $client->postAsync('revoke', [
                 'query' => [
                     'client_id' => self::getClientId(),
-                    'token' => self::getAccessToken()
+                    'token' => self::getSessionAccessToken()
                 ]
             ]);
         } catch (RequestException $exception) {}
@@ -402,7 +417,7 @@ class TwitchUtils
         return [
             'Accept' => 'application/vnd.twitchtv.v5+json',
             'Client-ID' => self::getClientId(),
-            'Authorization' => 'OAuth ' . self::getAccessToken()
+            'Authorization' => 'OAuth ' . self::getDBAccessToken()
         ];
     }
 }

@@ -9,7 +9,6 @@ use App\Models\Whitelist;
 use App\Utils\TwitchUtils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -77,7 +76,7 @@ class BroadcasterController extends Controller
 
 
         if ($channel->sync && is_null($user->access_token)) {
-            $user->access_token = TwitchUtils::getAccessToken();
+            $user->access_token = TwitchUtils::getSessionAccessToken();
             $user->save();
         } else if (!$channel->sync && !is_null($user->access_token)) {
             $user->access_token = null;
