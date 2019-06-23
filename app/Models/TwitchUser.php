@@ -58,4 +58,13 @@ class TwitchUser extends Model
         return $this->hasMany('App\Models\Whitelist', 'user_id');
     }
 
+    /**
+     * Encrypts the token and sets it
+     * @param $token string
+     */
+    public function setRefreshToken($token) {
+        $this->refresh_token = encrypt($token);
+        $this->save();
+    }
+
 }

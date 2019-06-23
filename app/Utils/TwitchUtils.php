@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -52,11 +53,20 @@ class TwitchUtils
      */
     private static function getRefreshToken() {
         $user = self::getDbUser(null, false);
-        if (!is_null($user)) {
-            return $user->refresh_token;
+        if (!is_null($user) && !is_null($user->refresh_token)) {
+            try {
+                return decrypt($user->refresh_token);
+            } catch (DecryptException $e) {
+                report($e);
+                $user->refresh_token = null;
+                $user->save();
+                self::logout();
+                abort(500, 'Error refreshing oauth token, logging out');
+            }
         }
         return null;
     }
+
 
     /**
      * @return \Illuminate\Config\Repository|mixed
@@ -366,8 +376,7 @@ class TwitchUtils
             $channel = $user->channel;
             if (!is_null($channel) && $channel->sync) {
                 $user->access_token = $response->access_token;
-                $user->refresh_token = $response->refresh_token;
-                $user->save();
+                $user->setRefreshToken($response->refresh_token);
             }
         }
         return true;

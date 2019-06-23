@@ -14,7 +14,7 @@ class AddRefreshTokenToTwitchUsers extends Migration
     public function up()
     {
         Schema::table('twitch_users', function (Blueprint $table) {
-            $table->string('refresh_token')->nullable();
+            $table->string('refresh_token', 500)->nullable();
         });
     }
 
