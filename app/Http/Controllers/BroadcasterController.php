@@ -47,6 +47,18 @@ class BroadcasterController extends Controller
         ]);
     }
 
+    public function links() {
+        $user = TwitchUtils::getDbUser();
+        $channel = $user->channel;
+        $id = Hashids::encode($channel->id);
+        $base_url = route('home'). "/list/$id/";
+
+        return view('broadcaster.links', [
+            'name' => $channel->owner->name,
+            'base_url' => $base_url
+        ]);
+    }
+
     public function updateSettings(Request $request) {
         $inputs = $request->validate([
             'list_toggle' => 'required|boolean',

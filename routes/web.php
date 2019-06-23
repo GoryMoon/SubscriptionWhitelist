@@ -39,6 +39,7 @@ Route::middleware('twitch')->group(function () {
         Route::post('/', 'BroadcasterController@updateSettings')->name('broadcaster.settings');
         Route::post('/contact', 'BroadcasterController@contact')->name('broadcaster.contact');
 
+        Route::get('/links', 'BroadcasterController@links')->name('broadcaster.links');
         Route::get('/list', 'BroadcasterController@userlist')->name('broadcaster.list');
         Route::get('/list/data', 'BroadcasterController@userlistData');
         Route::get('/list/stats', 'BroadcasterController@listStats');

@@ -21,7 +21,7 @@
         @endif
     @endif
     <h1>Whitelist Settings</h1>
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-body">
             <form method="POST" action="{{ route('broadcaster.settings') }}">
                 <h5>Whitelist toggle</h5>
@@ -78,35 +78,12 @@
             </form>
         </div>
     </div>
-
-    <h1 class="mt-5">Whitelist Links</h1>
     <div class="card mb-3">
         <div class="card-body">
             <h3>Subscriber link</h3>
             <div class="form-group">
                 <label for="sub_link">Link to give to your subscribers</label>
                 <input class="form-control selectable" id="sub_link" readonly type="text" value="{{ route('subscriber.add', ['channel' => $name]) }}">
-            </div>
-        </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <h3>List links</h3>
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="pills-general-tab" data-toggle="pill" href="#pills-general" role="tab" aria-controls="pills-general" aria-selected="true">General</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="pills-minecraft-tab" data-toggle="pill" href="#pills-minecraft" role="tab" aria-controls="pills-minecraft" aria-selected="false">Minecraft</a>
-                </li>
-            </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-general" role="tabpanel" aria-labelledby="pills-general-tab">
-                    @include('broadcaster.links.general')
-                </div>
-                <div class="tab-pane fade" id="pills-minecraft" role="tabpanel" aria-labelledby="pills-minecraft-tab">
-                    @include('broadcaster.links.minecraft')
-                </div>
             </div>
         </div>
     </div>
