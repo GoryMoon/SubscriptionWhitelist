@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property string $display_name
  * @property string $broadcaster_type
  * @property string|null $access_token
+ * @property string|null $refresh_token
  * @property int|null $channel_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

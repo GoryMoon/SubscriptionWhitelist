@@ -51,7 +51,11 @@ class TwitchUtils
      * @return mixed
      */
     private static function getRefreshToken() {
-        return Session::get('refresh_token');
+        $user = self::getDbUser(null, false);
+        if (!is_null($user)) {
+            return $user->refresh_token;
+        }
+        return null;
     }
 
     /**
@@ -91,21 +95,26 @@ class TwitchUtils
             $response = $this->getKraken()->send($request);
             $result = json_decode($response->getBody());
         } catch (RequestException $exception) {
+            Log::error("Kraken exception", [$exception->getMessage()]);
             if ($exception->getResponse()->getStatusCode() == 404) {
                 return false;
             }
             return null;
         } catch (GuzzleException $e) {
+            report($e);
+            Log::error("Kraken guzzle exception");
             return false;
         }
+        Log::debug("Kraken response", [$result]);
         return $result;
     }
 
     /**
+     * @param bool $auth
      * @param int $depth
      * @return mixed|null
      */
-    private function getInternalRemoteUser($depth = 0) {
+    private function getInternalRemoteUser($auth, $depth = 0) {
         if (is_null($this->authed_user)) {
             $session_user = Session::get('session_user');
             if (!is_null($session_user)) {
@@ -113,9 +122,11 @@ class TwitchUtils
                 return $this->authed_user;
             }
             $accessToken = self::getAccessToken();
-            if (is_null($accessToken)) {
+            if (!$auth || is_null($accessToken)) {
                 return null;
             }
+
+            //Should never get here, the session is gone and no access token is available
             $request = $this->getHelix()->getAuthedUser($accessToken);
             if ($request->success()) {
                 $this->authed_user = $request->shift();
@@ -123,7 +134,7 @@ class TwitchUtils
                 if (!self::tokenRefresh(self::getRefreshToken()) || $depth >= 2) {
                     return null;
                 } else {
-                    return $this->getInternalRemoteUser($depth + 1);
+                    return $this->getInternalRemoteUser($auth, $depth + 1);
                 }
             }
         }
@@ -131,10 +142,11 @@ class TwitchUtils
     }
 
     /**
+     * @param bool $auth
      * @return mixed|null
      */
-    public static function getRemoteUser() {
-        return self::instance()->getInternalRemoteUser();
+    public static function getRemoteUser($auth = true) {
+        return self::instance()->getInternalRemoteUser($auth);
     }
 
     /**
@@ -146,11 +158,12 @@ class TwitchUtils
 
     /**
      * @param $uid
+     * @param bool $auth
      * @return TwitchUser|Builder|Model|object|null
      */
-    public static function getDbUser($uid = null) {
+    public static function getDbUser($uid = null, $auth = true) {
         if (is_null($uid)) {
-            $user = self::getRemoteUser();
+            $user = self::getRemoteUser($auth);
             if (is_null($user)) {
                 return null;
             }
@@ -176,21 +189,21 @@ class TwitchUtils
     private function internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth = 0) {
         $response = $this->executeKrakenQuery("users/$user_id/subscriptions/$channel_id");
         if (is_null($response)) {
-            if (!self::tokenRefresh(self::getRefreshToken()) || $depth >= 2) {
+            if ($depth >= 2 || !self::tokenRefresh(self::getRefreshToken())) {
                 return false;
             } else {
                 return $this->internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth + 1);
             }
         }
         if ($response == false) {
-            Log::debug("$user_id not subbed to $channel_id", [$response]);
+            Log::info("$user_id not subbed to $channel_id", [$response]);
             return false;
         }
         if (!in_array($response->sub_plan, $valid_plans)) {
-            Log::debug("$user_id don't have valid sub_plan", [$response, $valid_plans]);
+            Log::info("$user_id don't have valid sub_plan", [$response, $valid_plans]);
             return false;
         }
-        Log::debug("$user_id is subscribed to $channel_id", [$response]);
+        Log::info("$user_id is subscribed to $channel_id", [$response]);
         return true;
     }
 
@@ -201,7 +214,9 @@ class TwitchUtils
      * @return bool
      */
     public static function checkIfSubbed($user_id, $channel, $uid) {
-        Log::debug("Check is subbed", [$channel]);
+        if (!Session::has('session_user')) {
+            Session::put('session_user', (object)['id' => $uid]);
+        }
         if (is_null($channel->valid_plans)) {
             return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
         } else {
@@ -289,6 +304,7 @@ class TwitchUtils
                 }
                 if (!is_null($db_user->access_token)) {
                     $db_user->access_token = null;
+                    $db_user->refresh_token = null;
                     $db_user->save();
                 }
             }
@@ -311,8 +327,7 @@ class TwitchUtils
     public static function logout() {
         Session::forget([
             'session_user',
-            'access_token',
-            'refresh_token'
+            'access_token'
         ]);
     }
 
@@ -332,30 +347,44 @@ class TwitchUtils
                 'query' => [
                     'client_id' => self::getClientId(),
                     'client_secret' => config('twitch-api.client_secret'),
-                    'code' => $refresh_token,
+                    'refresh_token' => $refresh_token,
                     'grant_type' => 'refresh_token'
                 ]
             ]);
         } catch (RequestException $exception) {
-            Log::debug("Token refresh errored", [$exception]);
+            report($exception);
+            Log::error("Token refresh errored", [$exception->getMessage()]);
             return false;
         }
 
-        Log::debug("Token refreshed", [$response]);
         $response = json_decode($response->getBody());
+        Log::debug("Token refreshed", [$response]);
+
+        Session::put('access_token', $response->access_token);
 
         $user = self::getDbUser();
         if (!is_null($user)) {
             $channel = $user->channel;
             if (!is_null($channel) && $channel->sync) {
                 $user->access_token = $response->access_token;
+                $user->refresh_token = $response->refresh_token;
+                $user->save();
             }
         }
-        Session::put([
-            'access_token' => $response->access_token,
-            'refresh_token' => $response->refresh_token
-        ]);
         return true;
+    }
+
+    /**
+     * @param $user
+     */
+    public static function setSessionUser($user) {
+        $session_user = (object)[
+            'id' => $user->id,
+            'name' => $user->login,
+            'display_name' => $user->display_name,
+            'broadcaster_type' => $user->broadcaster_type
+        ];
+        Session::put('session_user', $session_user);
     }
 
     /**

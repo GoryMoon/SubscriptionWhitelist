@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SyncChannel;
-use App\Jobs\SyncDispatcher;
 use App\Jobs\SyncUser;
 use App\Utils\TwitchUtils;
 use GuzzleHttp\Client;
@@ -72,10 +71,7 @@ class TwitchController extends Controller
 
         $request->session()->remove('state');
         $response = json_decode($response->getBody());
-        $request->session()->put([
-            'access_token' => $response->access_token,
-            'refresh_token' => $response->refresh_token
-        ]);
+        Session::put('access_token', $response->access_token);
 
         $user = TwitchUtils::getRemoteUser();
         if (is_null($user)) {
@@ -86,19 +82,15 @@ class TwitchController extends Controller
             return $this->redirectError();
         }
 
-        $session_user = (object)[
-            'id' => $user->id,
-            'name' => $user->login,
-            'display_name' => $user->display_name,
-            'broadcaster_type' => $user->broadcaster_type
-        ];
-        Session::put('session_user', $session_user);
+        TwitchUtils::setSessionUser($user);
 
         if (!TwitchUtils::handleDbUserLogin($user)) {
             return $this->redirectError();
         }
 
         $db_user = TwitchUtils::getDbUser();
+        $db_user->refresh_token = $response->refresh_token;
+        $db_user->save();
         SyncUser::dispatch($db_user);
         $channel = $db_user->channel;
         if (!is_null($channel) && isset($channel) && $channel->enabled && $channel->sync) {
