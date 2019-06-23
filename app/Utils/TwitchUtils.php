@@ -28,15 +28,15 @@ class TwitchUtils
 
     private $db_user;
 
-    private static $testing;
+    private $testing;
 
     /**
      * @return TwitchUtils
      */
     private static function instance() {
         if (is_null(self::$instance)) {
-            self::$testing = config('whitelist.testing');
             self::$instance = new TwitchUtils;
+            self::$instance->testing = config('whitelist.testing');
         }
         return self::$instance;
     }
@@ -256,7 +256,7 @@ class TwitchUtils
      * @return bool
      */
     public static function isUserSubscribedToChannel($user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::$testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
+        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
     }
 
     /**
@@ -280,7 +280,7 @@ class TwitchUtils
      * @return bool
      */
     public static function isBroadcaster($type) {
-        return self::$testing ? true : $type != "";
+        return self::instance()->testing ? true : $type != "";
     }
 
     /**
