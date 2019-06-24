@@ -60,7 +60,7 @@ class SyncChannel implements ShouldQueue
                 SyncChannel::dispatch($this->channel, array_slice($this->whitelists, $i))->delay(now()->addMinutes(5));
                 break;
             }
-            $subbed = TwitchUtils::checkIfSubbed($entry->user->uid, $this->channel, $owner->uid);
+            $subbed = TwitchUtils::checkIfSubbed(false, $entry->user->uid, $this->channel, $owner->uid);
             $checked++;
             if ($entry->valid != $subbed) {
                 $entry->valid = $subbed;

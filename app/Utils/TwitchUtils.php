@@ -204,19 +204,21 @@ class TwitchUtils
     }
 
     /**
+     * @param string $from_user
      * @param string $user_id
      * @param string $channel_id
      * @param array $valid_plans
      * @param int $depth
      * @return bool
      */
-    private function internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth = 0) {
-        $response = $this->executeKrakenQuery("users/$user_id/subscriptions/$channel_id");
+    private function internalIsSubscribed($from_user, $user_id, $channel_id, $valid_plans, $depth = 0) {
+        $url = $from_user ? "users/$user_id/subscriptions/$channel_id" : "channels/$channel_id/subscriptions/$user_id";
+        $response = $this->executeKrakenQuery($url);
         if (is_null($response)) {
             if ($depth >= 2 || !self::tokenRefresh(self::getRefreshToken())) {
                 return false;
             } else {
-                return $this->internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth + 1);
+                return $this->internalIsSubscribed($from_user, $user_id, $channel_id, $valid_plans, $depth + 1);
             }
         }
         if ($response == false) {
@@ -232,31 +234,33 @@ class TwitchUtils
     }
 
     /**
+     * @param string $from_user
      * @param string $user_id
      * @param Channel $channel
      * @param string $uid
      * @return bool
      */
-    public static function checkIfSubbed($user_id, $channel, $uid) {
+    public static function checkIfSubbed($from_user, $user_id, $channel, $uid) {
         if (!Session::has('session_user')) {
             Session::put('session_user', (object)['id' => $uid]);
         }
         if (is_null($channel->valid_plans)) {
-            return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
+            return TwitchUtils::isUserSubscribedToChannel($from_user, $user_id, $uid);
         } else {
             $plans = json_decode($channel->valid_plans);
-            return TwitchUtils::isUserSubscribedToChannel($user_id, $uid, $plans);
+            return TwitchUtils::isUserSubscribedToChannel($from_user, $user_id, $uid, $plans);
         }
     }
 
     /**
+     * @param string $from_user
      * @param string $user_id
      * @param string $channel_id
      * @param array $valid_plans
      * @return bool
      */
-    public static function isUserSubscribedToChannel($user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
+    public static function isUserSubscribedToChannel($from_user, $user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
+        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($from_user, $user_id, $channel_id, $valid_plans);
     }
 
     /**
@@ -265,7 +269,7 @@ class TwitchUtils
      * @return bool
      */
     public static function isUserSubscribed($channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::isUserSubscribedToChannel(self::getRemoteUser()->id, $channel_id, $valid_plans);
+        return self::isUserSubscribedToChannel(true, self::getRemoteUser()->id, $channel_id, $valid_plans);
     }
 
     /**
