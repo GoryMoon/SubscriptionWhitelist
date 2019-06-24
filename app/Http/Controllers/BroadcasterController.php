@@ -113,7 +113,7 @@ class BroadcasterController extends Controller
 
 
     public function userlist() {
-        return view('broadcaster.userlist');
+        return view('broadcaster.userlist', ['channel_id' => TwitchUtils::getDbUser()->channel->id]);
     }
 
     public function userlistData(Request $request) {

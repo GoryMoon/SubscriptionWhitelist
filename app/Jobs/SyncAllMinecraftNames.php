@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Channel;
 use App\Models\Whitelist;
+use App\Notifications\MCSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -11,7 +12,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class SyncAllMinecraftNames implements ShouldQueue
 {
@@ -61,6 +61,7 @@ class SyncAllMinecraftNames implements ShouldQueue
                 $whitelist->minecraft()->associate($data);
                 $whitelist->save();
             }
+            $this->channel->notify(new MCSyncDone());
         }
     }
 }

@@ -8,6 +8,7 @@ use App\Utils\TwitchUtils;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
@@ -91,6 +92,8 @@ class TwitchController extends Controller
         $db_user = TwitchUtils::getDbUser();
         $db_user->setRefreshToken($response->refresh_token);
         SyncUser::dispatch($db_user);
+        Auth::guard()->login($db_user);
+
         $channel = $db_user->channel;
         if (!is_null($channel) && isset($channel) && $channel->enabled && $channel->sync) {
             SyncChannel::dispatch($channel);
@@ -106,12 +109,14 @@ class TwitchController extends Controller
     }
 
     private function redirectError($message = ['Something went wrong']) {
+        Auth::logout();
         TwitchUtils::logout();
         $errors = new ViewErrorBag;
         return redirect()->route('login')->with('errors', $errors->put('default', new MessageBag($message)));
     }
 
     public function logout() {
+        Auth::logout();
         TwitchUtils::logout();
         return redirect()->route('login');
     }

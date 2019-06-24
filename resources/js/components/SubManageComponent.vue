@@ -3,7 +3,7 @@
         <slot name="csrf"></slot>
         <input ref="hiddenInput" type="hidden" name="_method" value="PUT">
         <div class="form-group">
-            <label :for="getId">Username:</label> <img v-if="hasMcName" class="minecraft_logo" src="/images/minecraft_logo.png" data-toggle="tooltip" data-placement="top" :title="'Minecraft name: ' + minecraft">
+            <label :for="getId">Username:</label> <img v-if="hasMcName" class="minecraft_logo" src="/images/minecraft_logo.png" data-toggle="tooltip" data-placement="top" :title="'Minecraft name: ' + mc_name">
             <input type="text"
                    :disabled="!isValid"
                    :class="getClasses"
@@ -57,6 +57,19 @@ export default {
             default: ''
         }
     },
+    data() {
+        return {
+            mc_name: this.minecraft
+        }
+    },
+    created() {
+        Echo.private(`users.${this.uid}`)
+            .notification((notification) => {
+                if (notification.type === "App\\Notifications\\MCUserSyncDone") {
+                    this.mc_name = notification.name;
+                }
+            });
+    },
     computed: {
         isValid() {
             return this.valid === '1';
@@ -68,7 +81,7 @@ export default {
             return 'form-control mr-sm-2 mb-2 ' + this.errorClasses;
         },
         hasMcName() {
-            return this.minecraft !== '';
+            return this.mc_name !== '';
         }
     },
     methods: {

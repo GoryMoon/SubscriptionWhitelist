@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Eloquent;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Vinkla\Hashids\Facades\Hashids;
 
 /**
  * App\Models\TwitchUser
@@ -39,8 +43,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|TwitchUser whereUpdatedAt($value)
  * @mixin Eloquent
  */
-class TwitchUser extends Model
+class TwitchUser extends Model implements AuthenticatableContract
 {
+    use Notifiable, Authenticatable;
 
     /**
      * Returns the channel the user has
@@ -73,6 +78,10 @@ class TwitchUser extends Model
         } else {
             $this->attributes['access_token'] = encrypt($value);
         }
+    }
+
+    public function receivesBroadcastNotificationsOn(){
+        return 'users.'. Hashids::connection('user')->encode($this->id);
     }
 
 }

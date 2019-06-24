@@ -25,7 +25,7 @@
     <div class="card mb-3">
         <div class="card-body">
             <h3>Users</h3>
-            <user-list-component route="{{ route('broadcaster.list') }}"></user-list-component>
+            <user-list-component route="{{ route('broadcaster.list') }}" channel="{{ $channel_id }}"></user-list-component>
         </div>
     </div>
 @endsection

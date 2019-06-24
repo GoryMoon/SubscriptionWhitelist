@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Whitelist;
+use App\Notifications\MCUserSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -37,13 +38,17 @@ class SyncMinecraftName implements ShouldQueue
     {
         $response = MinecraftUtils::instance()->getProfile($this->whitelist->username);
         $channel = $this->whitelist->channel;
+        $name = '';
         if (!is_null($response)) {
             $data = $this->whitelist->minecraft()->updateOrCreate(['uuid' => $response->id], ['username' => $response->name]);
+            $name = $data->username;
             $this->whitelist->minecraft()->associate($data);
             $this->whitelist->save();
         } else {
             $this->whitelist->minecraft()->delete();
         }
+        $this->whitelist->user->notify(new MCUserSyncDone($name));
+
         $channel->whitelist_dirty = true;
         $channel->save();
     }

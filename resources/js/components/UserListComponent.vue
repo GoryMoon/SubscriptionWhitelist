@@ -164,6 +164,9 @@ export default {
         route: {
             type: String,
             required: true
+        },
+        channel: {
+            type: String
         }
     },
     data() {
@@ -225,6 +228,20 @@ export default {
     },
     created() {
         this.enableUpdateInterval();
+        Echo.private(`channel.${this.channel}`)
+            .notification((notification) => {
+                if (notification.type === "App\\Notifications\\SubSyncDone") {
+                    this.updateList(false);
+                    this.$bvToast.toast("Userlist subscriptions synced", {
+                        title: 'Subscriber Whitelist',
+                        variant: 'success',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
+                } else if (notification.type === "App\\Notifications\\MCSyncDone") {
+                    this.updateList(false);
+                }
+            });
     },
     methods: {
         onPageinationData(data) {
@@ -262,21 +279,24 @@ export default {
         enableUpdateInterval() {
             this.timer = setInterval(this.updateList, 30000);
         },
-        updateList: _.debounce(function () {
+        updateList: _.debounce(function (toast = true) {
             this.$refs.vuetable.refresh();
-            this.$bvToast.toast("Userlist refreshed", {
-                title: 'Subscriber Whitelist',
-                variant: 'success',
-                solid: true,
-                autoHideDelay: 1000
-            });
+            if (toast) {
+                this.$bvToast.toast("Userlist refreshed", {
+                    title: 'Subscriber Whitelist',
+                    variant: 'success',
+                    solid: true,
+                    autoHideDelay: 1000
+                });
+            }
         }, 1000, { leading: true, trailing: false}),
         sync: _.debounce(function () {
             axios.post(this.route + '/sync').then(() => {
                 this.$bvToast.toast("Queued userlist syncing", {
                     title: 'Subscriber Whitelist',
                     variant: 'primary',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             });
         }, 3000, { leading: true, trailing: false}),
@@ -287,13 +307,15 @@ export default {
                 this.$bvToast.toast("Successfully removed invalid subscriptions", {
                     title: 'Subscriber Whitelist',
                     variant: 'success',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             }).catch((error) => {
                 this.$bvToast.toast(error, {
                     title: 'Subscriber Whitelist',
                     variant: 'danger',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             });
         },
@@ -304,13 +326,15 @@ export default {
                 this.$bvToast.toast("Successfully removed all usernames", {
                     title: 'Subscriber Whitelist',
                     variant: 'success',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             }).catch((error) => {
                 this.$bvToast.toast(error, {
                     title: 'Subscriber Whitelist',
                     variant: 'danger',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             });
         },
@@ -321,7 +345,8 @@ export default {
                 this.$bvToast.toast("Successfully removed " + response.data.user, {
                     title: 'Subscriber Whitelist',
                     variant: 'success',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             }).catch((error) => {
                 let message = error.message;
@@ -333,7 +358,8 @@ export default {
                 this.$bvToast.toast(message, {
                     title: 'Subscriber Whitelist',
                     variant: 'danger',
-                    solid: true
+                    solid: true,
+                    autoHideDelay: 2000
                 });
             });
         },

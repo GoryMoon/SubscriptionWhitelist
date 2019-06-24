@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
 /**
@@ -39,6 +40,7 @@ use Illuminate\Support\Carbon;
  */
 class Channel extends Model
 {
+    use Notifiable;
 
     public function owner() {
         return $this->hasOne('App\Models\TwitchUser');
@@ -50,6 +52,10 @@ class Channel extends Model
 
     public function stats() {
         return $this->hasMany('App\Models\RequestStat');
+    }
+
+    public function receivesBroadcastNotificationsOn(){
+        return 'channel.'.$this->id;
     }
 
 }

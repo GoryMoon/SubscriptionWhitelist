@@ -74,4 +74,11 @@ class Whitelist extends Model
         return ['valid'  => $this->valid == true, 'minecraft' => $name];
     }
 
+    protected static function boot(){
+        parent::boot();
+
+        self::deleting(function (Whitelist $whitelist) {
+            $whitelist->minecraft()->delete();
+        });
+    }
 }

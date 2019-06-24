@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\MinecraftUser;
+use App\Notifications\MCSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -62,6 +63,7 @@ class SyncMinecraftUuids implements ShouldQueue
             }
         }
         if (!is_null($channel)) {
+            $channel->notify(new MCSyncDone());
             $channel->whitelist_dirty = true;
             $channel->save();
         }

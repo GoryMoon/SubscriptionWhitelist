@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Channel;
 use App\Models\Whitelist;
+use App\Notifications\SubSyncDone;
 use App\Utils\TwitchUtils;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -72,6 +73,7 @@ class SyncChannel implements ShouldQueue
             $this->channel->whitelist_dirty = true;
             $this->channel->save();
         }
+        $this->channel->notify(new SubSyncDone());
     }
 
     /**
