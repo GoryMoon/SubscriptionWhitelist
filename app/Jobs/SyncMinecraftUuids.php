@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class SyncMinecraftUuids implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * @var null
      */

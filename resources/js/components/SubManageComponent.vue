@@ -3,7 +3,7 @@
         <slot name="csrf"></slot>
         <input ref="hiddenInput" type="hidden" name="_method" value="PUT">
         <div class="form-group">
-            <label :for="getId">Username:</label>
+            <label :for="getId">Username:</label> <img v-if="hasMcName" class="minecraft_logo" src="/images/minecraft_logo.png" data-toggle="tooltip" data-placement="top" :title="'Minecraft name: ' + minecraft">
             <input type="text"
                    :disabled="!isValid"
                    :class="getClasses"
@@ -30,6 +30,14 @@ export default {
         id: {
             type: String,
             required: true
+        },
+        uid: {
+            type: String,
+            required: true
+        },
+        minecraft: {
+            type: String,
+            required: false
         },
         username: {
             type: String,
@@ -58,6 +66,9 @@ export default {
         },
         getClasses() {
             return 'form-control mr-sm-2 mb-2 ' + this.errorClasses;
+        },
+        hasMcName() {
+            return this.minecraft !== '';
         }
     },
     methods: {

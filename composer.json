@@ -17,6 +17,7 @@
         "laravel/horizon": "^3.1",
         "laravel/telescope": "^2.0",
         "laravel/tinker": "^1.0",
+        "pusher/pusher-php-server": "~3.0",
         "romanzipp/laravel-twitch": "^2.0",
         "torann/geoip": "^1.0",
         "vinkla/hashids": "^6.0"

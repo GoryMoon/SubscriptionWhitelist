@@ -43,7 +43,10 @@ return [
             'salt' => env('HASHIDS_SALT'),
             'length' => env('HASHIDS_LENGTH')
         ],
-
+        'user' => [
+            'salt' => env('HASHIDS_USER_SALT'),
+            'length' => env('HASHIDS_LENGTH')
+        ],
         'alternative' => [
             'salt' => 'your-salt-string',
             'length' => 'your-length-integer',

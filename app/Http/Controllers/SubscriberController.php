@@ -25,9 +25,12 @@ class SubscriberController extends Controller
         $whitelists = $user->whitelist()->with('channel.owner')->get();
         $return = [];
         foreach ($whitelists as $whitelist) {
+            $mc = $whitelist->minecraft;
             $return[] = (object)[
                 'id' => Hashids::encode($whitelist->channel->id),
+                'uid' => Hashids::connection('user')->encode($user->id),
                 'valid' => $whitelist->valid,
+                'minecraft' => !is_null($mc) ? $mc->username: '',
                 'username' => $whitelist->username,
                 'display_name' => $whitelist->channel->owner->display_name,
                 'name' => $whitelist->channel->owner->name
