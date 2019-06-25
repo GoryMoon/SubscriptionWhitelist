@@ -42,6 +42,8 @@ use Vinkla\Hashids\Facades\Hashids;
  * @method static Builder|TwitchUser whereUid($value)
  * @method static Builder|TwitchUser whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TwitchUser whereRefreshToken($value)
  */
 class TwitchUser extends Model implements AuthenticatableContract
 {

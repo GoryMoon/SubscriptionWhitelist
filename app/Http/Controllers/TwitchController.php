@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Illuminate\Support\ViewErrorBag;
+use romanzipp\Twitch\Enums\Scope;
+use romanzipp\Twitch\Facades\Twitch;
 
 class TwitchController extends Controller
 {
@@ -33,6 +35,8 @@ class TwitchController extends Controller
         $url = route('token');
         $id = config('twitch-api.client_id');
         $url = "https://id.twitch.tv/oauth2/authorize?client_id=$id&redirect_uri=$url&response_type=code&scope=" . self::$scope . "&state=$state";
+        //Bug with API, encodes url
+        //$url = Twitch::getOAuthAuthorizeUrl('code', [Scope::CHANNEL_READ_SUBSCRIPTIONS, Scope::V5_USER_SUBSCRIPTIONS], $state);
         return redirect()->away($url);
     }
 
@@ -69,6 +73,15 @@ class TwitchController extends Controller
         } catch (RequestException $exception) {
             return $this->redirectError(['Unknown error', json_decode($exception->getResponse()->getBody())->message]);
         }
+        //Bug with API, encodes url
+        /*
+         $result = Twitch::getOAuthToken($request->get('code'));
+        if ($result->success()) {
+            $response = $result->shift();
+        } else {
+            return $this->redirectError([$result->error()]);
+        }
+         */
 
         $request->session()->remove('state');
         $response = json_decode($response->getBody());

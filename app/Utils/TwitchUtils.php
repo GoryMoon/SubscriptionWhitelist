@@ -14,6 +14,7 @@ use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use romanzipp\Twitch\Twitch;
@@ -49,10 +50,11 @@ class TwitchUtils
     }
 
     /**
+     * @param null $uid
      * @return mixed
      */
-    public static function getDBAccessToken() {
-        $user = self::getDbUser(null, false);
+    public static function getDBAccessToken($uid = null) {
+        $user = self::getDbUser($uid, false);
         if (!is_null($user) && !is_null($user->access_token)) {
             try {
                 return decrypt($user->access_token);
@@ -200,36 +202,90 @@ class TwitchUtils
         if (is_null($this->db_user)) {
             $this->db_user = TwitchUser::whereUid($uid)->first();
         }
+        if ($this->db_user->uid != $uid) {
+            return TwitchUser::whereUid($uid)->first();
+        }
         return $this->db_user;
     }
 
     /**
-     * @param string $from_user
+     * @param string $channel_id
+     * @param array $channel_ids
+     * @return Collection|null
+     */
+    private function getChannelSubscribers($channel_id, $channel_ids) {
+        $access_token = self::getDBAccessToken($channel_id);
+
+        if (is_null($access_token)) {
+            return null;
+        }
+        $twitch = $this->getHelix()->withToken($access_token);
+        $users = collect();
+        $retried = false;
+        do {
+            $result = $twitch->getSubscriptions(['broadcaster_id' => $channel_id, 'user_id' => $channel_ids], isset($result) ? $result->next(): null);
+
+            if ($result->success()) {
+                $users = $users->concat($result->data());
+            } else if ($result->status === 401 && !is_null($result->exception) && count($result->response->getHeader('WWW-Authenticate')) > 0){
+                if (!$retried) {
+                    self::tokenRefresh(self::getRefreshToken());
+                    unset($result);
+                    $retried = true;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } while ($retried || (isset($result) && !is_null($result->pagination)));
+
+        return $users->mapWithKeys(function ($item) {
+            return [$item->user_id => $item->tier];
+        });
+    }
+
+    /**
+     * @param Channel $channel
+     * @param Collection $channel_ids
+     * @return Collection|null
+     */
+    public static function checkSubscriptions($channel, $channel_ids) {
+        $plans = is_null($channel->valid_plans) ? ['Prime', '1000', '2000', '3000']: json_decode($channel->valid_plans);
+
+        $response = self::instance()->getChannelSubscribers($channel->owner->uid, $channel_ids->toArray());
+        if (!is_null($response)) {
+            return $channel_ids->mapWithKeys(function ($item) use ($response, $plans){
+                $data = $response->get($item);
+                return [$item => in_array(is_null($data) ? '': $data, $plans)];
+            });
+        }
+        return null;
+    }
+
+
+    /**
      * @param string $user_id
      * @param string $channel_id
      * @param array $valid_plans
      * @param int $depth
      * @return bool
      */
-    private function internalIsSubscribed($from_user, $user_id, $channel_id, $valid_plans, $depth = 0) {
-        $url = $from_user ? "users/$user_id/subscriptions/$channel_id" : "channels/$channel_id/subscriptions/$user_id";
-        $response = $this->executeKrakenQuery($url);
+    private function internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth = 0) {
+        $response = $this->executeKrakenQuery("users/$user_id/subscriptions/$channel_id");
         if (is_null($response)) {
             if ($depth >= 2 || !self::tokenRefresh(self::getRefreshToken())) {
                 return false;
             } else {
-                return $this->internalIsSubscribed($from_user, $user_id, $channel_id, $valid_plans, $depth + 1);
+                return $this->internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth + 1);
             }
         }
         if ($response == false) {
-            Log::info("$user_id not subbed to $channel_id", [$response]);
             return false;
         }
         if (!in_array($response->sub_plan, $valid_plans)) {
-            Log::info("$user_id don't have valid sub_plan", [$response, $valid_plans]);
             return false;
         }
-        Log::info("$user_id is subscribed to $channel_id", [$response]);
         return true;
     }
 
@@ -240,15 +296,15 @@ class TwitchUtils
      * @param string $uid
      * @return bool
      */
-    public static function checkIfSubbed($from_user, $user_id, $channel, $uid) {
+    public static function checkIfSubbed($user_id, $channel, $uid) {
         if (!Session::has('session_user')) {
             Session::put('session_user', (object)['id' => $uid]);
         }
         if (is_null($channel->valid_plans)) {
-            return TwitchUtils::isUserSubscribedToChannel($from_user, $user_id, $uid);
+            return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
         } else {
             $plans = json_decode($channel->valid_plans);
-            return TwitchUtils::isUserSubscribedToChannel($from_user, $user_id, $uid, $plans);
+            return TwitchUtils::isUserSubscribedToChannel($user_id, $uid, $plans);
         }
     }
 
@@ -259,8 +315,8 @@ class TwitchUtils
      * @param array $valid_plans
      * @return bool
      */
-    public static function isUserSubscribedToChannel($from_user, $user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($from_user, $user_id, $channel_id, $valid_plans);
+    public static function isUserSubscribedToChannel($user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
+        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
     }
 
     /**
@@ -269,7 +325,7 @@ class TwitchUtils
      * @return bool
      */
     public static function isUserSubscribed($channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::isUserSubscribedToChannel(true, self::getRemoteUser()->id, $channel_id, $valid_plans);
+        return self::isUserSubscribedToChannel(self::getRemoteUser()->id, $channel_id, $valid_plans);
     }
 
     /**

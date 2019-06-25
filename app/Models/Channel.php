@@ -37,6 +37,7 @@ use Illuminate\Support\Carbon;
  * @property int $requests
  * @property-read Collection|RequestStat[] $stats
  * @method static Builder|Channel whereRequests($value)
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  */
 class Channel extends Model
 {

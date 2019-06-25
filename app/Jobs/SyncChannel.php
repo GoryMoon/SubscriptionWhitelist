@@ -48,10 +48,11 @@ class SyncChannel implements ShouldQueue
      */
     public function handle()
     {
-        $owner = $this->channel->owner;
         $changed = false;
         $checked = 0;
-        for ($i = 0; $i < count($this->whitelists); $i++) {
+        $channels = [];
+        $size = count($this->whitelists);
+        for ($i = 0; $i < $size; $i++) {
             $entry = $this->whitelists[$i];
             if (is_null($entry->user)) {
                 continue;
@@ -60,12 +61,27 @@ class SyncChannel implements ShouldQueue
                 SyncChannel::dispatch($this->channel, array_slice($this->whitelists, $i))->delay(now()->addMinutes(5));
                 break;
             }
-            $subbed = TwitchUtils::checkIfSubbed(false, $entry->user->uid, $this->channel, $owner->uid);
-            $checked++;
-            if ($entry->valid != $subbed) {
-                $entry->valid = $subbed;
-                $entry->save();
-                $changed = true;
+
+            $channels[] = $entry;
+            if ($i + 1 == $size || count($channels) == 100) {
+                $channels = collect($channels)->mapWithKeys(function ($item) {
+                    return [$item->user->uid => $item];
+                });
+                $subs = TwitchUtils::checkSubscriptions($this->channel, $channels->map(function ($item, $key) {
+                    return $key;
+                }));
+
+                foreach ($subs as $key => $value) {
+                    $whitelist = $channels->get($key);
+
+                    if ($whitelist->valid != $value) {
+                        $whitelist->valid = $value;
+                        $whitelist->save();
+                        $changed = true;
+                    }
+                }
+                $checked++;
+                $channels = [];
             }
         }
 

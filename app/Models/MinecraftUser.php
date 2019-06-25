@@ -27,7 +27,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder|MinecraftUser whereUuid($value)
  * @method static Builder|MinecraftUser whereWhitelistId($value)
  * @mixin Eloquent
-
  */
 class MinecraftUser extends Model
 {

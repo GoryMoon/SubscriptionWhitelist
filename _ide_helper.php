@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.8.14 on 2019-06-01 16:34:04.
+ * Generated for Laravel 5.8.24 on 2019-06-24 23:29:39.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -349,6 +349,18 @@ namespace Illuminate\Support\Facades {
         {
                         /** @var \Illuminate\Foundation\Application $instance */
                         return $instance->isLocal();
+        }
+        
+        /**
+         * Determine if application is in production environment.
+         *
+         * @return bool 
+         * @static 
+         */ 
+        public static function isProduction()
+        {
+                        /** @var \Illuminate\Foundation\Application $instance */
+                        return $instance->isProduction();
         }
         
         /**
@@ -1469,7 +1481,7 @@ namespace Illuminate\Support\Facades {
          * Run the console application.
          *
          * @param \Symfony\Component\Console\Input\InputInterface $input
-         * @param \Symfony\Component\Console\Output\OutputInterface $output
+         * @param \Symfony\Component\Console\Output\OutputInterface|null $output
          * @return int 
          * @static 
          */ 
@@ -1529,7 +1541,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $command
          * @param array $parameters
-         * @param \Symfony\Component\Console\Output\OutputInterface $outputBuffer
+         * @param \Symfony\Component\Console\Output\OutputInterface|null $outputBuffer
          * @return int 
          * @throws \Symfony\Component\Console\Exception\CommandNotFoundException
          * @static 
@@ -1624,7 +1636,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Attempt to get the guard from the local cache.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Contracts\Auth\Guard|\Illuminate\Contracts\Auth\StatefulGuard 
          * @static 
          */ 
@@ -1796,7 +1808,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the currently authenticated user.
          *
-         * @return \App\User|null 
+         * @return \App\Models\TwitchUser|null 
          * @static 
          */ 
         public static function user()
@@ -1834,7 +1846,7 @@ namespace Illuminate\Support\Facades {
          * Log the given user ID into the application without sessions or cookies.
          *
          * @param mixed $id
-         * @return \App\User|false 
+         * @return \App\Models\TwitchUser|false 
          * @static 
          */ 
         public static function onceUsingId($id)
@@ -1903,7 +1915,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param mixed $id
          * @param bool $remember
-         * @return \App\User|false 
+         * @return \App\Models\TwitchUser|false 
          * @static 
          */ 
         public static function loginUsingId($id, $remember = false)
@@ -1970,7 +1982,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the last user we attempted to authenticate.
          *
-         * @return \App\User 
+         * @return \App\Models\TwitchUser 
          * @static 
          */ 
         public static function getLastAttempted()
@@ -2081,7 +2093,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Return the currently cached user.
          *
-         * @return \App\User|null 
+         * @return \App\Models\TwitchUser|null 
          * @static 
          */ 
         public static function getUser()
@@ -2131,7 +2143,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if current user is authenticated. If not, throw an exception.
          *
-         * @return \App\User 
+         * @return \App\Models\TwitchUser 
          * @throws \Illuminate\Auth\AuthenticationException
          * @static 
          */ 
@@ -2253,7 +2265,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Compile the view at the given path.
          *
-         * @param string $path
+         * @param string|null $path
          * @return void 
          * @static 
          */ 
@@ -2371,7 +2383,7 @@ namespace Illuminate\Support\Facades {
          * Register a component alias directive.
          *
          * @param string $path
-         * @param string $alias
+         * @param string|null $alias
          * @return void 
          * @static 
          */ 
@@ -2385,7 +2397,7 @@ namespace Illuminate\Support\Facades {
          * Register an include alias directive.
          *
          * @param string $path
-         * @param string $alias
+         * @param string|null $alias
          * @return void 
          * @static 
          */ 
@@ -2552,7 +2564,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a driver instance.
          *
-         * @param string $driver
+         * @param string|null $driver
          * @return mixed 
          * @static 
          */ 
@@ -3626,8 +3638,8 @@ namespace Illuminate\Support\Facades {
          * @param string $name
          * @param string $value
          * @param int $minutes
-         * @param string $path
-         * @param string $domain
+         * @param string|null $path
+         * @param string|null $domain
          * @param bool|null $secure
          * @param bool $httpOnly
          * @param bool $raw
@@ -3646,8 +3658,8 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $name
          * @param string $value
-         * @param string $path
-         * @param string $domain
+         * @param string|null $path
+         * @param string|null $domain
          * @param bool|null $secure
          * @param bool $httpOnly
          * @param bool $raw
@@ -3665,8 +3677,8 @@ namespace Illuminate\Support\Facades {
          * Expire the given cookie.
          *
          * @param string $name
-         * @param string $path
-         * @param string $domain
+         * @param string|null $path
+         * @param string|null $domain
          * @return \Symfony\Component\HttpFoundation\Cookie 
          * @static 
          */ 
@@ -3735,7 +3747,7 @@ namespace Illuminate\Support\Facades {
          * @param string $path
          * @param string $domain
          * @param bool $secure
-         * @param string $sameSite
+         * @param string|null $sameSite
          * @return \Illuminate\Cookie\CookieJar 
          * @static 
          */ 
@@ -3862,7 +3874,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Decrypt the given value.
          *
-         * @param mixed $payload
+         * @param string $payload
          * @param bool $unserialize
          * @return mixed 
          * @throws \Illuminate\Contracts\Encryption\DecryptException
@@ -3913,7 +3925,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a database connection instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Database\Connection 
          * @static 
          */ 
@@ -3926,7 +3938,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Disconnect from the given database and remove from local cache.
          *
-         * @param string $name
+         * @param string|null $name
          * @return void 
          * @static 
          */ 
@@ -3939,7 +3951,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Disconnect from the given database.
          *
-         * @param string $name
+         * @param string|null $name
          * @return void 
          * @static 
          */ 
@@ -3952,7 +3964,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Reconnect to the given database.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Database\Connection 
          * @static 
          */ 
@@ -4650,7 +4662,7 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * Determine if the connection in a "dry run".
+         * Determine if the connection is in a "dry run".
          *
          * @return bool 
          * @static 
@@ -5297,7 +5309,7 @@ namespace Illuminate\Support\Facades {
          * Get or set UNIX mode of a file or directory.
          *
          * @param string $path
-         * @param int $mode
+         * @param int|null $mode
          * @return mixed 
          * @static 
          */ 
@@ -5609,7 +5621,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $directory
          * @param string $destination
-         * @param int $options
+         * @param int|null $options
          * @return bool 
          * @static 
          */ 
@@ -5922,6 +5934,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param object|string $class
          * @return mixed 
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
          * @static 
          */ 
         public static function resolvePolicy($class)
@@ -6166,7 +6179,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $key
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string|array 
          * @static 
          */ 
@@ -6197,7 +6210,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $key
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string|array 
          * @static 
          */ 
@@ -6213,7 +6226,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param int|array|\Countable $number
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string 
          * @static 
          */ 
@@ -6229,7 +6242,7 @@ namespace Illuminate\Support\Facades {
          * @param string $key
          * @param int|array|\Countable $number
          * @param array $replace
-         * @param string $locale
+         * @param string|null $locale
          * @return string 
          * @static 
          */ 
@@ -6843,7 +6856,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string|array|\Illuminate\Contracts\Mail\Mailable $view
          * @param array $data
-         * @param \Closure|string $callback
+         * @param \Closure|string|null $callback
          * @return void 
          * @static 
          */ 
@@ -7589,7 +7602,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the driver is connected.
          *
-         * @param string $name
+         * @param string|null $name
          * @return bool 
          * @static 
          */ 
@@ -7602,7 +7615,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Resolve a queue connection instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Contracts\Queue\Queue 
          * @static 
          */ 
@@ -7668,7 +7681,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the full name for the given connection.
          *
-         * @param string $connection
+         * @param string|null $connection
          * @return string 
          * @static 
          */ 
@@ -7790,7 +7803,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the size of the queue.
          *
-         * @param string $queue
+         * @param string|null $queue
          * @return int 
          * @static 
          */ 
@@ -7805,7 +7818,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $job
          * @param mixed $data
-         * @param string $queue
+         * @param string|null $queue
          * @return mixed 
          * @static 
          */ 
@@ -7819,7 +7832,7 @@ namespace Illuminate\Support\Facades {
          * Push a raw payload onto the queue.
          *
          * @param string $payload
-         * @param string $queue
+         * @param string|null $queue
          * @param array $options
          * @return mixed 
          * @static 
@@ -7836,7 +7849,7 @@ namespace Illuminate\Support\Facades {
          * @param \DateTimeInterface|\DateInterval|int $delay
          * @param string $job
          * @param mixed $data
-         * @param string $queue
+         * @param string|null $queue
          * @return mixed 
          * @static 
          */ 
@@ -7880,7 +7893,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Pop the next job off of the queue.
          *
-         * @param string $queue
+         * @param string|null $queue
          * @return \Illuminate\Contracts\Queue\Job|null 
          * @static 
          */ 
@@ -7895,7 +7908,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param array $jobs
          * @param mixed $data
-         * @param string $queue
+         * @param string|null $queue
          * @return mixed 
          * @static 
          */ 
@@ -8137,7 +8150,7 @@ namespace Illuminate\Support\Facades {
          * @param string $path
          * @param int $status
          * @param array $headers
-         * @param bool $secure
+         * @param bool|null $secure
          * @return \Illuminate\Http\RedirectResponse 
          * @static 
          */ 
@@ -8153,7 +8166,7 @@ namespace Illuminate\Support\Facades {
          * @param string $default
          * @param int $status
          * @param array $headers
-         * @param bool $secure
+         * @param bool|null $secure
          * @return \Illuminate\Http\RedirectResponse 
          * @static 
          */ 
@@ -8182,7 +8195,7 @@ namespace Illuminate\Support\Facades {
          * @param string $path
          * @param int $status
          * @param array $headers
-         * @param bool $secure
+         * @param bool|null $secure
          * @return \Illuminate\Http\RedirectResponse 
          * @static 
          */ 
@@ -8702,7 +8715,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the JSON payload for the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param mixed $default
          * @return \Symfony\Component\HttpFoundation\ParameterBag|mixed 
          * @static 
@@ -10097,7 +10110,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve an old input item.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array 
          * @static 
@@ -10161,7 +10174,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a server variable from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10188,7 +10201,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a header from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10291,7 +10304,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get all of the input and files for the request.
          *
-         * @param array|mixed $keys
+         * @param array|mixed|null $keys
          * @return array 
          * @static 
          */ 
@@ -10344,7 +10357,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a query string item from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10358,7 +10371,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a request payload item from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10385,7 +10398,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a cookie from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param string|array|null $default
          * @return string|array|null 
          * @static 
@@ -10424,7 +10437,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Retrieve a file from the request.
          *
-         * @param string $key
+         * @param string|null $key
          * @param mixed $default
          * @return \Illuminate\Http\UploadedFile|\Illuminate\Http\UploadedFile[]|array|null 
          * @static 
@@ -11385,7 +11398,7 @@ namespace Illuminate\Support\Facades {
          * Get a route parameter for the current route.
          *
          * @param string $key
-         * @param string $default
+         * @param string|null $default
          * @return mixed 
          * @static 
          */ 
@@ -11680,7 +11693,6 @@ namespace Illuminate\Support\Facades {
     /**
      * 
      *
-     * @method static void registerCustomDBALType(string $class, string $name, string $type)
      * @see \Illuminate\Database\Schema\Builder
      */ 
     class Schema {
@@ -11849,6 +11861,20 @@ namespace Illuminate\Support\Facades {
             //Method inherited from \Illuminate\Database\Schema\Builder            
                         /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
                         $instance->dropIfExists($table);
+        }
+        
+        /**
+         * Drop all types from the database.
+         *
+         * @return void 
+         * @throws \LogicException
+         * @static 
+         */ 
+        public static function dropAllTypes()
+        {
+            //Method inherited from \Illuminate\Database\Schema\Builder            
+                        /** @var \Illuminate\Database\Schema\MySqlBuilder $instance */
+                        $instance->dropAllTypes();
         }
         
         /**
@@ -12055,13 +12081,13 @@ namespace Illuminate\Support\Facades {
         /**
          * Save the session data to storage.
          *
-         * @return bool 
+         * @return void 
          * @static 
          */ 
         public static function save()
         {
                         /** @var \Illuminate\Session\Store $instance */
-                        return $instance->save();
+                        $instance->save();
         }
         
         /**
@@ -12132,7 +12158,7 @@ namespace Illuminate\Support\Facades {
          * Get the value of a given key and then forget it.
          *
          * @param string $key
-         * @param string $default
+         * @param string|null $default
          * @return mixed 
          * @static 
          */ 
@@ -12145,7 +12171,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Determine if the session contains old input.
          *
-         * @param string $key
+         * @param string|null $key
          * @return bool 
          * @static 
          */ 
@@ -12158,7 +12184,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get the requested item from the flashed input array.
          *
-         * @param string $key
+         * @param string|null $key
          * @param mixed $default
          * @return mixed 
          * @static 
@@ -12580,7 +12606,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a filesystem instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Filesystem\FilesystemAdapter 
          * @static 
          */ 
@@ -12593,7 +12619,7 @@ namespace Illuminate\Support\Facades {
         /**
          * Get a filesystem instance.
          *
-         * @param string $name
+         * @param string|null $name
          * @return \Illuminate\Filesystem\FilesystemAdapter 
          * @static 
          */ 
@@ -13357,7 +13383,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $name
          * @param array $parameters
-         * @param \DateTimeInterface|\DateInterval|int $expiration
+         * @param \DateTimeInterface|\DateInterval|int|null $expiration
          * @param bool $absolute
          * @return string 
          * @static 
@@ -13447,7 +13473,7 @@ namespace Illuminate\Support\Facades {
          * Get the base URL for the request.
          *
          * @param string $scheme
-         * @param string $root
+         * @param string|null $root
          * @return string 
          * @static 
          */ 
@@ -13737,7 +13763,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $rule
          * @param \Closure|string $extension
-         * @param string $message
+         * @param string|null $message
          * @return void 
          * @static 
          */ 
@@ -13752,7 +13778,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $rule
          * @param \Closure|string $extension
-         * @param string $message
+         * @param string|null $message
          * @return void 
          * @static 
          */ 
@@ -13767,7 +13793,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $rule
          * @param \Closure|string $extension
-         * @param string $message
+         * @param string|null $message
          * @return void 
          * @static 
          */ 
@@ -13959,7 +13985,7 @@ namespace Illuminate\Support\Facades {
          * Add a piece of shared data to the environment.
          *
          * @param array|string $key
-         * @param mixed $value
+         * @param mixed|null $value
          * @return mixed 
          * @static 
          */ 
@@ -14065,7 +14091,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $extension
          * @param string $engine
-         * @param \Closure $resolver
+         * @param \Closure|null $resolver
          * @return void 
          * @static 
          */ 
@@ -14290,6 +14316,20 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Get the first view that actually exists from the given list, and start a component.
+         *
+         * @param array $names
+         * @param array $data
+         * @return void 
+         * @static 
+         */ 
+        public static function startComponentFirst($names, $data = array())
+        {
+                        /** @var \Illuminate\View\Factory $instance */
+                        $instance->startComponentFirst($names, $data);
+        }
+        
+        /**
          * Render the current component.
          *
          * @return string 
@@ -14504,7 +14544,7 @@ namespace Illuminate\Support\Facades {
          * Get the contents of a section.
          *
          * @param string $name
-         * @param string $default
+         * @param string|null $default
          * @return mixed 
          * @static 
          */ 
@@ -14992,22 +15032,10 @@ namespace romanzipp\Twitch\Facades {
     class Twitch {
         
         /**
-         * Set clientId
+         * Get client id.
          *
          * @param string $clientId Twitch client id
-         * @static 
-         */ 
-        public static function setClientId($clientId)
-        {
-                        /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->setClientId($clientId);
-        }
-        
-        /**
-         * Get clientId
-         *
-         * @param string $clientId clientId optional
-         * @return string clientId
+         * @return string 
          * @static 
          */ 
         public static function getClientId()
@@ -15017,22 +15045,36 @@ namespace romanzipp\Twitch\Facades {
         }
         
         /**
-         * Set clientSecret
+         * Set client id.
          *
-         * @param string $clientSecret Twitch client id
+         * @param string $clientId Twitch client id
+         * @return void 
          * @static 
          */ 
-        public static function setClientSecret($clientSecret)
+        public static function setClientId($clientId)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->setClientSecret($clientSecret);
+                        $instance->setClientId($clientId);
         }
         
         /**
-         * Get clientSecret
+         * Fluid client id setter.
          *
-         * @param string $clientSecret clientSecret optional
-         * @return string clientSecret
+         * @param string $clientId Twitch client id.
+         * @return self 
+         * @static 
+         */ 
+        public static function withClientId($clientId)
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        return $instance->withClientId($clientId);
+        }
+        
+        /**
+         * Get client secret.
+         *
+         * @param string $clientSecret Twitch client secret
+         * @return string 
          * @static 
          */ 
         public static function getClientSecret()
@@ -15042,34 +15084,74 @@ namespace romanzipp\Twitch\Facades {
         }
         
         /**
-         * Set Twitch OAuth Token
+         * Set client secret.
          *
-         * @param string $token OAuth token
+         * @param string $clientSecret Twitch client secret
+         * @return void 
          * @static 
          */ 
-        public static function setToken($token)
+        public static function setClientSecret($clientSecret)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->setToken($token);
+                        $instance->setClientSecret($clientSecret);
         }
         
         /**
-         * Set Twitch OAuth Token for one request
+         * Fluid client secret setter.
          *
-         * @param string $token OAuth token
+         * @param string $clientSecret Twitch client secret
          * @return self 
          * @static 
          */ 
-        public static function withToken($token)
+        public static function withClientSecret($clientSecret)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->withToken($token);
+                        return $instance->withClientSecret($clientSecret);
         }
         
         /**
-         * Get Twitch token
+         * Get redirect url.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getRedirectUri()
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        return $instance->getRedirectUri();
+        }
+        
+        /**
+         * Set redirect url.
+         *
+         * @param string $redirectUri
+         * @return self 
+         * @static 
+         */ 
+        public static function setRedirectUri($redirectUri)
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        return $instance->setRedirectUri($redirectUri);
+        }
+        
+        /**
+         * Fluid redirect url setter.
+         *
+         * @param string $redirectUri
+         * @return self 
+         * @static 
+         */ 
+        public static function withRedirectUri($redirectUri)
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        return $instance->withRedirectUri($redirectUri);
+        }
+        
+        /**
+         * Get OAuth token.
          *
          * @return string Twitch token
+         * @return string|null
          * @static 
          */ 
         public static function getToken()
@@ -15079,15 +15161,29 @@ namespace romanzipp\Twitch\Facades {
         }
         
         /**
-         * Set legacy mode for one Request
+         * Set OAuth token.
          *
+         * @param string $token Twitch OAuth token
+         * @return void 
+         * @static 
+         */ 
+        public static function setToken($token)
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        $instance->setToken($token);
+        }
+        
+        /**
+         * Fluid OAuth token setter.
+         *
+         * @param string $token Twitch OAuth token
          * @return self 
          * @static 
          */ 
-        public static function withLegacy()
+        public static function withToken($token)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->withLegacy();
+                        return $instance->withToken($token);
         }
         
         /**
@@ -15135,12 +15231,13 @@ namespace romanzipp\Twitch\Facades {
         }
         
         /**
-         * Execute query
+         * Build query & execute.
          *
          * @param string $method HTTP method
          * @param string $path Query path
          * @param array $parameters Query parameters
-         * @param mixed $token Token String or true/false to obtain by setToken method
+         * @param \romanzipp\Twitch\Paginator $paginator Paginator object
+         * @param mixed|null $jsonBody JSON data
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
@@ -15151,16 +15248,47 @@ namespace romanzipp\Twitch\Facades {
         }
         
         /**
-         * Generate headers
+         * Build query with support for multiple smae first-dimension keys.
          *
-         * @param bool $json Body is JSON
-         * @return array 
+         * @param array $query
+         * @return string 
          * @static 
          */ 
-        public static function generateHeaders($json = false)
+        public static function buildQuery($query)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->generateHeaders($json);
+                        return $instance->buildQuery($query);
+        }
+        
+        /**
+         * Get OAuth authorize url.
+         *
+         * @see https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/
+         * @param string $responseType code / token
+         * @param array $scopes
+         * @param string $state
+         * @param bool $forceVerify
+         * @return string 
+         * @static 
+         */ 
+        public static function getOAuthAuthorizeUrl($responseType = 'code', $scopes = array(), $state = null, $forceVerify = false)
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        return $instance->getOAuthAuthorizeUrl($responseType, $scopes, $state, $forceVerify);
+        }
+        
+        /**
+         * Get an access token based on the OAuth code flow.
+         *
+         * @see https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/#oauth-authorization-code-flow
+         * @param string $code
+         * @return \romanzipp\Twitch\Result 
+         * @static 
+         */ 
+        public static function getOAuthToken($code)
+        {
+                        /** @var \romanzipp\Twitch\Twitch $instance */
+                        return $instance->getOAuthToken($code);
         }
         
         /**
@@ -15230,14 +15358,13 @@ namespace romanzipp\Twitch\Facades {
          * Note: Bearer OAuth Token and the state "user:edit:broadcast" are both required
          *
          * @see https://dev.twitch.tv/docs/api/reference#get-user-extensions
-         * @param string $token Twitch OAuth Token
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
-        public static function getAuthedUserExtensions($token = null)
+        public static function getAuthedUserExtensions()
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->getAuthedUserExtensions($token);
+                        return $instance->getAuthedUserExtensions();
         }
         
         /**
@@ -15245,14 +15372,13 @@ namespace romanzipp\Twitch\Facades {
          * Note: Bearer OAuth Token and the state "user:edit:broadcast" are both required
          *
          * @see https://dev.twitch.tv/docs/api/reference#get-user-active-extensions
-         * @param string $token Twitch OAuth Token
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
-        public static function getAuthedUserActiveExtensions($token = null)
+        public static function getAuthedUserActiveExtensions()
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->getAuthedUserActiveExtensions($token);
+                        return $instance->getAuthedUserActiveExtensions();
         }
         
         /**
@@ -15260,14 +15386,13 @@ namespace romanzipp\Twitch\Facades {
          * Note: Bearer OAuth Token and the state "user:edit:broadcast" are both required
          *
          * @see "https://dev.twitch.tv/docs/api/reference/#update-user-extensions"
-         * @param string $token Twitch OAuth Token
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
-        public static function disableAllExtensions($token = null)
+        public static function disableAllExtensions()
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->disableAllExtensions($token);
+                        return $instance->disableAllExtensions();
         }
         
         /**
@@ -15275,15 +15400,14 @@ namespace romanzipp\Twitch\Facades {
          * Note: Bearer OAuth Token and the state "user:edit:broadcast" are both required
          *
          * @see https://dev.twitch.tv/docs/api/reference/#update-user-extensions
-         * @param string $token Twitch OAuth Token
          * @param string $parameter Id of the Extension that should be deactivated
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
-        public static function disableUserExtensionById($token = null, $parameter = null)
+        public static function disableUserExtensionById($parameter = null)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->disableUserExtensionById($token, $parameter);
+                        return $instance->disableUserExtensionById($parameter);
         }
         
         /**
@@ -15291,15 +15415,14 @@ namespace romanzipp\Twitch\Facades {
          * Note: Bearer OAuth Token and the state "user:edit:broadcast" are both required
          *
          * @see https://dev.twitch.tv/docs/api/reference/#update-user-extensions
-         * @param string $token Twitch OAuth Token
          * @param string $parameter Name of the Extension that should be deactivated
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
-        public static function disableUserExtensionByName($token = null, $parameter = null)
+        public static function disableUserExtensionByName($parameter = null)
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->disableUserExtensionByName($token, $parameter);
+                        return $instance->disableUserExtensionByName($parameter);
         }
         
         /**
@@ -15632,16 +15755,14 @@ namespace romanzipp\Twitch\Facades {
         
         /**
          * Get currently authed user with Bearer Token
-         * Note: Bearer OAuth Token is required
          *
-         * @param string $token Twitch OAuth Token
          * @return \romanzipp\Twitch\Result Result object
          * @static 
          */ 
-        public static function getAuthedUser($token = null)
+        public static function getAuthedUser()
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->getAuthedUser($token);
+                        return $instance->getAuthedUser();
         }
         
         /**
@@ -15937,34 +16058,6 @@ namespace romanzipp\Twitch\Facades {
         {
                         /** @var \romanzipp\Twitch\Twitch $instance */
                         return $instance->webhookTopicUserFollowsUser($from, $to);
-        }
-        
-        /**
-         * [LEGACY v5] Refresh OAuth Token by given Refresh Token
-         *
-         * @param string $refreshToken Refresh Token
-         * @param string|null $clientSecret Client Secret
-         * @param string|null $scope Scopes
-         * @return \romanzipp\Twitch\Result 
-         * @see https://dev.twitch.tv/docs/authentication#refreshing-access-tokens
-         * @static 
-         */ 
-        public static function legacyRefreshToken($refreshToken, $clientSecret = null, $scope = null)
-        {
-                        /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->legacyRefreshToken($refreshToken, $clientSecret, $scope);
-        }
-        
-        /**
-         * [LEGACY v5] Root
-         *
-         * @return \romanzipp\Twitch\Result 
-         * @static 
-         */ 
-        public static function legacyRoot()
-        {
-                        /** @var \romanzipp\Twitch\Twitch $instance */
-                        return $instance->legacyRoot();
         }
          
     }
@@ -16664,7 +16757,7 @@ namespace  {
              *
              * @param mixed $value
              * @param callable $callback
-             * @param callable $default
+             * @param callable|null $default
              * @return mixed|$this 
              * @static 
              */ 
@@ -16692,7 +16785,7 @@ namespace  {
              *
              * @param mixed $value
              * @param callable $callback
-             * @param callable $default
+             * @param callable|null $default
              * @return mixed|$this 
              * @static 
              */ 
@@ -17425,7 +17518,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -17441,7 +17534,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -17456,7 +17549,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -17472,7 +17565,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -17487,7 +17580,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -17503,7 +17596,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -17518,7 +17611,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -17534,7 +17627,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string $value
+             * @param \DateTimeInterface|string|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -17549,7 +17642,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string|int $value
+             * @param \DateTimeInterface|string|int|null $value
              * @param string $boolean
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
@@ -17565,7 +17658,7 @@ namespace  {
              *
              * @param string $column
              * @param string $operator
-             * @param \DateTimeInterface|string|int $value
+             * @param \DateTimeInterface|string|int|null $value
              * @return \Illuminate\Database\Query\Builder|static 
              * @static 
              */ 
@@ -17811,7 +17904,7 @@ namespace  {
              * Handles dynamic "where" clauses to the query.
              *
              * @param string $method
-             * @param string $parameters
+             * @param array $parameters
              * @return \Illuminate\Database\Query\Builder 
              * @static 
              */ 
@@ -18501,6 +18594,30 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
                                 return $instance->cloneWithoutBindings($except);
+            }
+         
+            /**
+             * Dump the current SQL and bindings.
+             *
+             * @return void 
+             * @static 
+             */ 
+            public static function dump()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                $instance->dump();
+            }
+         
+            /**
+             * Die and dump the current SQL and bindings.
+             *
+             * @return void 
+             * @static 
+             */ 
+            public static function dd()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                $instance->dd();
             }
          
             /**
