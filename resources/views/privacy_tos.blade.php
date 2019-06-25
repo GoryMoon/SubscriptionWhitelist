@@ -21,6 +21,7 @@
                                 <li>Twitch Display Name - To show when you're logged in</li>
                                 <li>Twitch Broadcaster Type - To determine if you are a broadcaster or not</li>
                                 <li>Zero or more provided usernames for the whitelists</li>
+                                <li>If you names matches an MC name the uuid and name is stored</li>
                             </ul>
                         </li>
                         <li>For broadcasters:
@@ -38,7 +39,7 @@
                     <p>By continuing to navigate our website without changing your cookie settings, you hereby acknowledge and agree to Subscriber Whitelist's use of cookies.</p>
                     <p>Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.</p>
                     <p>If you have any questions about this Privacy Policy, please contact us via <show-email-component></show-email-component></p>
-                    <p>This policy is effective as of 9 May 2019.</p>
+                    <p>This policy is effective as of 25 June 2019.</p>
                 </div>
             </div>
         </div>
