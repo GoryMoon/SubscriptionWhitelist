@@ -477,7 +477,7 @@ class TwitchUtils
         return [
             'Accept' => 'application/vnd.twitchtv.v5+json',
             'Client-ID' => self::getClientId(),
-            'Authorization' => 'OAuth ' . self::getDBAccessToken()
+            'Authorization' => 'OAuth ' . self::getSessionAccessToken()
         ];
     }
 }
