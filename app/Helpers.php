@@ -18,4 +18,7 @@ class Helpers
         return Route::currentRouteName() == $route ? $true : $false;
     }
 
+    public static function isRouteBase($route, $true, $false = "") {
+        return explode('.', Route::currentRouteName())[0] == $route ? $true: $false;
+    }
 }

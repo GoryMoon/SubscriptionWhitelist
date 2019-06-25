@@ -188,7 +188,7 @@ export default {
                             '<i class="fas fa-check text-success" data-toggle="tooltip" data-placement="top" title="Valid subscription"></i>':
                             '<i class="fas fa-times text-danger" data-toggle="tooltip" data-placement="top" title="Invalid subscription"></i>';
                         let minecraft = val.minecraft !== "" ?
-                            '<img class="minecraft_logo" src="/images/minecraft_logo.png" data-toggle="tooltip" data-placement="top" title="Minecraft name: ' + val.minecraft + '">':
+                            '<img class="minecraft_logo" src="/images/minecraft_logo_success.png" data-toggle="tooltip" data-placement="top" title="Minecraft name: ' + val.minecraft + '">':
                             '';
 
                         return status + "  " + minecraft;
@@ -241,6 +241,7 @@ export default {
                 } else if (notification.type === "App\\Notifications\\MCSyncDone") {
                     this.updateList(false);
                 }
+                refreshTooltips();
             });
     },
     methods: {

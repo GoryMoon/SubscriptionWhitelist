@@ -149,15 +149,20 @@ class SubscriberController extends Controller
                 $channel = Channel::whereId($ids[0])->first();
                 if (!is_null($channel)) {
                     $name = 'username-' . $channelHash;
+
+                    $db_user = TwitchUtils::getDbUser();
+                    $whitelist = $db_user->whitelist()->where('channel_id', $channel->id)->first();
+                    if (is_null($whitelist)) {
+                        return redirect()->back();
+                    }
+                    if ($whitelist->username === $request->input($name)) {
+                        return $this->redirectError([$name  => 'Provided name is the same as the already saved one']);
+                    }
+
                     $validData = $request->validate([
                          $name => 'required|unique:whitelists,username'
                     ]);
                     $owner = $channel->owner;
-                    $db_user = TwitchUtils::getDbUser();
-                    $whitelist = $db_user->whitelist()->where('channel_id', $channel->id)->first();
-                    if (is_null($whitelist)) {
-                        return $this->redirectError(['edit' => 'You are not whitelisted to this channel, you need to add before able to update']);
-                    }
                     if ($this->checkIfOwn($owner)) {
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);

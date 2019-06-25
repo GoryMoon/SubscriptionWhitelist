@@ -76,7 +76,7 @@
                         <ul class="navbar-nav mr-auto">
                             @if(\App\Utils\TwitchUtils::hasSubscribers())
                                 <li class="nav-item">
-                                    <a class="nav-link {{ \App\Helpers::isRoute('broadcaster', 'active') }} {{ \App\Helpers::isRoute('broadcaster.list', 'active') }}" href="{{ route('broadcaster') }}">Broadcaster</a>
+                                    <a class="nav-link {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="{{ route('broadcaster') }}">Broadcaster</a>
                                 </li>
                             @endif
                             <li class="nav-item">
