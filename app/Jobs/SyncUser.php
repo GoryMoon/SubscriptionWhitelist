@@ -9,6 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Session;
 
 class SyncUser implements ShouldQueue
 {
@@ -17,15 +18,18 @@ class SyncUser implements ShouldQueue
      * @var TwitchUser
      */
     private $user;
+    private $access_token;
 
     /**
      * Create a new job instance.
      *
      * @param TwitchUser $user
+     * @param $access_token
      */
-    public function __construct(TwitchUser $user)
+    public function __construct(TwitchUser $user, $access_token)
     {
         $this->user = $user;
+        $this->access_token = $access_token;
     }
 
     /**
@@ -35,6 +39,7 @@ class SyncUser implements ShouldQueue
      */
     public function handle()
     {
+        Session::put('access_token', $this->access_token);
         $whitelists = $this->user->whitelist;
         foreach ($whitelists as $whitelist) {
             $channel = $whitelist->channel;

@@ -60,20 +60,6 @@ class SubscriberController extends Controller
         return $owner->id === TwitchUtils::getDbUser()->id;
     }
 
-    /**
-     * @param Channel $channel
-     * @param string $uid
-     * @return bool
-     */
-    private function checkIfSubbed($channel, $uid) {
-        if (is_null($channel->valid_plans)) {
-            return TwitchUtils::isUserSubscribed($uid);
-        } else {
-            $plans = json_decode($channel->valid_plans);
-            return TwitchUtils::isUserSubscribed($uid, $plans);
-        }
-    }
-
     public function subscriberRedirect(Request $request) {
         $channel = $request->input('channel');
         if (!is_null($channel)) {
@@ -99,7 +85,7 @@ class SubscriberController extends Controller
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
-                    if (!$this->checkIfSubbed($channel, $owner->uid)) {
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner->uid)) {
                         return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
                     }
                     return view('subscriber.channel')->with([
@@ -134,7 +120,7 @@ class SubscriberController extends Controller
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
-                    if (!$this->checkIfSubbed($channel, $owner->uid)) {
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner->uid)) {
                         return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
                     }
                     $db_user = TwitchUtils::getDbUser();
@@ -176,7 +162,7 @@ class SubscriberController extends Controller
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
-                    if (!$whitelist->valid || !$this->checkIfSubbed($channel, $owner->uid)) {
+                    if (!$whitelist->valid || !TwitchUtils::checkIfSubbed(null, $channel, $owner->uid)) {
                         if ($whitelist->valid) {
                             $whitelist->valid = false;
                             $whitelist->save();

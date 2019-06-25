@@ -297,8 +297,11 @@ class TwitchUtils
      * @return bool
      */
     public static function checkIfSubbed($user_id, $channel, $uid) {
-        if (!Session::has('session_user')) {
-            Session::put('session_user', (object)['id' => $uid]);
+        if (!Session::has('session_user') && !is_null($user_id)) {
+            Session::put('session_user', (object)['id' => $user_id]);
+        }
+        if (is_null($user_id)) {
+            $user_id = self::getRemoteUser()->id;
         }
         if (is_null($channel->valid_plans)) {
             return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
@@ -317,15 +320,6 @@ class TwitchUtils
      */
     public static function isUserSubscribedToChannel($user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
         return self::instance()->testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
-    }
-
-    /**
-     * @param string $channel_id
-     * @param array $valid_plans
-     * @return bool
-     */
-    public static function isUserSubscribed($channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::isUserSubscribedToChannel(self::getRemoteUser()->id, $channel_id, $valid_plans);
     }
 
     /**

@@ -104,7 +104,7 @@ class TwitchController extends Controller
 
         $db_user = TwitchUtils::getDbUser();
         $db_user->setRefreshToken($response->refresh_token);
-        SyncUser::dispatch($db_user);
+        SyncUser::dispatch($db_user, TwitchUtils::getSessionAccessToken());
         Auth::guard()->login($db_user);
 
         $channel = $db_user->channel;
