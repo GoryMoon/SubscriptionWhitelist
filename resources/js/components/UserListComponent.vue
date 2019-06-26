@@ -43,7 +43,7 @@
         ></search-bar>
         <vuetable ref="vuetable"
                   :fields="fields"
-                  :api-url="route + '/data'"
+                  :api-url="route('broadcaster.data').toString()"
                   :css="css.table"
                   pagination-path=""
                   :sort-order="sortOrder"
@@ -161,10 +161,6 @@ export default {
         SearchBar
     },
     props: {
-        route: {
-            type: String,
-            required: true
-        },
         channel: {
             type: String
         }
@@ -292,7 +288,7 @@ export default {
             }
         }, 1000, { leading: true, trailing: false}),
         sync: _.debounce(function () {
-            axios.post(this.route + '/sync').then(() => {
+            axios.post(route('broadcaster.sync')).then(() => {
                 this.$bvToast.toast("Queued userlist syncing", {
                     title: 'Subscriber Whitelist',
                     variant: 'primary',
@@ -302,7 +298,7 @@ export default {
             });
         }, 3000, { leading: true, trailing: false}),
         removeInvalid() {
-            axios.delete(this.route + '/invalid').then((response) => {
+            axios.delete(route('broadcaster.invalid')).then((response) => {
                 this.$refs.vuetable.refresh();
                 this.$refs['remove-invalid'].hide();
                 this.$bvToast.toast("Successfully removed invalid subscriptions", {
@@ -321,7 +317,7 @@ export default {
             });
         },
         removeAll() {
-            axios.delete(this.route + '/all').then(response => {
+            axios.delete(route('broadcaster.delete')).then(response => {
                 this.$refs.vuetable.refresh();
                 this.$refs['remove-all'].hide();
                 this.$bvToast.toast("Successfully removed all usernames", {
@@ -340,7 +336,7 @@ export default {
             });
         },
         onDeleteItem(id) {
-            axios.delete(this.route + '/' + id).then(response => {
+            axios.delete(route('broadcaster.delete_entry', {id: id})).then(response => {
                 this.$refs.vuetable.refresh();
                 this.$refs['remove-all'].hide();
                 this.$bvToast.toast("Successfully removed " + response.data.user, {
@@ -365,7 +361,7 @@ export default {
             });
         },
         onRefresh() {
-            axios.get(this.route + '/stats').then(response => {
+            axios.get(route('broadcaster.list_stats')).then(response => {
                 this.infoData = response.data;
             });
         }

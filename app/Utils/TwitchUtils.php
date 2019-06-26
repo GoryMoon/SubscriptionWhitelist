@@ -202,7 +202,7 @@ class TwitchUtils
         if (is_null($this->db_user)) {
             $this->db_user = TwitchUser::whereUid($uid)->first();
         }
-        if ($this->db_user->uid != $uid) {
+        if (!is_null($this->db_user) && $this->db_user->uid != $uid) {
             return TwitchUser::whereUid($uid)->first();
         }
         return $this->db_user;
@@ -260,6 +260,7 @@ class TwitchUtils
                 return [$item => in_array(is_null($data) ? '': $data, $plans)];
             });
         }
+        Log::info("Sub check response was null", [$channel, $channel_ids]);
         return null;
     }
 

@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\RequestStat;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -24,7 +25,7 @@ class CleanRequestStats implements ShouldQueue
     {
         try {
             $amount = RequestStat::whereDate('created_at', '<', Carbon::now()->subDay(2))->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Failed to delete old stat data', ['ex' => $e]);
             return;
         }

@@ -11,7 +11,7 @@ window.Vue = require('vue');
 
 require('bootstrap4-toggle');
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTwitch, faPaypal } from '@fortawesome/free-brands-svg-icons'
+import { faTwitch, faCcPaypal, faGithub } from '@fortawesome/free-brands-svg-icons'
 import {
     faPlus,
     faTrash,
@@ -37,14 +37,20 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
     faSort, faSortUp, faSortDown, faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight,
-    faEdit, faPaypal, faGripLinesVertical
+    faEdit, faCcPaypal, faGripLinesVertical, faGithub
     );
 
 import BootstrapVue from 'bootstrap-vue';
 Vue.use(BootstrapVue);
 
+Vue.mixin({
+    methods: {
+        route: route
+    }
+});
+
 import Raphael from 'raphael/raphael'
-global.Raphael = Raphael
+global.Raphael = Raphael;
 
 /**
  * The following block of code may be used to automatically register your
@@ -87,4 +93,4 @@ window.refreshTooltips = function refreshTooltips() {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
-}
+};

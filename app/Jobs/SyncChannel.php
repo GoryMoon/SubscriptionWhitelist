@@ -71,13 +71,15 @@ class SyncChannel implements ShouldQueue
                     return $key;
                 }));
 
-                foreach ($subs as $key => $value) {
-                    $whitelist = $channels->get($key);
+                if (!is_null($subs)) {
+                    foreach ($subs as $key => $value) {
+                        $whitelist = $channels->get($key);
 
-                    if ($whitelist->valid != $value) {
-                        $whitelist->valid = $value;
-                        $whitelist->save();
-                        $changed = true;
+                        if ($whitelist->valid != $value) {
+                            $whitelist->valid = $value;
+                            $whitelist->save();
+                            $changed = true;
+                        }
                     }
                 }
                 $checked++;

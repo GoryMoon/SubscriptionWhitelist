@@ -1,5 +1,5 @@
 <template>
-    <form @submit="checkForm" :action="this.route" method="POST">
+    <form @submit="checkForm" :action="route('broadcaster.list.add')" method="POST">
         <slot></slot>
         <div v-if="error" class="alert alert-danger" role="alert">
             You need to enter at least one name.
@@ -22,12 +22,6 @@
 
 <script>
 export default {
-    props: {
-        route: {
-            type: String,
-            required: true
-        }
-    },
     data() {
         return {
             error: false,

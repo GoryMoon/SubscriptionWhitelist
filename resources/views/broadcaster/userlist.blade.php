@@ -11,7 +11,7 @@
                 Here you can add custom usernames, for instance: your, moderators or anyone else. <br>
                 These names will always be in the whitelist until you remove them, they are not bound to subscription
             </p>
-            <add-user-component route="{{ route('broadcaster.list.add') }}">
+            <add-user-component>
                 @csrf
             </add-user-component>
             @error('usernames')
@@ -25,7 +25,7 @@
     <div class="card mb-3">
         <div class="card-body">
             <h3>Users</h3>
-            <user-list-component route="{{ route('broadcaster.list') }}" channel="{{ $channel_id }}"></user-list-component>
+            <user-list-component channel="{{ $channel_id }}"></user-list-component>
         </div>
     </div>
 @endsection

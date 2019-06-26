@@ -13,10 +13,10 @@
 
 Route::get('/login', 'TwitchController@index')->name('login');
 Route::get('/login/authorize', 'TwitchController@authorizeTwitch')->name('login.authorize');
-
 Route::get('/token', 'TwitchController@token')->name('token');
 
 Route::get('/privacy-tos', 'MainController@privacy')->name('privacy');
+Route::get('/about', 'MainController@about')->name('about');
 
 Route::middleware('twitch')->group(function () {
     Route::get('/', 'MainController@home')->name('home');
@@ -41,13 +41,13 @@ Route::middleware('twitch')->group(function () {
 
         Route::get('/links', 'BroadcasterController@links')->name('broadcaster.links');
         Route::get('/list', 'BroadcasterController@userlist')->name('broadcaster.list');
-        Route::get('/list/data', 'BroadcasterController@userlistData');
-        Route::get('/list/stats', 'BroadcasterController@listStats');
+        Route::get('/list/data', 'BroadcasterController@userlistData')->name('broadcaster.data');
+        Route::get('/list/stats', 'BroadcasterController@listStats')->name('broadcaster.list_stats');
         Route::post('/list/add', 'BroadcasterController@addUser')->name('broadcaster.list.add');
-        Route::post('/list/sync', 'BroadcasterController@sync');
-        Route::delete('/list/invalid', 'BroadcasterController@removeInvalid');
-        Route::delete('/list/all', 'BroadcasterController@removeAll');
-        Route::delete('/list/{id}', 'BroadcasterController@removeEntry');
+        Route::post('/list/sync', 'BroadcasterController@sync')->name('broadcaster.sync');
+        Route::delete('/list/invalid', 'BroadcasterController@removeInvalid')->name('broadcaster.invalid');
+        Route::delete('/list/all', 'BroadcasterController@removeAll')->name('broadcaster.delete');
+        Route::delete('/list/{id}', 'BroadcasterController@removeEntry')->name('broadcaster.delete_entry');
 
         Route::get('/stats', 'BroadcasterController@stats')->name('broadcaster.stats');
     });

@@ -17,8 +17,10 @@
         "laravel/horizon": "^3.1",
         "laravel/telescope": "^2.0",
         "laravel/tinker": "^1.0",
+        "pragmarx/version": "v0.2.9",
         "pusher/pusher-php-server": "~3.0",
         "romanzipp/laravel-twitch": "^2.0",
+        "tightenco/ziggy": "v0.7.1",
         "torann/geoip": "^1.0",
         "vinkla/hashids": "^6.0"
     },
@@ -60,7 +62,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan version:refresh"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

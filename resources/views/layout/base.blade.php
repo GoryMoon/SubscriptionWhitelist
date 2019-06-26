@@ -71,36 +71,41 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @if(\App\Utils\TwitchUtils::hasUser())
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            @if(\App\Utils\TwitchUtils::hasSubscribers())
+                            @if(\App\Utils\TwitchUtils::hasUser())
+                                @if(\App\Utils\TwitchUtils::hasSubscribers())
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="{{ route('broadcaster') }}">Broadcaster</a>
+                                    </li>
+                                @endif
                                 <li class="nav-item">
-                                    <a class="nav-link {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="{{ route('broadcaster') }}">Broadcaster</a>
+                                    <a class="nav-link {{ \App\Helpers::isRoute('subscriber', 'active') }}" href="{{ route('subscriber') }}">Subscriber</a>
                                 </li>
-                            @endif
-                            <li class="nav-item">
-                                <a class="nav-link {{ \App\Helpers::isRoute('subscriber', 'active') }}" href="{{ route('subscriber') }}">Subscriber</a>
-                            </li>
-                            @if(\App\Utils\TwitchUtils::getDbUser()->uid == config('whitelist.admin_id'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('horizon.index', ['view' => 'dashboard']) }}">Horizon</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('telescope') }}">Telescope</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ \App\Helpers::isRoute('admin.stats', 'active') }}" href="{{ route('admin.stats') }}">Stats</a>
-                            </li>
+                                @if(\App\Utils\TwitchUtils::getDbUser()->uid == config('whitelist.admin_id'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('horizon.index', ['view' => 'dashboard']) }}">Horizon</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('telescope') }}">Telescope</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link {{ \App\Helpers::isRoute('admin.stats', 'active') }}" href="{{ route('admin.stats') }}">Stats</a>
+                                </li>
+                                @endif
                             @endif
                         </ul>
                         <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link {{ \App\Helpers::isRoute('about', 'active') }}" href="{{ route('about') }}">About</a>
+                            </li>
+                            @if(\App\Utils\TwitchUtils::hasUser())
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle {{ \App\Helpers::isRoute('profile', 'active') }}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {{ \App\Utils\TwitchUtils::getDbUser()->display_name }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a href="{{ route('profile') }}" class="dropdown-item">Profile</a>
+                                    <a href="{{ route('profile') }}" class="dropdown-item {{ \App\Helpers::isRoute('profile', 'active') }}">Profile</a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
@@ -111,9 +116,13 @@
                                     </form>
                                 </div>
                             </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link {{ \App\Helpers::isRoute('login', 'active') }}" href="{{ route('login') }}">Login</a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
-                @endif
             </div>
         </nav>
         <div class="container">
@@ -128,11 +137,10 @@
             <div class="text-center pt-3 px-2 pb-1">
                 <span class="text-nowrap">Copyright &copy; {{ date('Y') }} <a href="{{ route('home') }}">Subscription Whitelist</a></span>
                 <fa class="text-muted" icon="grip-lines-vertical"></fa> <a href="{{ route('privacy') }}" class="text-nowrap">Privacy Policy & Terms of Service</a>
-                <fa class="text-muted" icon="grip-lines-vertical"></fa> <span class="text-nowrap">Made by: <a href="https://twitter.com/Gory_moon">@Gory_Moon</a>
-                | <a href="https://paypal.me/GustafJ"><fa :icon="['fab','paypal']"></fa><span class="sr-only">PayPal Donate</span></a></span>
             </div>
         </footer>
     </div>
+    @routes
     <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

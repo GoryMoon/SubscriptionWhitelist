@@ -43,4 +43,8 @@ class MainController extends Controller
             'home' => route('home')
         ]);
     }
+
+    public function about() {
+        return view('about');
+    }
 }
