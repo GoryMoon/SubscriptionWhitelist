@@ -225,7 +225,7 @@ class TwitchUtils
         $users = collect();
         $retried = false;
         do {
-            $result = $twitch->getSubscriptions(['broadcaster_id' => $channel_id, 'user_id' => $channel_ids], isset($result) ? $result->next(): null);
+            $result = $twitch->getSubscriptions(['broadcaster_id' => $channel_id, 'user_id' => $channel_ids], isset($result) && !is_null($result->pagination) ? $result->next(): null);
 
             if ($result->success()) {
                 $users = $users->concat($result->data());
