@@ -66,10 +66,11 @@ class TwitchUtils
     }
 
     /**
+     * @param null $uid
      * @return mixed
      */
-    private static function getRefreshToken() {
-        $user = self::getDbUser(null, false);
+    private static function getRefreshToken($uid = null) {
+        $user = self::getDbUser($uid, false);
         if (!is_null($user) && !is_null($user->refresh_token)) {
             try {
                 return decrypt($user->refresh_token);
@@ -227,11 +228,10 @@ class TwitchUtils
             $result = $twitch->getSubscriptions(['broadcaster_id' => $channel_id, 'user_id' => $channel_ids], isset($result) ? $result->next(): null);
 
             if ($result->success()) {
-                Log::info("Got data", [$result->data()]);
                 $users = $users->concat($result->data());
-            } else if ($result->status === 401 && !is_null($result->exception) && count($result->response->getHeader('WWW-Authenticate')) > 0){
+            } else if ($result->status === 401 && !is_null($result->exception)){
                 if (!$retried) {
-                    self::tokenRefresh(self::getRefreshToken());
+                    self::tokenRefresh(self::getRefreshToken($channel_id));
                     unset($result);
                     $retried = true;
                 } else {
@@ -239,7 +239,7 @@ class TwitchUtils
                     return null;
                 }
             } else {
-                Log::error("Unknown errror: " . $result->error(), [$result->exception]);
+                Log::error("Unknown error: " . $result->error(), [$result->exception->getMessage()]);
                 return null;
             }
         } while ($retried || (isset($result) && !is_null($result->pagination)));
