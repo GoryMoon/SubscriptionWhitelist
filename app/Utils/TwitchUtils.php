@@ -217,6 +217,7 @@ class TwitchUtils
         $access_token = self::getDBAccessToken($channel_id);
 
         if (is_null($access_token)) {
+            Log::error("Access token was null");
             return null;
         }
         $twitch = $this->getHelix()->withToken($access_token);
@@ -226,6 +227,7 @@ class TwitchUtils
             $result = $twitch->getSubscriptions(['broadcaster_id' => $channel_id, 'user_id' => $channel_ids], isset($result) ? $result->next(): null);
 
             if ($result->success()) {
+                Log::info("Got data", [$result->data()]);
                 $users = $users->concat($result->data());
             } else if ($result->status === 401 && !is_null($result->exception) && count($result->response->getHeader('WWW-Authenticate')) > 0){
                 if (!$retried) {
@@ -233,9 +235,11 @@ class TwitchUtils
                     unset($result);
                     $retried = true;
                 } else {
+                    Log::error("To many retries");
                     return null;
                 }
             } else {
+                Log::error("Unknown errror: " . $result->error(), [$result->exception]);
                 return null;
             }
         } while ($retried || (isset($result) && !is_null($result->pagination)));
