@@ -8,8 +8,18 @@ use Exception;
 class MainController extends Controller
 {
     public function home() {
-        return view('home', [
-            'isBroadcaster' => TwitchUtils::hasSubscribers()
+        return view('home');
+    }
+
+    public function dashboard() {
+        $user = TwitchUtils::getDbUser();
+        $enabled = false;
+        if (!is_null($user->channel)) {
+            $enabled = $user->channel->enabled;
+        }
+        return view('dashboard', [
+            'isBroadcaster' => TwitchUtils::hasSubscribers(),
+            'disabled' => !$enabled
         ]);
     }
 

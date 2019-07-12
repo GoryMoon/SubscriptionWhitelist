@@ -45,7 +45,7 @@ class AdminController extends Controller
             $time->subHour();
         }
 
-        $channels = Channel::count();
+        $channels = Channel::where('enabled', true)->count();
         $total = self::getStatBase();
         $subs = self::getStatBase()->whereNotNull('user_id');
         $custom = self::getStatBase()->whereNull('user_id');

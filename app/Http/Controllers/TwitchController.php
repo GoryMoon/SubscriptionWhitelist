@@ -117,7 +117,7 @@ class TwitchController extends Controller
             Session::remove('redirect');
             return redirect($redirect);
         } else {
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
     }
 

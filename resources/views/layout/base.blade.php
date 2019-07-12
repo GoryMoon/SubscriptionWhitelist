@@ -74,6 +74,9 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             @if(\App\Utils\TwitchUtils::hasUser())
+                                <li class="nav-item">
+                                    <a class="nav-link {{ \App\Helpers::isRoute('dashboard', 'active') }}" href="{{ route('dashboard') }}">Dashboard</a>
+                                </li>
                                 @if(\App\Utils\TwitchUtils::hasSubscribers())
                                     <li class="nav-item">
                                         <a class="nav-link {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="{{ route('broadcaster') }}">Broadcaster</a>

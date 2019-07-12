@@ -1,37 +1,43 @@
 @extends('layout.base')
 
 
-<?php /** @var boolean $isBroadcaster */?>
 @section('content')
-    <h1>Welcome</h1>
-    <div class="row">
-        @if($isBroadcaster)
-            <div class="col-sm-6 mt-2">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><fa :icon="['fab', 'twitch']" class="text-primary"></fa> Broadcaster</h5>
-                        <p class="card-text">Here you can manage your whitelist settings and get the links to give to your subscribers. You can also manage the username list.</p>
-                        <a href="{{ route('broadcaster') }}" class="btn btn-primary">Broadcaster Dashboard</a>
-                    </div>
-                </div>
-            </div>
-        @endif
-        <div class="col-sm-6 mt-2">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"><fa icon="star" class="text-primary"></fa> Subscriber</h5>
-                    <p class="card-text">Here you can manage your whitelisted usernames based on your subscriptions.</p>
-                    <a href="{{ route('subscriber') }}" class="btn btn-primary">Subscription Dashboard</a>
-                </div>
-            </div>
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading">Subscription Whitelist</h1>
+            <p class="lead text-muted">Create a list that your twitch subscribers can add their username to and/or<br>Add your name to a list setup by the streamer you watch.</p>
+            <p>
+                @if(\App\Utils\TwitchUtils::hasUser())
+                    <b-button variant="primary" href="{{ route('dashboard') }}">Dashboard</b-button>
+                    <p class="small text-muted">Get started by going to the dashboard</p>
+                @else
+                    <b-button variant="primary" href="{{ route('login') }}"><fa :icon="['fab', 'twitch']"></fa> Login</b-button>
+                @endif
+            </p>
         </div>
-        <div class="col-sm-6 mt-2">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title"><fa icon="user" class="text-primary"></fa> Profile</h5>
-                    <p class="card-text">Here you can manage your profile.</p>
-                    <a href="{{ route('profile') }}" class="btn btn-primary">Go to Profile</a>
-                </div>
+    </section>
+    <hr class="featurette-divider">
+
+    <div class="container" style="text-align: center">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <fa style="font-size: xx-large; text-anchor: middle;" :icon="['fab','twitch']"></fa>
+                <h2>Subscribers</h2>
+                <p>Updates list depending on subscriptions status, can limit list on subscription type: <b-badge variant="primary">Tier 1</b-badge>, <b-badge variant="primary">Tier 2</b-badge> &amp; <b-badge variant="primary">Tier 3</b-badge></p>
+                <p>Ability to add custom names to list that always will be present</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <fa style="font-size: xx-large" icon="list"></fa>
+                <h2>Formats</h2>
+                <p>Supports a bunch of different formats for the list: <b-badge variant="primary">new line</b-badge >, <b-badge variant="primary">csv</b-badge> &amp; <b-badge variant="primary">json array</b-badge></p>
+                <p>Minecraft: Verifies name against Mojang and have lists based on the returned username, auto updates on name change &amp; <b-badge variant="primary">minecraft whitelist</b-badge> format</p>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <fa style="font-size: xx-large" :icon="['fab','github']"></fa>
+                <h2>Open Source</h2>
+                <p>This project is open source, the source links can be found on the about page.
+                    If you have an issue or want a new feature it's the place for it.</p>
+                <p><b-button variant="primary" href="{{ route('about') }}">About Page</b-button></p>
             </div>
         </div>
     </div>

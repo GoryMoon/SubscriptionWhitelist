@@ -11,6 +11,7 @@
 |
 */
 
+Route::get('/', 'MainController@home')->name('home');
 Route::get('/login', 'TwitchController@index')->name('login');
 Route::get('/login/authorize', 'TwitchController@authorizeTwitch')->name('login.authorize');
 Route::get('/token', 'TwitchController@token')->name('token');
@@ -19,7 +20,7 @@ Route::get('/privacy-tos', 'MainController@privacy')->name('privacy');
 Route::get('/about', 'MainController@about')->name('about');
 
 Route::middleware('twitch')->group(function () {
-    Route::get('/', 'MainController@home')->name('home');
+    Route::get('/dashboard', 'MainController@dashboard')->name('dashboard');
     Route::get('/profile', 'MainController@profile')->name('profile');
     Route::delete('/profile', 'MainController@profileDelete')->name('profile.delete');
     Route::post('/logout', 'TwitchController@logout')->name('logout');

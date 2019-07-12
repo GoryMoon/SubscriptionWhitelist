@@ -19,11 +19,6 @@ $enable-responsive-font-sizes: true;
   src: local('Roboto'), url('https://fonts.googleapis.com/css?family=Roboto');
 }
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
-
 .toggle-on {
   right: unset;
 }
@@ -47,8 +42,8 @@ textarea {
 .page-link.active {
   z-index: 1;
   color: #fff !important;
-  background-color: #4b367c;
-  border-color: #4b367c;
+  background-color: $twitch;
+  border-color: $twitch;
 }
 
 .page-item:first-child {
@@ -111,4 +106,16 @@ svg { width: 100%; }
   @include media-breakpoint-up(md) {
     column-count: 2;
   }
+}
+
+.jumbotron {
+  background-color: $body-bg;
+}
+
+.jumbotron .container {
+  max-width: 40rem;
+}
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
 }

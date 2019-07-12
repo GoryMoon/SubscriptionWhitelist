@@ -30,14 +30,15 @@ import {
     faAngleDoubleLeft,
     faAngleDoubleRight,
     faEdit,
-    faGripLinesVertical
+    faGripLinesVertical,
+    faList
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
     faSort, faSortUp, faSortDown, faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight,
-    faEdit, faCcPaypal, faGripLinesVertical, faGithub
+    faEdit, faCcPaypal, faGripLinesVertical, faGithub, faList
     );
 
 import BootstrapVue from 'bootstrap-vue';

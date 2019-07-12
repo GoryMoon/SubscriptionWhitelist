@@ -24,7 +24,10 @@
     <div class="card mb-3">
         <div class="card-body">
             <form method="POST" action="{{ route('broadcaster.settings') }}">
+                <button type="submit" class="btn btn-primary"><fa icon="save"></fa> Save</button>
+                <hr>
                 <h5>Whitelist toggle</h5>
+                <p>If this is disabled users can't add their username to your list</p>
                 <div class="form-group">
                     <label class="sr-only" for="list_toggle">Enable or disable whitelist</label>
                     <input type="hidden" name="list_toggle" value="0">
