@@ -20,19 +20,25 @@
 
     <div class="container" style="text-align: center">
         <div class="row">
-            <div class="col-lg-4 mb-4">
+            <div class="col-lg-4 mb-5">
                 <fa style="font-size: xx-large; text-anchor: middle;" :icon="['fab','twitch']"></fa>
                 <h2>Subscribers</h2>
                 <p>Updates list depending on subscriptions status, can limit list on subscription type: <b-badge variant="primary">Tier 1</b-badge>, <b-badge variant="primary">Tier 2</b-badge> &amp; <b-badge variant="primary">Tier 3</b-badge></p>
                 <p>Ability to add custom names to list that always will be present</p>
             </div>
-            <div class="col-lg-4 mb-4">
+            <div class="col-lg-1 d-lg-none">
+                <hr>
+            </div>
+            <div class="col-lg-4 mb-5">
                 <fa style="font-size: xx-large" icon="list"></fa>
                 <h2>Formats</h2>
-                <p>Supports a bunch of different formats for the list: <b-badge variant="primary">new line</b-badge >, <b-badge variant="primary">csv</b-badge> &amp; <b-badge variant="primary">json array</b-badge></p>
+                <p>Supports a bunch of different formats for the list: <b-badge variant="primary">newline</b-badge >, <b-badge variant="primary">csv</b-badge> &amp; <b-badge variant="primary">json array</b-badge></p>
                 <p>Minecraft: Verifies name against Mojang and have lists based on the returned username, auto updates on name change &amp; <b-badge variant="primary">minecraft whitelist</b-badge> format</p>
             </div>
-            <div class="col-lg-4 mb-4">
+            <div class="col-lg-1 d-lg-none">
+                <hr>
+            </div>
+            <div class="col-lg-4 mb-5">
                 <fa style="font-size: xx-large" :icon="['fab','github']"></fa>
                 <h2>Open Source</h2>
                 <p>This project is open source, the source links can be found on the about page.
