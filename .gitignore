@@ -13,6 +13,7 @@ yarn-error.log
 /public/css
 /public/fonts
 /public/vendor
+/public/mix-manifest.json
 
 # User-specific stuff
 .idea/**/workspace.xml

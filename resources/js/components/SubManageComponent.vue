@@ -1,5 +1,5 @@
 <template>
-    <form ref="form" method="POST" :action="route">
+    <form ref="form" method="POST" :action="route('subscriber.save', {channel: id})">
         <slot name="csrf"></slot>
         <input ref="hiddenInput" type="hidden" name="_method" value="PUT">
         <div class="form-group">
@@ -25,10 +25,6 @@
 <script>
 export default {
     props: {
-        route: {
-            type: String,
-            required: true
-        },
         id: {
             type: String,
             required: true

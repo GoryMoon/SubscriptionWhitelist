@@ -42,7 +42,6 @@
                     </div>
                     @endif
                     <sub-manage-component
-                            route="{{ route('subscriber.save', ['channel' => $whitelist->id]) }}"
                             id="{{ $whitelist->id }}"
                             uid="{{ $whitelist->uid }}"
                             minecraft="{{ $whitelist->minecraft }}"

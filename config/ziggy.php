@@ -13,6 +13,7 @@ return [
         'broadcaster.sync',
         'broadcaster.list_stats',
         'broadcaster.data',
-        'subscriber'
+        'subscriber',
+        'subscriber.save'
     ]
 ];
