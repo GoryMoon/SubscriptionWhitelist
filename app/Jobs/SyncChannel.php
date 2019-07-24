@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
 
 class SyncChannel implements ShouldQueue
 {
@@ -52,6 +53,8 @@ class SyncChannel implements ShouldQueue
         $checked = 0;
         $channels = [];
         $size = count($this->whitelists);
+        $name = $this->channel->owner->name;
+        Log::info("Syncing channel $name", [$this->channel]);
         for ($i = 0; $i < $size; $i++) {
             $entry = $this->whitelists[$i];
             if (is_null($entry->user)) {
@@ -90,7 +93,9 @@ class SyncChannel implements ShouldQueue
         if ($changed && !$this->channel->whitelist_dirty) {
             $this->channel->whitelist_dirty = true;
             $this->channel->save();
+            Log::info("Channel $name had changed subscriptions, marked dirty");
         }
+        Log::info("Finished syncing channel $name");
         $this->channel->notify(new SubSyncDone());
     }
 

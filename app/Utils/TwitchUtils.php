@@ -215,16 +215,16 @@ class TwitchUtils
      * @return Collection|null
      */
     private function getChannelSubscribers($channel_id, $channel_ids) {
-        $access_token = self::getDBAccessToken($channel_id);
-
-        if (is_null($access_token)) {
-            Log::error("Access token was null");
-            return null;
-        }
-        $twitch = $this->getHelix()->withToken($access_token);
         $users = collect();
         $retried = false;
         do {
+            $access_token = self::getDBAccessToken($channel_id);
+
+            if (is_null($access_token)) {
+                Log::error("Access token was null");
+                return null;
+            }
+            $twitch = $this->getHelix()->withToken($access_token);
             $result = $twitch->getSubscriptions(['broadcaster_id' => $channel_id, 'user_id' => $channel_ids], isset($result) && !is_null($result->pagination) ? $result->next(): null);
 
             if ($result->success()) {
@@ -235,11 +235,11 @@ class TwitchUtils
                     unset($result);
                     $retried = true;
                 } else {
-                    Log::error("To many retries");
+                    Log::error("To many subcheck retries", [$result->exception->getMessage(), $channel_id, $access_token]);
                     return null;
                 }
             } else {
-                Log::error("Unknown error: " . $result->error(), [$result->exception->getMessage()]);
+                Log::error("Unknown error: " . $result->error(), [$result->exception->getMessage(), $channel_id, $access_token]);
                 return null;
             }
         } while ($retried || (isset($result) && !is_null($result->pagination)));
