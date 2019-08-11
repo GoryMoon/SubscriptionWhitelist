@@ -54,7 +54,7 @@ class TwitchUtils
      * @return mixed
      */
     public static function getDBAccessToken($uid = null) {
-        $user = self::getDbUser($uid, false);
+        $user = self::getDbUser($uid, false, true);
         if (!is_null($user) && !is_null($user->access_token)) {
             try {
                 return decrypt($user->access_token);
@@ -70,7 +70,7 @@ class TwitchUtils
      * @return mixed
      */
     private static function getRefreshToken($uid = null) {
-        $user = self::getDbUser($uid, false);
+        $user = self::getDbUser($uid, false, true);
         if (!is_null($user) && !is_null($user->refresh_token)) {
             try {
                 return decrypt($user->refresh_token);
@@ -186,9 +186,10 @@ class TwitchUtils
     /**
      * @param $uid
      * @param bool $auth
+     * @param bool $force
      * @return TwitchUser|Builder|Model|object|null
      */
-    public static function getDbUser($uid = null, $auth = true) {
+    public static function getDbUser($uid = null, $auth = true, $force = false) {
         if (is_null($uid)) {
             $user = self::getRemoteUser($auth);
             if (is_null($user)) {
@@ -196,11 +197,11 @@ class TwitchUtils
             }
             $uid = $user->id;
         }
-        return self::instance()->getInternalDBUser($uid);
+        return self::instance()->getInternalDBUser($uid, $force);
     }
 
-    private function getInternalDBUser($uid) {
-        if (is_null($this->db_user)) {
+    private function getInternalDBUser($uid, $force) {
+        if ($force || is_null($this->db_user)) {
             $this->db_user = TwitchUser::whereUid($uid)->first();
         }
         if (!is_null($this->db_user) && $this->db_user->uid != $uid) {
@@ -448,9 +449,12 @@ class TwitchUtils
         $user = self::getDbUser();
         if (!is_null($user)) {
             $channel = $user->channel;
-            if (!is_null($channel) && $channel->sync) {
-                $user->access_token = $response->access_token;
-                $user->setRefreshToken($response->refresh_token);
+            if (!is_null($channel)) {
+                if ($channel->sync) {
+                    $user->access_token = $response->access_token;
+                }
+                $user->refresh_token = $response->refresh_token;
+                $user->save();
             }
         }
         return true;
