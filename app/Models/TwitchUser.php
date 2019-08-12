@@ -70,7 +70,11 @@ class TwitchUser extends Model implements AuthenticatableContract
      * @param $value string
      */
     public function setRefreshTokenAttribute($value) {
-        $this->attributes['refresh_token'] = encrypt($value);
+        if (is_null($value)) {
+            $this->attributes['refresh_token'] = null;
+        } else {
+            $this->attributes['refresh_token'] = encrypt($value);
+        }
     }
 
     /**
