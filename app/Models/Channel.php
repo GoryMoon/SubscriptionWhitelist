@@ -44,15 +44,15 @@ class Channel extends Model
     use Notifiable;
 
     public function owner() {
-        return $this->hasOne('App\Models\TwitchUser');
+        return $this->hasOne(TwitchUser::class);
     }
 
     public function whitelist() {
-        return $this->hasMany('App\Models\Whitelist');
+        return $this->hasMany(Whitelist::class);
     }
 
     public function stats() {
-        return $this->hasMany('App\Models\RequestStat');
+        return $this->hasMany(RequestStat::class);
     }
 
     public function receivesBroadcastNotificationsOn(){

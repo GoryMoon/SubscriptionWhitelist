@@ -26,6 +26,8 @@ class SyncChannel implements ShouldQueue
      */
     private $channel;
 
+    public $tries = 2;
+
     /**
      * Create a new job instance.
      *
@@ -66,7 +68,7 @@ class SyncChannel implements ShouldQueue
             }
 
             $channels[] = $entry;
-            if ($i + 1 == $size || count($channels) == 100) {
+            if ($i + 1 == $size || count($channels) == 80) {
                 $channels = collect($channels)->mapWithKeys(function ($item) {
                     return [$item->user->uid => $item];
                 });
@@ -84,6 +86,8 @@ class SyncChannel implements ShouldQueue
                             $changed = true;
                         }
                     }
+                } else {
+                    $this->fail();
                 }
                 $checked++;
                 $channels = [];

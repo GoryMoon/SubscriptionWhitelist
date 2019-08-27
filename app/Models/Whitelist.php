@@ -44,15 +44,15 @@ class Whitelist extends Model
     protected $appends = ['is_subscriber', 'status'];
 
     public function user() {
-        return $this->belongsTo('App\Models\TwitchUser', 'user_id');
+        return $this->belongsTo(TwitchUser::class, 'user_id');
     }
 
     public function channel() {
-        return $this->belongsTo('App\Models\Channel');
+        return $this->belongsTo(Channel::class);
     }
 
     public function minecraft() {
-        return $this->belongsTo('App\Models\MinecraftUser', 'minecraft_id');
+        return $this->belongsTo(MinecraftUser::class, 'minecraft_id');
     }
 
     /**

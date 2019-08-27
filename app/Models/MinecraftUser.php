@@ -34,7 +34,7 @@ class MinecraftUser extends Model
     protected $fillable = ['uuid', 'username'];
 
     public function whitelist() {
-        return $this->hasOne('App\Models\Whitelist');
+        return $this->hasOne(Whitelist::class);
     }
 
 }

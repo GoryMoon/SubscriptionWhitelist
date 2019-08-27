@@ -29,7 +29,7 @@ class RequestStat extends Model
 {
 
     public function channel() {
-        return $this->belongsTo('App\Models\Channel');
+        return $this->belongsTo(Channel::class);
     }
 
 }

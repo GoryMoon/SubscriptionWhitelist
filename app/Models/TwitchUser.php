@@ -54,7 +54,7 @@ class TwitchUser extends Model implements AuthenticatableContract
      * @return BelongsTo
      */
     public function channel() {
-        return $this->belongsTo('App\Models\Channel');
+        return $this->belongsTo(Channel::class);
     }
 
     /**
@@ -62,7 +62,7 @@ class TwitchUser extends Model implements AuthenticatableContract
      * @return HasMany
      */
     public function whitelist() {
-        return $this->hasMany('App\Models\Whitelist', 'user_id');
+        return $this->hasMany(Whitelist::class, 'user_id');
     }
 
     /**

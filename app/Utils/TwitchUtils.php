@@ -203,6 +203,7 @@ class TwitchUtils
     private function getInternalDBUser($uid, $force) {
         if ($force || is_null($this->db_user)) {
             $this->db_user = TwitchUser::whereUid($uid)->first();
+            $this->db_user->refresh();
         }
         if (!is_null($this->db_user) && $this->db_user->uid != $uid) {
             return TwitchUser::whereUid($uid)->first();
