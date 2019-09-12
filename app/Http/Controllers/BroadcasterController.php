@@ -254,18 +254,28 @@ class BroadcasterController extends Controller
 
         $formatted = array();
         $time = Carbon::now()->minute(0)->second(0);
+        $day = 0;
+        $twodays = 0;
         for ($i = 0; $i < 48; $i++) {
+            $stat = $stats->get($time->format("Y-m-d H:i:s"), 0);
             $formatted[] = [
                 'time' => Carbon::make($time)->format('Y-m-d\TH:i:sP'),
-                'requests' => $stats->get($time->format("Y-m-d H:i:s"), 0)
+                'requests' => $stat
             ];
             $time->subHour();
+            if ($i > 24) {
+                $twodays += $stat;
+            } else {
+                $day += $stat;
+            }
         }
         $result = $this->getStats();
 
         return view('broadcaster.stats', [
             'stats' => json_encode($formatted),
             'total' => $channel->requests,
+            'day' => $day,
+            'twodays' => $twodays,
             'whitelist' => (object)[
                 'total' => $result[3]->num,
                 'subscribers' => $result[2]->num,

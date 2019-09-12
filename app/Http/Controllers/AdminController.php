@@ -37,12 +37,20 @@ class AdminController extends Controller
 
         $formatted = array();
         $time = Carbon::now()->minute(0)->second(0);
+        $day = 0;
+        $twodays = 0;
         for ($i = 0; $i < 48; $i++) {
+            $stat = $stats->get($time->format("Y-m-d H:i:s"), 0);
             $formatted[] = [
                 'time' => Carbon::make($time)->format('Y-m-d\TH:i:sP'),
-                'requests' => $stats->get($time->format("Y-m-d H:i:s"), 0)
+                'requests' => $stat
             ];
             $time->subHour();
+            if ($i > 24) {
+                $twodays += $stat;
+            } else {
+                $day += $stat;
+            }
         }
 
         $channels = Channel::where('enabled', true)->count();
@@ -55,6 +63,8 @@ class AdminController extends Controller
             'stats' => json_encode($formatted),
             'total' => $requests,
             'channels' => $channels,
+            'day' => $day,
+            'twodays' => $twodays,
             'whitelist' => (object)[
                 'total' => $result[3]->num,
                 'subscribers' => $result[2]->num,
