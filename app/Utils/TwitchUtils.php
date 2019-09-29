@@ -335,7 +335,8 @@ class TwitchUtils
      * @return boolean
      */
     public static function hasSubscribers() {
-        return self::isBroadcaster(self::getDbUser()->broadcaster_type);
+        $user = self::getDbUser();
+        return is_null($user) ? false: self::isBroadcaster($user->broadcaster_type);
     }
 
     /**
