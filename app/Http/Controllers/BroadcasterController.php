@@ -267,6 +267,7 @@ class BroadcasterController extends Controller
                 $twodays += $stat;
             } else {
                 $day += $stat;
+                $twodays += $stat;
             }
         }
         $result = $this->getStats();

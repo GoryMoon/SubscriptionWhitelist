@@ -50,6 +50,7 @@ class AdminController extends Controller
                 $twodays += $stat;
             } else {
                 $day += $stat;
+                $twodays += $stat;
             }
         }
 
