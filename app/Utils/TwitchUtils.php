@@ -184,6 +184,13 @@ class TwitchUtils
     }
 
     /**
+     * @return bool
+     */
+    public static function hasDBUser() {
+        return !is_null(self::getDbUser());
+    }
+
+    /**
      * @param $uid
      * @param bool $auth
      * @param bool $force

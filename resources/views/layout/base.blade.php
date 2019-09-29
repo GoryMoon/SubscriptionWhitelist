@@ -73,7 +73,7 @@
                 </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            @if(\App\Utils\TwitchUtils::hasUser())
+                            @if(\App\Utils\TwitchUtils::hasDBUser())
                                 <li class="nav-item">
                                     <a class="nav-link {{ \App\Helpers::isRoute('dashboard', 'active') }}" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
@@ -102,7 +102,7 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ \App\Helpers::isRoute('about', 'active') }}" href="{{ route('about') }}">About</a>
                             </li>
-                            @if(\App\Utils\TwitchUtils::hasUser())
+                            @if(\App\Utils\TwitchUtils::hasDBUser())
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle {{ \App\Helpers::isRoute('profile', 'active') }}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {{ \App\Utils\TwitchUtils::getDbUser()->display_name }}
