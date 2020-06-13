@@ -24,7 +24,7 @@ class CleanRequestStats implements ShouldQueue
     public function handle()
     {
         try {
-            $amount = RequestStat::whereDate('created_at', '<', Carbon::now()->subDay(2))->delete();
+            $amount = RequestStat::whereDate('created_at', '<', Carbon::now()->subDays(2))->delete();
         } catch (Exception $e) {
             Log::error('Failed to delete old stat data', ['ex' => $e]);
             return;

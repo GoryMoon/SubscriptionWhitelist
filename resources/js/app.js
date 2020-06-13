@@ -4,7 +4,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -65,13 +64,14 @@ const files = require.context('./', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('fa', FontAwesomeIcon);
+/*
 Vue.component('add-user-component', require('./components/AddUserComponent.vue').default);
 Vue.component('user-list-component', require('./components/UserListComponent').default);
 Vue.component('remove-account-component', require('./components/RemoveAccountComponent').default);
 Vue.component('sub-manage-component', require('./components/SubManageComponent').default);
 Vue.component('request-chart-component', require('./components/RequestChartComponent').default);
 Vue.component('show-email-component', require('./components/ShowEmailComponent').default);
-
+*/
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

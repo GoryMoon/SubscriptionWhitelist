@@ -14,6 +14,8 @@ yarn-error.log
 /public/fonts
 /public/vendor
 /public/mix-manifest.json
+_ide_helper.php
+.phpstorm.meta.php
 
 # User-specific stuff
 .idea/**/workspace.xml

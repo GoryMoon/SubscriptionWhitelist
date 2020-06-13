@@ -28,6 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Redis::enableEvents();
-        Blade::component('components.bold', 'bold');
+        Blade::aliasComponent('components.bold', 'bold');
     }
 }

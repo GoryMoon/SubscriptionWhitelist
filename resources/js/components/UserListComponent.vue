@@ -2,8 +2,7 @@
     <div>
         <div class="mb-2">
             <p class="text-muted">
-                Syncing the subscribers will validate the subscriptions of each name, if invalid their entry will<br>
-                be invalidated and not listed in any whitelist links.<br>
+                Syncing the subscribers will validate the subscriptions of each name, if invalid their entry will be invalidated and not listed in any whitelist links.<br>
                 This action can take some time depending on the list size.
             </p>
             <span>Whitelist info:</span>

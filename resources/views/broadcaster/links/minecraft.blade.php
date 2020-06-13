@@ -1,5 +1,5 @@
 <p>
-    These links will try to get to UUID of the usernames in the whitelist, invalid names will be filtered out
+    These links will try to get the UUID of the usernames in the whitelist, invalid names will be filtered out
 </p>
 <hr>
 <h4>Verified Names</h4>

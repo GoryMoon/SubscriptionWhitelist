@@ -15,7 +15,7 @@
                         I will continue to add features and work on this as time goes, if you have suggestions you can post a issue on the github below.
                     </p>
                     <h4>Site info</h4>
-                    <h6>Version: @version('simple') (build <a href="https://github.com/GoryMoon/SubscriptionWhitelist/commit/@version('build')">@version('build')</a>)</h6>
+                    <h6>Version: @version('simple') (build <a href="https://github.com/GoryMoon/SubscriptionWhitelist/commit/@version('commit')">@version('commit')</a>)</h6>
                     <h6>Source code:</h6>
                     <ul>
                         <li>

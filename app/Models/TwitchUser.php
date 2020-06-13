@@ -44,6 +44,8 @@ use Vinkla\Hashids\Facades\Hashids;
  * @mixin Eloquent
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TwitchUser whereRefreshToken($value)
+ * @property-read int|null $notifications_count
+ * @property-read int|null $whitelist_count
  */
 class TwitchUser extends Model implements AuthenticatableContract
 {

@@ -8,30 +8,34 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.3",
         "ext-json": "*",
+        "ext-redis": "*",
         "doctrine/dbal": "~2.9.2",
-        "fideloper/proxy": "^4.2.0",
-        "guzzlehttp/guzzle": "^6.3.3",
-        "laravel/framework": "5.8.*",
-        "laravel/horizon": "^3.2.8",
-        "laravel/telescope": "^2.0.6",
-        "laravel/tinker": "^1.0.9",
-        "pragmarx/version": "v0.2.9",
-        "pusher/pusher-php-server": "~4.0.0",
-        "romanzipp/laravel-twitch": "^2.0.2",
-        "tightenco/ziggy": "v0.7.1",
-        "torann/geoip": "^1.0.9",
-        "vinkla/hashids": "^6.0.0"
+        "fideloper/proxy": "^4.3",
+        "fruitcake/laravel-cors": "^2.0.1",
+        "guzzlehttp/guzzle": "^6.5.4",
+        "laravel/framework": "^7.15.0",
+        "laravel/horizon": "^4.3.3",
+        "laravel/telescope": "^3.5.0",
+        "laravel/tinker": "^2.4.0",
+        "laravel/ui": "^2.0",
+        "pragmarx/version": "^1.2.2",
+        "pusher/pusher-php-server": "^4.1.4",
+        "romanzipp/laravel-twitch": "^2.3.2",
+        "tightenco/ziggy": "^0.9.4",
+        "torann/geoip": "^1.2.1",
+        "vinkla/hashids": "^8.1.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.6.2",
-        "beyondcode/laravel-dump-server": "^1.3.0",
-        "filp/whoops": "^2.5.0",
-        "fzaninotto/faker": "^1.8.0",
-        "mockery/mockery": "^1.2.3",
-        "nunomaduro/collision": "^3.0.1",
-        "phpunit/phpunit": "^8.3.4"
+        "barryvdh/laravel-ide-helper": "^2.7.0",
+        "beyondcode/laravel-dump-server": "^1.4.0",
+        "filp/whoops": "^2.7.2",
+        "facade/ignition": "^2.0.7",
+        "fzaninotto/faker": "^1.9.1",
+        "mockery/mockery": "^1.3.1",
+        "nunomaduro/collision": "^4.1",
+        "phpunit/phpunit": "^8.5"
     },
     "config": {
         "optimize-autoloader": true,
@@ -63,7 +67,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "@php artisan version:refresh"
+            "@php artisan version:absorb"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

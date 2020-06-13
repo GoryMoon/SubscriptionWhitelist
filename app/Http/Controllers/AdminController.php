@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Channel;
 use App\Models\RequestStat;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -16,8 +17,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @param int $id
-     * @return \Illuminate\Database\Query\Builder
+     * @return Builder
      */
     private static function getStatBase(){
         return DB::table('whitelists')->selectRaw('COUNT(id) as num');
