@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Utils;
-
 
 use App\Models\Channel;
 use App\Models\TwitchUser;
@@ -50,14 +48,13 @@ class TwitchUtils
     }
 
     /**
-     * @param null $uid
+     * @param TwitchUser $channel_owner
      * @return mixed
      */
-    public static function getDBAccessToken($uid = null) {
-        $user = self::getDbUser($uid, false, true);
-        if (!is_null($user) && !is_null($user->access_token)) {
+    public static function getDBAccessToken($channel_owner) {
+        if (!is_null($channel_owner) && !is_null($channel_owner->access_token)) {
             try {
-                return decrypt($user->access_token);
+                return decrypt($channel_owner->access_token);
             } catch (DecryptException $e) {
                 return null;
             }
@@ -66,11 +63,11 @@ class TwitchUtils
     }
 
     /**
-     * @param null $uid
+     * @param TwitchUser|null $owner
      * @return mixed
      */
-    private static function getRefreshToken($uid = null) {
-        $user = self::getDbUser($uid, false, true);
+    private static function getRefreshToken($owner = null) {
+        $user = is_null($owner) ? self::getDbUser($owner, false, true): $owner;
         if (!is_null($user) && !is_null($user->refresh_token)) {
             try {
                 return decrypt($user->refresh_token);
@@ -154,7 +151,7 @@ class TwitchUtils
                 return null;
             }
 
-            $request = $this->getHelix()->withToken($accessToken)->getAuthedUser();
+            $request = $this->getHelix()->withToken($accessToken)->getUsers();
             if ($request->success()) {
                 $this->authed_user = $request->shift();
             } else {
@@ -221,15 +218,16 @@ class TwitchUtils
     }
 
     /**
-     * @param string $channel_id
+     * @param TwitchUser $owner
      * @param array $channel_ids
      * @return Collection|null
      */
-    private function getChannelSubscribers($channel_id, $channel_ids) {
+    private function getChannelSubscribers($owner, $channel_ids) {
         $users = collect();
         $retried = false;
+        $channel_id = $owner->uid;
         do {
-            $access_token = self::getDBAccessToken($channel_id);
+            $access_token = self::getDBAccessToken($owner);
 
             if (is_null($access_token)) {
                 Log::error("Access token was null");
@@ -242,7 +240,7 @@ class TwitchUtils
                 $users = $users->concat($result->data());
             } else if ($result->status === 401 && !is_null($result->exception)){
                 if (!$retried) {
-                    self::tokenRefresh(self::getRefreshToken($channel_id));
+                    self::tokenRefresh(self::getRefreshToken($owner), $owner);
                     unset($result);
                     $retried = true;
                 } else {
@@ -268,7 +266,7 @@ class TwitchUtils
     public static function checkSubscriptions($channel, $channel_ids) {
         $plans = is_null($channel->valid_plans) ? ['Prime', '1000', '2000', '3000']: json_decode($channel->valid_plans);
 
-        $response = self::instance()->getChannelSubscribers($channel->owner->uid, $channel_ids->toArray());
+        $response = self::instance()->getChannelSubscribers($channel->owner, $channel_ids->toArray());
         if (!is_null($response)) {
             return $channel_ids->mapWithKeys(function ($item) use ($response, $plans){
                 $data = $response->get($item);
@@ -282,18 +280,19 @@ class TwitchUtils
 
     /**
      * @param string $user_id
-     * @param string $channel_id
+     * @param TwitchUser $owner
      * @param array $valid_plans
      * @param int $depth
      * @return bool
      */
-    private function internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth = 0) {
+    private function internalIsSubscribed($user_id, $owner, $valid_plans, $depth = 0) {
+        $channel_id = $owner->uid;
         $response = $this->executeKrakenQuery("users/$user_id/subscriptions/$channel_id");
         if (is_null($response)) {
             if ($depth >= 2 || !self::tokenRefresh(self::getRefreshToken())) {
                 return false;
             } else {
-                return $this->internalIsSubscribed($user_id, $channel_id, $valid_plans, $depth + 1);
+                return $this->internalIsSubscribed($user_id, $owner, $valid_plans, $depth + 1);
             }
         }
         if ($response == false) {
@@ -306,13 +305,12 @@ class TwitchUtils
     }
 
     /**
-     * @param string $from_user
      * @param string $user_id
      * @param Channel $channel
-     * @param string $uid
+     * @param TwitchUser $owner
      * @return bool
      */
-    public static function checkIfSubbed($user_id, $channel, $uid) {
+    public static function checkIfSubbed($user_id, $channel, $owner) {
         if (!Session::has('session_user') && !is_null($user_id)) {
             Session::put('session_user', (object)['id' => $user_id]);
         }
@@ -320,22 +318,21 @@ class TwitchUtils
             $user_id = self::getRemoteUser()->id;
         }
         if (is_null($channel->valid_plans)) {
-            return TwitchUtils::isUserSubscribedToChannel($user_id, $uid);
+            return TwitchUtils::isUserSubscribedToChannel($user_id, $owner);
         } else {
             $plans = json_decode($channel->valid_plans);
-            return TwitchUtils::isUserSubscribedToChannel($user_id, $uid, $plans);
+            return TwitchUtils::isUserSubscribedToChannel($user_id, $owner, $plans);
         }
     }
 
     /**
-     * @param string $from_user
      * @param string $user_id
-     * @param string $channel_id
+     * @param TwitchUser $owner
      * @param array $valid_plans
      * @return bool
      */
-    public static function isUserSubscribedToChannel($user_id, $channel_id, $valid_plans = ['Prime', '1000', '2000', '3000']) {
-        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($user_id, $channel_id, $valid_plans);
+    public static function isUserSubscribedToChannel($user_id, $owner, $valid_plans = ['Prime', '1000', '2000', '3000']) {
+        return self::instance()->testing ? true: self::instance()->internalIsSubscribed($user_id, $owner, $valid_plans);
     }
 
     /**
@@ -428,9 +425,10 @@ class TwitchUtils
 
     /**
      * @param $refresh_token
+     * @param TwitchUser|null $owner
      * @return bool
      */
-    public static function tokenRefresh($refresh_token) {
+    public static function tokenRefresh($refresh_token, $owner = null) {
         if (is_null($refresh_token)) {
             Log::debug("Refresh token is null, aborting refresh");
             return false;
@@ -457,7 +455,7 @@ class TwitchUtils
 
         Session::put('access_token', $response->access_token);
 
-        $user = self::getDbUser();
+        $user = is_null($owner) ? self::getDbUser(): $owner;
         if (!is_null($user)) {
             $channel = $user->channel;
             if (!is_null($channel)) {

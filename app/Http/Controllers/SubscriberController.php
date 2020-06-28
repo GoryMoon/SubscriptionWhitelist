@@ -85,7 +85,7 @@ class SubscriberController extends Controller
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
-                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner->uid)) {
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner)) {
                         return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
                     }
                     return view('subscriber.channel')->with([
@@ -120,7 +120,7 @@ class SubscriberController extends Controller
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
-                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner->uid)) {
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner)) {
                         return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
                     }
                     $db_user = TwitchUtils::getDbUser();
@@ -167,7 +167,7 @@ class SubscriberController extends Controller
                         $url = route('broadcaster.list');
                         return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
                     }
-                    if (!$whitelist->valid || !TwitchUtils::checkIfSubbed(null, $channel, $owner->uid)) {
+                    if (!$whitelist->valid || !TwitchUtils::checkIfSubbed(null, $channel, $owner)) {
                         if ($whitelist->valid) {
                             $whitelist->valid = false;
                             $whitelist->save();

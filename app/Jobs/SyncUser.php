@@ -44,7 +44,7 @@ class SyncUser implements ShouldQueue
         foreach ($whitelists as $whitelist) {
             $channel = $whitelist->channel;
 
-            $subbed = TwitchUtils::checkIfSubbed($this->user->uid, $channel, $channel->owner->uid);
+            $subbed = TwitchUtils::checkIfSubbed($this->user->uid, $channel, $channel->owner);
             if ($whitelist->valid != $subbed) {
                 $whitelist->valid = $subbed;
                 $whitelist->save();
