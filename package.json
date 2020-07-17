@@ -30,7 +30,7 @@
         "bootstrap4-toggle": "^3.6.1",
         "jquery": "^3.5.1",
         "laravel-echo": "^1.8.0",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.19",
         "moment": "^2.26.0",
         "pusher-js": "^6.0.3",
         "raphael": "^2.3.0",
