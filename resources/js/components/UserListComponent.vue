@@ -42,7 +42,7 @@
         ></search-bar>
         <vuetable ref="vuetable"
                   :fields="fields"
-                  :api-url="route('broadcaster.data').toString()"
+                  :api-url="route('broadcaster.data').url()"
                   :css="css.table"
                   pagination-path=""
                   :sort-order="sortOrder"
@@ -287,7 +287,7 @@ export default {
             }
         }, 1000, { leading: true, trailing: false}),
         sync: _.debounce(function () {
-            axios.post(route('broadcaster.sync')).then(() => {
+            axios.post(this.route('broadcaster.sync').url()).then(() => {
                 this.$bvToast.toast("Queued userlist syncing", {
                     title: 'Subscriber Whitelist',
                     variant: 'primary',
@@ -297,7 +297,7 @@ export default {
             });
         }, 3000, { leading: true, trailing: false}),
         removeInvalid() {
-            axios.delete(route('broadcaster.invalid')).then((response) => {
+            axios.delete(this.route('broadcaster.invalid').url()).then((response) => {
                 this.$refs.vuetable.refresh();
                 this.$refs['remove-invalid'].hide();
                 this.$bvToast.toast("Successfully removed invalid subscriptions", {
@@ -316,7 +316,7 @@ export default {
             });
         },
         removeAll() {
-            axios.delete(route('broadcaster.delete')).then(response => {
+            axios.delete(this.route('broadcaster.delete').url()).then(response => {
                 this.$refs.vuetable.refresh();
                 this.$refs['remove-all'].hide();
                 this.$bvToast.toast("Successfully removed all usernames", {
@@ -335,7 +335,7 @@ export default {
             });
         },
         onDeleteItem(id) {
-            axios.delete(route('broadcaster.delete_entry', {id: id})).then(response => {
+            axios.delete(this.route('broadcaster.delete_entry', {id: id}).url()).then(response => {
                 this.$refs.vuetable.refresh();
                 this.$refs['remove-all'].hide();
                 this.$bvToast.toast("Successfully removed " + response.data.user, {
@@ -348,6 +348,9 @@ export default {
                 let message = error.message;
                 if (error.response) {
                     message = error.response.data;
+                    if (message.message) {
+                        message = message.message;
+                    }
                 } else if (error.request) {
                     message = error.request;
                 }
@@ -360,7 +363,7 @@ export default {
             });
         },
         onRefresh() {
-            axios.get(route('broadcaster.list_stats')).then(response => {
+            axios.get(this.route('broadcaster.list_stats')).then(response => {
                 this.infoData = response.data;
             });
         }

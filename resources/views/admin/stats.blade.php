@@ -1,9 +1,5 @@
 @extends('layout.base')
 
-<?php /**
- * @var string $total
- * @var string $stats
- */ ?>
 @section('content')
     <h1>Whitelist Request Statistics</h1>
     <div class="card">
@@ -37,7 +33,7 @@
             </ul>
             <h5>Graph of request for last 48-hours:</h5>
             <request-chart-component
-                    data="{{ $stats }}"
+                data="{{ $stats }}"
             ></request-chart-component>
         </div>
     </div>

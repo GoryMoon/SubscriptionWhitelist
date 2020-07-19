@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Channel;
 use App\Models\RequestStat;
-use Carbon\Carbon;
+use App\Models\TwitchUser;
+use App\Models\Whitelist;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use DB;
+use Response;
 
 class AdminController extends Controller
 {
@@ -23,6 +26,78 @@ class AdminController extends Controller
         return DB::table('whitelists')->selectRaw('COUNT(id) as num');
     }
 
+    public function index() {
+        return view('admin.index');
+    }
+
+    public function channels(Request $request) {
+        $sort = $request->query('sort');
+        $query = Channel::with('owner')
+            ->select([
+                'channels.*',
+                'twitch_users.channel_id',
+                'twitch_users.name',
+                'twitch_users.display_name',
+                'twitch_users.broadcaster_type'
+            ])
+            ->withCount('whitelist')
+            ->join('twitch_users', 'channels.id', '=', 'twitch_users.channel_id');
+        $order = 'desc';
+        if ($request->query('order') == 'asc') {
+            $order = 'asc';
+        }
+        if (!is_null($sort)) {
+            if ($sort == 'id') {
+                $query = $query->orderBy('id', $order);
+            } else if ($sort == 'name') {
+                $query = $query->orderBy('twitch_users.name', $order);
+            } else if ($sort == 'dname') {
+                $query = $query->orderBy('twitch_users.display_name', $order);
+            } else if ($sort == 'type') {
+                $query = $query->orderBy('twitch_users.broadcaster_type', $order);
+            } else if ($sort == 'enabled') {
+                $query = $query->orderBy('enabled', $order);
+            } else if ($sort == 'whitelist') {
+                $query = $query->orderBy('whitelist_count', $order);
+            } else if ($sort == 'requests') {
+                $query = $query->orderBy('requests', $order);
+            }
+        }
+        $channels = $query->paginate(15);
+        return view('admin.channels', ['channels' => $channels]);
+    }
+
+    public function viewChannel(Request $request, Channel $channel) {
+        $sort = $request->query('sort');
+        $query = $channel->whitelist();
+        $order = 'desc';
+        if ($request->query('order') == 'asc') {
+            $order = 'asc';
+        }
+        if (!is_null($sort)) {
+            if ($sort == 'id') {
+                $query = $query->orderBy('id', $order);
+            } else if ($sort == 'name') {
+                $query = $query->orderBy('username', $order);
+            } else if ($sort == 'type') {
+                $query = $query->orderBy('user_id', $order);
+            } else if ($sort == 'valid') {
+                $query = $query->orderBy('valid', $order);
+            }
+        }
+        $whitelist = $query->paginate(15);
+
+        return view('admin.channel_view', ['channel' => $channel, 'whitelists' => $whitelist]);
+    }
+
+    public function deleteWhitelist(Channel $channel, Whitelist $whitelist) {
+        $whitelist->delete();
+        $channel->whitelist_dirty = true;
+        $channel->save();
+
+        return back();
+    }
+
     public function stats() {
         $channels = Channel::get();
         $data = RequestStat::get();
@@ -31,34 +106,13 @@ class AdminController extends Controller
             return $values->requests;
         })->sum();
 
-        $stats = $data->countBy(function ($time) {
-            return $time->created_at->minute(0)->second(0)->toDateTimeString();
-        });
-
-        $formatted = array();
-        $time = Carbon::now()->minute(0)->second(0);
-        $day = 0;
-        $twodays = 0;
-        for ($i = 0; $i < 48; $i++) {
-            $stat = $stats->get($time->format("Y-m-d H:i:s"), 0);
-            $formatted[] = [
-                'time' => Carbon::make($time)->format('Y-m-d\TH:i:sP'),
-                'requests' => $stat
-            ];
-            $time->subHour();
-            if ($i > 24) {
-                $twodays += $stat;
-            } else {
-                $day += $stat;
-                $twodays += $stat;
-            }
-        }
-
         $channels = Channel::where('enabled', true)->count();
         $total = self::getStatBase();
         $subs = self::getStatBase()->whereNotNull('user_id');
         $custom = self::getStatBase()->whereNull('user_id');
         $result = self::getStatBase()->where('valid', false)->unionAll($custom)->unionAll($subs)->unionAll($total)->get();
+
+        list($formatted, $day, $twodays) = RequestStat::parseStats($data);
 
         return view('admin.stats', [
             'stats' => json_encode($formatted),
@@ -73,8 +127,6 @@ class AdminController extends Controller
                 'invalid' => $result[0]->num
             ]
         ]);
-
-
     }
 
 }

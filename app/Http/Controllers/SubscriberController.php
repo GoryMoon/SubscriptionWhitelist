@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\ViewErrorBag;
+use Illuminate\Validation\Rule;
 use Vinkla\Hashids\Facades\Hashids;
 
 class SubscriberController extends Controller
@@ -101,14 +102,18 @@ class SubscriberController extends Controller
     }
 
     public function subscriberAddSave(Request $request, $channelName) {
-        $validData = $request->validate([
-            'username' => 'required|unique:whitelists,username'
-        ]);
-
         if (!is_null($channelName)) {
             $owner = TwitchUser::whereName($channelName)->first();
             if (!is_null($owner)) {
                 $channel = $owner->channel;
+                $validData = $request->validate([
+                    'username' => [
+                        'required',
+                        Rule::unique('whitelists', 'username')->where(function ($query) use($channel) {
+                            return $query->where('channel_id', $channel->id);
+                        })
+                    ]
+                ]);
                 if (!is_null($channel)) {
                     if (!$channel->enabled) {
                         return $this->redirectError(['add' => "This channel's whitelist isn't enabled"]);
@@ -160,7 +165,12 @@ class SubscriberController extends Controller
                     }
 
                     $validData = $request->validate([
-                         $name => 'required|unique:whitelists,username'
+                         $name => [
+                             'required',
+                             Rule::unique('whitelists', 'username')->where(function ($query) use($channel) {
+                                 return $query->where('channel_id', $channel->id);
+                             })
+                         ]
                     ]);
                     $owner = $channel->owner;
                     if ($this->checkIfOwn($owner)) {

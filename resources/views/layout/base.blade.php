@@ -78,22 +78,31 @@
                                     <a class="nav-link {{ \App\Helpers::isRoute('dashboard', 'active') }}" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
                                 @if(\App\Utils\TwitchUtils::hasSubscribers())
-                                    <li class="nav-item">
-                                        <a class="nav-link {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="{{ route('broadcaster') }}">Broadcaster</a>
-                                    </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="#" id="broadcasterDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Broadcaster
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="broadcasterDropdown">
+                                        <a class="dropdown-item {{ \App\Helpers::isRoute('broadcaster', 'active') }}" href="{{ route('broadcaster') }}">Settings</a>
+                                        <a class="dropdown-item {{ \App\Helpers::isRoute('broadcaster.links', 'active') }}" href="{{ route('broadcaster.links') }}">Links</a>
+                                        <a class="dropdown-item {{ \App\Helpers::isRoute('broadcaster.list', 'active') }}" href="{{ route('broadcaster.list') }}">User list</a>
+                                        <a class="dropdown-item {{ \App\Helpers::isRoute('broadcaster.stats', 'active') }}" href="{{ route('broadcaster.stats') }}">Stats</a>
+                                    </div>
+                                </li>
                                 @endif
                                 <li class="nav-item">
                                     <a class="nav-link {{ \App\Helpers::isRoute('subscriber', 'active') }}" href="{{ route('subscriber') }}">Subscriber</a>
                                 </li>
                                 @if(\App\Utils\TwitchUtils::getDbUser()->uid == config('whitelist.admin_id'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('horizon.index', ['view' => 'dashboard']) }}">Horizon</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('telescope') }}">Telescope</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link {{ \App\Helpers::isRoute('admin.stats', 'active') }}" href="{{ route('admin.stats') }}">Stats</a>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle {{ \App\Helpers::isRouteBase('admin', 'active') }}" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Admin
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="adminDropdown">
+                                        <a class="dropdown-item {{ \App\Helpers::isRoute('admin', 'active') }}" href="{{ route('admin') }}">Dashboard</a>
+                                        <a class="dropdown-item" href="{{ route('horizon.index', ['view' => 'dashboard']) }}">Horizon</a>
+                                        <a class="dropdown-item" href="{{ route('telescope') }}">Telescope</a>
+                                    </div>
                                 </li>
                                 @endif
                             @endif
@@ -143,7 +152,6 @@
             </div>
         </footer>
     </div>
-    @routes
     <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

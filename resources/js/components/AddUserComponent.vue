@@ -1,22 +1,27 @@
 <template>
     <form @submit="checkForm" :action="route('broadcaster.list.add')" method="POST">
         <slot></slot>
-        <div v-if="error" class="alert alert-danger" role="alert">
+        <b-alert :show="error" variant="danger">
             You need to enter at least one name.
-        </div>
+        </b-alert>
         <div class="form-row" v-for="(name, index) in nameList">
-            <div class="form-group col-10 col-md-8">
-                <label :for="'add-name-' + index" class="sr-only">Username</label>
-                <input type="text" class="form-control" name="usernames[]" :id="'add-name-' + index" placeholder="Username" v-bind:value="name.name" v-on:input="name.name = update(index, $event.target.value)">
-            </div>
-            <div v-if="index" class="form-group col-1">
-                <button class="btn btn-danger" tabindex="-1" @click.prevent v-on:click="nameList.splice(index, 1)"><fa icon="times"></fa></button>
-            </div>
-            <div v-else class="form-group col-1">
-                <button class="btn btn-success" tabindex="-1" @click.prevent v-on:click="addInput"><fa icon="plus"></fa></button>
-            </div>
+            <b-form-group class="form-group col-10 col-md-8">
+                <b-form-input name="usernames[]"
+                              aria-label="Username"
+                              :id="'add-name-' + index"
+                              placeholder="Username"
+                              v-bind:value="name.name"
+                              @input="name.name = update(index, $event)">
+                </b-form-input>
+            </b-form-group>
+            <b-form-group v-if="index" class="col-1">
+                <b-button variant="danger" tabindex="-1" @click="nameList.splice(index, 1)"><fa icon="times"></fa></b-button>
+            </b-form-group>
+            <b-form-group v-else class="col-1">
+                <b-button variant="success" tabindex="-1" @click="addInput"><fa icon="plus"></fa></b-button>
+            </b-form-group>
         </div>
-        <button type="submit" class="btn btn-primary"><fa icon="plus"></fa> Add</button>
+        <b-button type="submit" variant="primary"><fa icon="plus"></fa> Add</b-button>
     </form>
 </template>
 

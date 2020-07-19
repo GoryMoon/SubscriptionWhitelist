@@ -25,8 +25,6 @@ Route::middleware('twitch')->group(function () {
     Route::delete('/profile', 'MainController@profileDelete')->name('profile.delete');
     Route::post('/logout', 'TwitchController@logout')->name('logout');
 
-    Route::get('/admin/stats', 'AdminController@stats')->name('admin.stats');
-
     Route::get('/channel/', 'SubscriberController@subscriberRedirect')->name('subscriber.redirect');
     Route::get('/channel/{channel}', 'SubscriberController@subscriberAdd')->name('subscriber.add');
     Route::post('/channel/{channel}', 'SubscriberController@subscriberAddSave')->name('subscriber.add.save');
@@ -34,6 +32,14 @@ Route::middleware('twitch')->group(function () {
     Route::get('/subscriber', 'SubscriberController@subscriber')->name('subscriber');
     Route::put('/subscriber/{channel}', 'SubscriberController@subscriberSave')->name('subscriber.save');
     Route::delete('/subscriber/{channel}', 'SubscriberController@subscriberDelete')->name('subscriber.delete');
+
+    Route::prefix('admin')->group(function () {
+        Route::get('/', 'AdminController@index')->name('admin');
+        Route::get('/stats', 'AdminController@stats')->name('admin.stats');
+        Route::get('/channel', 'AdminController@channels')->name('admin.channel');
+        Route::get('/channel/{channel}', 'AdminController@viewChannel')->name('admin.channel.view');
+        Route::delete('/channel/{channel}/{whitelist}', 'AdminController@deleteWhitelist')->name('admin.channel.whitelist.delete');
+    });
 
     Route::middleware('broadcaster')->prefix('broadcaster')->group(function () {
         Route::get('/', 'BroadcasterController@index')->name('broadcaster');

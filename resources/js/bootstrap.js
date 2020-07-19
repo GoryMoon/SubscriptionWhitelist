@@ -20,7 +20,6 @@ try {
  */
 
 window.axios = require('axios');
-
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
@@ -30,7 +29,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 import Echo from 'laravel-echo'
-
+import route from 'ziggy';  // dynamic dependency from composer package
 
 //Only connect to pusher on pages we use it
 if (route().current("broadcaster*") || route().current("subscriber")) {

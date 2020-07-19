@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Jobs\SyncAllMinecraftNames;
 use App\Jobs\SyncChannel;
 use App\Mail\Contact;
+use App\Models\RequestStat;
 use App\Models\Whitelist;
 use App\Utils\TwitchUtils;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -104,13 +106,12 @@ class BroadcasterController extends Controller
             'contact_message' => 'required'
         ]);
         $to = $validated['contact_email'];
-        $channel = TwitchUtils::getDbUser()->channel;
+        $user = TwitchUtils::getDbUser();
         $message = $validated['contact_message'];
-        Mail::to($to)->queue(new Contact($channel->display_name, $channel->name, $to, $message));
+        Mail::to("whitelist@gorymoon.se")->queue(new Contact($user->display_name, $user->name, $to, $message));
 
         return redirect()->route('broadcaster')->with('success', 'Message successfully sent');
     }
-
 
     public function userlist() {
         return view('broadcaster.userlist', ['channel_id' => TwitchUtils::getDbUser()->channel->id]);
@@ -151,7 +152,7 @@ class BroadcasterController extends Controller
 
     /**
      * @param $id
-     * @return \Illuminate\Database\Query\Builder
+     * @return Builder
      */
     private static function getStatBase($id) {
         return DB::table('whitelists')->selectRaw('COUNT(id) as num')->where('channel_id', $id);
@@ -176,12 +177,14 @@ class BroadcasterController extends Controller
     }
 
     public function addUser(Request $request) {
+        $channel = TwitchUtils::getDbUser()->channel;
         $inputs = $request->validate([
             'usernames' => 'required|array',
-            'usernames.*' => 'unique:whitelists,username'
+            'usernames.*' => Rule::unique('whitelists', 'username')->where(function ($query) use($channel) {
+                return $query->where('channel_id', $channel->id);
+            })
         ]);
 
-        $channel = TwitchUtils::getDbUser()->channel;
         if (is_null($channel)) {
             response()->json('Invalid user', 403);
         }
@@ -248,29 +251,8 @@ class BroadcasterController extends Controller
     public function stats() {
         $channel = TwitchUtils::getDbUser()->channel;
 
-        $stats = $channel->stats->countBy(function ($time) {
-            return $time->created_at->minute(0)->second(0)->toDateTimeString();
-        });
-
-        $formatted = array();
-        $time = Carbon::now()->minute(0)->second(0);
-        $day = 0;
-        $twodays = 0;
-        for ($i = 0; $i < 48; $i++) {
-            $stat = $stats->get($time->format("Y-m-d H:i:s"), 0);
-            $formatted[] = [
-                'time' => Carbon::make($time)->format('Y-m-d\TH:i:sP'),
-                'requests' => $stat
-            ];
-            $time->subHour();
-            if ($i > 24) {
-                $twodays += $stat;
-            } else {
-                $day += $stat;
-                $twodays += $stat;
-            }
-        }
         $result = $this->getStats();
+        list($formatted, $day, $twodays) = RequestStat::parseStats($channel->stats);
 
         return view('broadcaster.stats', [
             'stats' => json_encode($formatted),

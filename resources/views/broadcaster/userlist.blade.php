@@ -9,7 +9,7 @@
             <h3>Add custom names</h3>
             <p class="text-muted">
                 Here you can add custom usernames, for instance: your, moderators or anyone else. <br>
-                These names will always be in the whitelist until you remove them, they are not bound to subscription
+                These names will always be in the whitelist until you remove them, they are not bound to a subscription
             </p>
             <add-user-component>
                 @csrf
