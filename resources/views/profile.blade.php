@@ -8,12 +8,39 @@
 ?>
 @section('content')
     <h1><a href="https://twitch.tv/{{ $name }}"><fa :icon="['fab','twitch']"></fa>{{ $display_name }} ({{ $name }})</a></h1>
-    <p class="text-muted h6">Not much here, might be more in future if needed</p>
     <div class="row">
-        <div class="col-sm-6 mt-2">
+        <div class="col-md-6 mt-2">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title"><fa icon="link"></fa> Connections</h4>
+                    <hr>
+                    <ul class="list-unstyled">
+                        <li>
+                            <div class="row">
+                                <div class="col">
+                                    <h5><fa :icon="['fab','steam']"></fa> Steam</h5>
+                                    @if(!is_null($steam))
+                                    <a href="{{ $steam->profile_url }}"><fa icon="external-link-alt"></fa> {{ $steam->name }}</a>
+                                    @endif
+                                </div>
+                                <div class="col-4 col-md-4 text-right">
+                                    @if(is_null($steam))
+                                        <a href="{{ route('auth.steam.link') }}" class="btn btn-primary">Link</a>
+                                    @else
+                                        <a href="{{ route('auth.steam.unlink') }}" class="btn btn-primary">Unlink</a>
+                                    @endif
+                                </div>
+                            </div>
+                            <hr>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-2">
             <div class="card text-white border-danger">
                 <div class="card-body text-danger">
-                    <h5 class="card-title"><fa icon="trash"></fa> Delete Account</h5>
+                    <h4 class="card-title"><fa icon="trash"></fa> Delete Account</h4>
                     <p class="card-text">
                         With this you can delete your account and all the data associated with it.<br>
                         Your username/usernames will be removed from any whitelist you are on.<br>
@@ -21,8 +48,8 @@
                     </p>
                     <label for="login_name">Enter login name to verify removal</label>
                     <remove-account-component
-                            route="{{ route('profile.delete') }}"
-                            name="{{ $name }}"
+                        route="{{ route('profile.delete') }}"
+                        name="{{ $name }}"
                     >
                         @method('DELETE')
                         @csrf

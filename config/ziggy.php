@@ -14,6 +14,8 @@ return [
         'broadcaster.list_stats',
         'broadcaster.data',
         'subscriber',
-        'subscriber.save'
+        'subscriber.save',
+        'subscriber.steam.link',
+        'profile'
     ]
 ];

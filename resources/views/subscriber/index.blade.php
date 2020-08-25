@@ -42,22 +42,24 @@
                     </div>
                     @endif
                     <sub-manage-component
-                            id="{{ $whitelist->id }}"
                             uid="{{ $whitelist->uid }}"
                             minecraft="{{ $whitelist->minecraft }}"
                             username="{{ $whitelist->username }}"
+                            channel_name="{{ $whitelist->name }}"
                             valid="{{ $whitelist->valid }}"
                             index="{{ $loop->index }}"
-                            error-classes="@error('username-'.$whitelist->id) is-invalid @enderror @error('edit'.$whitelist->id) is-invalid @enderror"
+                            :steam_connected="{{ $whitelist->steam_connected }}"
+                            :steam_linked="{{ $whitelist->steam_linked }}"
+                            error-classes="@error('username-'.$whitelist->name) is-invalid @enderror @error('edit'.$whitelist->name) is-invalid @enderror"
                     >
                         <template v-slot:csrf>
                             @csrf
                         </template>
                         <template v-slot:error-alert>
-                            @error('username-'.$whitelist->id)
+                            @error('username-'.$whitelist->name)
                             <div class="alert alert-danger" role="alert">{{ $message }}</div>
                             @enderror
-                            @error('edit-'.$whitelist->id)
+                            @error('edit-'.$whitelist->name)
                             <div class="alert alert-danger" role="alert">{{ $message }}</div>
                             @enderror
                         </template>

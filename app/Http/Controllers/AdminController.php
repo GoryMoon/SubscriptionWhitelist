@@ -110,7 +110,15 @@ class AdminController extends Controller
         $total = self::getStatBase();
         $subs = self::getStatBase()->whereNotNull('user_id');
         $custom = self::getStatBase()->whereNull('user_id');
-        $result = self::getStatBase()->where('valid', false)->unionAll($custom)->unionAll($subs)->unionAll($total)->get();
+        $invalid = self::getStatBase()->where('valid', false);
+        $minecraft = self::getStatBase()->whereNotNull('minecraft_id');
+        $result = self::getStatBase()->whereNotNull('steam_id')
+            ->unionAll($minecraft)
+            ->unionAll($invalid)
+            ->unionAll($custom)
+            ->unionAll($subs)
+            ->unionAll($total)
+            ->get();
 
         list($formatted, $day, $twodays) = RequestStat::parseStats($data);
 
@@ -121,10 +129,12 @@ class AdminController extends Controller
             'day' => $day,
             'twodays' => $twodays,
             'whitelist' => (object)[
-                'total' => $result[3]->num,
-                'subscribers' => $result[2]->num,
-                'custom' => $result[1]->num,
-                'invalid' => $result[0]->num
+                'total' => $result[5]->num,
+                'subscribers' => $result[4]->num,
+                'custom' => $result[3]->num,
+                'invalid' => $result[2]->num,
+                'minecraft' => $result[1]->num,
+                'steam' => $result[0]->num
             ]
         ]);
     }

@@ -19,6 +19,12 @@
                 <li>
                     Total amount of invalid subscriptions: <span class="font-weight-bold">{{ infoData.invalid }}</span>
                 </li>
+                <li>
+                    Total amount of valid Minecraft names: <span class="font-weight-bold">{{ infoData.minecraft }}</span>
+                </li>
+                <li>
+                    Total amount of linked Steam IDs: <span class="font-weight-bold">{{ infoData.steam }}</span>
+                </li>
             </ul>
             <b-button variant="primary" class="mt-1" @click="updateList">
                 <fa icon="sync"></fa> Refresh List
@@ -182,11 +188,15 @@ export default {
                         let status = val.valid ?
                             '<i class="fas fa-check text-success" data-toggle="tooltip" data-placement="top" title="Valid subscription"></i>':
                             '<i class="fas fa-times text-danger" data-toggle="tooltip" data-placement="top" title="Invalid subscription"></i>';
-                        let minecraft = val.minecraft !== "" ?
-                            '<img class="minecraft_logo" src="/images/minecraft_logo_success.png" data-toggle="tooltip" data-placement="top" title="Minecraft name: ' + val.minecraft + '">':
-                            '';
+                        if (val.minecraft !== "") {
+                            status += ' <img class="minecraft_logo" src="/images/minecraft_logo_success.png" data-toggle="tooltip" data-placement="top" title="Minecraft name: ' + val.minecraft + '">';
+                        }
 
-                        return status + "  " + minecraft;
+                        if (val.steam) {
+                            status += ' <i class="fab fa-steam text-success" data-toggle="tooltip" data-placement="top" title="Steam Linked">';
+                        }
+
+                        return status;
                     },
                     width: '90px',
                     sortField: 'valid'

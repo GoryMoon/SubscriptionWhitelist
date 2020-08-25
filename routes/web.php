@@ -28,10 +28,17 @@ Route::middleware('twitch')->group(function () {
     Route::get('/channel/', 'SubscriberController@subscriberRedirect')->name('subscriber.redirect');
     Route::get('/channel/{channel}', 'SubscriberController@subscriberAdd')->name('subscriber.add');
     Route::post('/channel/{channel}', 'SubscriberController@subscriberAddSave')->name('subscriber.add.save');
+    Route::post('/channel/{channel}/steam', 'SubscriberController@subscriberAddSteam')->name('subscriber.add.steam');
 
     Route::get('/subscriber', 'SubscriberController@subscriber')->name('subscriber');
     Route::put('/subscriber/{channel}', 'SubscriberController@subscriberSave')->name('subscriber.save');
     Route::delete('/subscriber/{channel}', 'SubscriberController@subscriberDelete')->name('subscriber.delete');
+    Route::post('/subscriber/{channel}/steam', 'SubscriberController@subscriberLinkSteam')->name('subscriber.steam.link');
+    Route::delete('/subscriber/{channel}/steam', 'SubscriberController@subscriberUnLinkSteam')->name('subscriber.steam.unlink');
+
+    Route::get('profile/steam/link', 'SteamController@redirectToSteam')->name('auth.steam.link');
+    Route::get('profile/steam/unlink', 'SteamController@unlink')->name('auth.steam.unlink');
+    Route::get('profile/steam/handle', 'SteamController@handle')->name('auth.steam.handle');
 
     Route::prefix('admin')->group(function () {
         Route::get('/', 'AdminController@index')->name('admin');

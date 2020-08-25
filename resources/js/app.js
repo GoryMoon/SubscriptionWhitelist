@@ -13,7 +13,7 @@ window.Vue = require('vue');
 require('bootstrap4-toggle');
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTwitch, faCcPaypal, faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faTwitch, faCcPaypal, faGithub, faSteam } from '@fortawesome/free-brands-svg-icons'
 import {
     faPlus,
     faTrash,
@@ -38,7 +38,9 @@ import {
     faCopy,
     faUsers,
     faCheck,
-    faCross
+    faCross,
+    faLink,
+    faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import BootstrapVue from 'bootstrap-vue';
@@ -49,7 +51,7 @@ library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
     faSort, faSortUp, faSortDown, faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight,
     faEdit, faCcPaypal, faGripLinesVertical, faGithub, faList, faChartArea, faCopy, faUsers,
-    faCheck, faCross
+    faCheck, faCross, faSteam, faLink, faExternalLinkAlt
     );
 Vue.component('fa', FontAwesomeIcon);
 Vue.use(BootstrapVue);

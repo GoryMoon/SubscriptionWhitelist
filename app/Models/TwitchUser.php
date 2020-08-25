@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Vinkla\Hashids\Facades\Hashids;
@@ -29,6 +32,10 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property Carbon|null $updated_at
  * @property-read Channel|null $channel
  * @property-read Collection|Whitelist[] $whitelist
+ * @property-read int|null $notifications_count
+ * @property-read int|null $whitelist_count
+ * @property-read SteamUser|null $steam
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @method static Builder|TwitchUser newModelQuery()
  * @method static Builder|TwitchUser newQuery()
  * @method static Builder|TwitchUser query()
@@ -41,11 +48,8 @@ use Vinkla\Hashids\Facades\Hashids;
  * @method static Builder|TwitchUser whereName($value)
  * @method static Builder|TwitchUser whereUid($value)
  * @method static Builder|TwitchUser whereUpdatedAt($value)
+ * @method static Builder|TwitchUser whereRefreshToken($value)
  * @mixin Eloquent
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\TwitchUser whereRefreshToken($value)
- * @property-read int|null $notifications_count
- * @property-read int|null $whitelist_count
  */
 class TwitchUser extends Model implements AuthenticatableContract
 {
@@ -65,6 +69,14 @@ class TwitchUser extends Model implements AuthenticatableContract
      */
     public function whitelist() {
         return $this->hasMany(Whitelist::class, 'user_id');
+    }
+
+    /**
+     * Returns the connected steam account if any
+     * @return HasOne
+     */
+    public function steam() {
+        return $this->hasOne(SteamUser::class, 'user_id');
     }
 
     /**

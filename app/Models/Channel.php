@@ -6,6 +6,8 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
@@ -20,8 +22,14 @@ use Illuminate\Support\Carbon;
  * @property int $whitelist_dirty
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property int $requests
  * @property-read TwitchUser $owner
  * @property-read Collection|Whitelist[] $whitelist
+ * @property-read Collection|RequestStat[] $stats
+ * @property-read int|null $notifications_count
+ * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
+ * @property-read int|null $stats_count
+ * @property-read int|null $whitelist_count
  * @method static Builder|Channel newModelQuery()
  * @method static Builder|Channel newQuery()
  * @method static Builder|Channel query()
@@ -33,14 +41,8 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Channel whereUpdatedAt($value)
  * @method static Builder|Channel whereValidPlans($value)
  * @method static Builder|Channel whereWhitelistDirty($value)
- * @mixin Eloquent
- * @property int $requests
- * @property-read Collection|RequestStat[] $stats
  * @method static Builder|Channel whereRequests($value)
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property-read int|null $notifications_count
- * @property-read int|null $stats_count
- * @property-read int|null $whitelist_count
+ * @mixin Eloquent
  */
 class Channel extends Model
 {

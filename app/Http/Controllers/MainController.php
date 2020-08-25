@@ -27,7 +27,8 @@ class MainController extends Controller
         $user = TwitchUtils::getDbUser();
         return view('profile', [
             'display_name' => $user->display_name,
-            'name' => $user->name
+            'name' => $user->name,
+            'steam' => $user->steam
         ]);
     }
 

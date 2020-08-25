@@ -29,6 +29,12 @@
                     Total amount of invalid subscriptions: @bold{{ $whitelist->invalid }}@endbold
                 </li>
                 <li>
+                    Total amount of valid Minecraft names: @bold{{ $whitelist->minecraft }}@endbold
+                </li>
+                <li>
+                    Total amount of linked Steam IDs: @bold{{ $whitelist->steam }}@endbold
+                </li>
+                <li>
                     Requests last 24h: @bold{{ $day }}@endbold
                 </li>
                 <li>

@@ -28,13 +28,14 @@ class SubscriberController extends Controller
         foreach ($whitelists as $whitelist) {
             $mc = $whitelist->minecraft;
             $return[] = (object)[
-                'id' => Hashids::encode($whitelist->channel->id),
                 'uid' => Hashids::connection('user')->encode($user->id),
                 'valid' => $whitelist->valid,
                 'minecraft' => !is_null($mc) ? $mc->username: '',
                 'username' => $whitelist->username,
                 'display_name' => $whitelist->channel->owner->display_name,
-                'name' => $whitelist->channel->owner->name
+                'name' => $whitelist->channel->owner->name,
+                'steam_connected' => $user->steam()->exists() ? "true": "false",
+                'steam_linked' => $whitelist->steam()->exists() ? "true": "false"
             ];
         }
         return view('subscriber.index')->with('whitelists', $return);
@@ -82,17 +83,15 @@ class SubscriberController extends Controller
                     if ($this->checkWhitelisted($channel)) {
                         return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
                     }
-                    if ($this->checkIfOwn($owner)) {
-                        $url = route('broadcaster.list');
-                        return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
-                    }
-                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner)) {
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner) && !$this->checkIfOwn($owner)) {
                         return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
                     }
+                    $db_user = TwitchUtils::getDbUser();
                     return view('subscriber.channel')->with([
                         'id' => $channelName,
                         'display_name' => $owner->display_name,
-                        'name' => $owner->name
+                        'name' => $owner->name,
+                        'steam' => $db_user->steam
                     ]);
                 }
             }
@@ -121,11 +120,7 @@ class SubscriberController extends Controller
                     if ($this->checkWhitelisted($channel)) {
                         return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
                     }
-                    if ($this->checkIfOwn($owner)) {
-                        $url = route('broadcaster.list');
-                        return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
-                    }
-                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner)) {
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner) && !$this->checkIfOwn($owner)) {
                         return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
                     }
                     $db_user = TwitchUtils::getDbUser();
@@ -147,13 +142,48 @@ class SubscriberController extends Controller
         return $this->redirectError(['add' => 'Channel not found or channel don\'t have a whitelist enabled']);
     }
 
-    public function subscriberSave(Request $request, $channelHash) {
-        if (!is_null($channelHash)) {
-            $ids = Hashids::decode($channelHash);
-            if (count($ids) > 0) {
-                $channel = Channel::whereId($ids[0])->first();
+    public function subscriberAddSteam(Request $request, $channelName) {
+        if (!is_null($channelName)) {
+            $owner = TwitchUser::whereName($channelName)->first();
+            if (!is_null($owner)) {
+                $channel = $owner->channel;
                 if (!is_null($channel)) {
-                    $name = 'username-' . $channelHash;
+                    if (!$channel->enabled) {
+                        return $this->redirectError(['add' => "This channel's whitelist isn't enabled"]);
+                    }
+                    if ($this->checkWhitelisted($channel)) {
+                        return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
+                    }
+                    if (!TwitchUtils::checkIfSubbed(null, $channel, $owner) && !$this->checkIfOwn($owner)) {
+                        return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
+                    }
+                    $db_user = TwitchUtils::getDbUser();
+
+                    $whitelist = new Whitelist;
+                    $whitelist->username = $db_user->steam->name;
+                    $whitelist->user()->associate($db_user);
+                    $whitelist->steam()->associate($db_user->steam);
+                    $whitelist->channel()->associate($channel);
+                    $whitelist->save();
+                    SyncMinecraftName::dispatch($whitelist);
+
+                    self::dirty($channel);
+
+                    return redirect()->route('subscriber')->with('success', "You are now whitelisted to " . $owner->display_name);
+                }
+            }
+        }
+
+        return $this->redirectError(['add' => 'Channel not found or channel don\'t have a whitelist enabled']);
+    }
+
+    public function subscriberSave(Request $request, $channelName) {
+        if (!is_null($channelName)) {
+            $owner = TwitchUser::whereName($channelName)->first();
+            if (!is_null($owner)) {
+                $channel = $owner->channel;
+                if (!is_null($channel)) {
+                    $name = 'username-' . $channelName;
 
                     $db_user = TwitchUtils::getDbUser();
                     $whitelist = $db_user->whitelist()->where('channel_id', $channel->id)->first();
@@ -173,17 +203,13 @@ class SubscriberController extends Controller
                          ]
                     ]);
                     $owner = $channel->owner;
-                    if ($this->checkIfOwn($owner)) {
-                        $url = route('broadcaster.list');
-                        return $this->redirectError(['add' => "You can not add yourself to your own whitelist here, go to <a href='$url'>broadcast userlist</a> to do that"]);
-                    }
-                    if (!$whitelist->valid || !TwitchUtils::checkIfSubbed(null, $channel, $owner)) {
+                    if ((!$whitelist->valid || !TwitchUtils::checkIfSubbed(null, $channel, $owner)) && !$this->checkIfOwn($owner)) {
                         if ($whitelist->valid) {
                             $whitelist->valid = false;
                             $whitelist->save();
                             self::dirty($channel);
                         }
-                        return $this->redirectError(['edit-' . $channelHash => 'You can not update your username as you are not subscribed to this channel, it\'s not used anyway']);
+                        return $this->redirectError(['edit-' . $channelName => 'You can not update your username as you are not subscribed to this channel, it\'s not used anyway']);
                     }
 
                     $whitelist->username = $validData[$name];
@@ -200,11 +226,66 @@ class SubscriberController extends Controller
         return $this->redirectError(['edit' => 'An error occurred while trying to save username']);
     }
 
-    public function subscriberDelete($channelHash) {
-            if (!is_null($channelHash)) {
-            $ids = Hashids::decode($channelHash);
-            if (count($ids) > 0) {
-                $channel = Channel::whereId($ids[0])->first();
+    public function subscriberLinkSteam(Request $request, $channelName) {
+        if (!is_null($channelName)) {
+            $owner = TwitchUser::whereName($channelName)->first();
+            if (!is_null($owner)) {
+                $channel = $owner->channel;
+                if (!is_null($channel)) {
+                    $db_user = TwitchUtils::getDbUser();
+                    $whitelist = $db_user->whitelist()->where('channel_id', $channel->id)->first();
+                    if (is_null($whitelist)) {
+                        return redirect()->back();
+                    }
+                    if (!$db_user->steam()->exists()) {
+                        return $this->redirectError(['add' => 'You have not linked steam to your account']);
+                    }
+                    if ($whitelist->steam()->exists()) {
+                        return $this->redirectError(['add' => 'You have already linked steam to this whitelist']);
+                    }
+                    $whitelist->steam()->associate($db_user->steam);
+                    $whitelist->save();
+                    self::dirty($channel);
+
+                    return redirect()->back()->with('success', 'Successfully linked steam to ' . $owner->display_name);
+                }
+            }
+        }
+
+        return $this->redirectError(['edit' => 'An error occurred while trying to add steam']);
+    }
+
+    public function subscriberUnLinkSteam(Request $request, $channelName) {
+        if (!is_null($channelName)) {
+            $owner = TwitchUser::whereName($channelName)->first();
+            if (!is_null($owner)) {
+                $channel = $owner->channel;
+                if (!is_null($channel)) {
+                    $db_user = TwitchUtils::getDbUser();
+                    $whitelist = $db_user->whitelist()->where('channel_id', $channel->id)->first();
+                    if (is_null($whitelist)) {
+                        return redirect()->back();
+                    }
+                    if (!$whitelist->steam()->exists()) {
+                        return $this->redirectError(['add' => 'You have have not linked steam to this whitelist']);
+                    }
+                    $whitelist->steam()->dissociate();
+                    $whitelist->save();
+                    self::dirty($channel);
+
+                    return redirect()->back()->with('success', 'Successfully unlinked steam to ' . $owner->display_name);
+                }
+            }
+        }
+
+        return $this->redirectError(['edit' => 'An error occurred while trying to add steam']);
+    }
+
+    public function subscriberDelete($channelName) {
+        if (!is_null($channelName)) {
+            $owner = TwitchUser::whereName($channelName)->first();
+            if (!is_null($owner)) {
+                $channel = $owner->channel;
                 if (!is_null($channel)) {
                     $db_user = TwitchUtils::getDbUser();
                     $whitelist = $db_user->whitelist()->where('channel_id', $channel->id)->first();
@@ -214,7 +295,7 @@ class SubscriberController extends Controller
                     try {
                         $whitelist->delete();
                     } catch (Exception $e) {
-                        return $this->redirectError(['edit-' . $channelHash => 'An error occurred while trying to remove username']);
+                        return $this->redirectError(['edit-' . $channelName => 'An error occurred while trying to remove username']);
                     }
                     self::dirty($channel);
 

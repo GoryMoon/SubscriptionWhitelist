@@ -40,6 +40,9 @@
                 <li class="nav-item">
                     <a class="nav-link" id="pills-minecraft-tab" data-toggle="pill" href="#pills-minecraft" role="tab" aria-controls="pills-minecraft" aria-selected="false">Minecraft</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-steam-tab" data-toggle="pill" href="#pills-steam" role="tab" aria-controls="pills-steam" aria-selected="false">Steam (SteamID64)</a>
+                </li>
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-general" role="tabpanel" aria-labelledby="pills-general-tab">
@@ -47,6 +50,9 @@
                 </div>
                 <div class="tab-pane fade" id="pills-minecraft" role="tabpanel" aria-labelledby="pills-minecraft-tab">
                     @include('broadcaster.links.minecraft')
+                </div>
+                <div class="tab-pane fade" id="pills-steam" role="tabpanel" aria-labelledby="pills-steam-tab">
+                    @include('broadcaster.links.steam')
                 </div>
             </div>
         </div>

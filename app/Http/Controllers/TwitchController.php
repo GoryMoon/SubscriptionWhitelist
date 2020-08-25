@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\SyncChannel;
 use App\Jobs\SyncUser;
 use App\Utils\TwitchUtils;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -32,11 +30,8 @@ class TwitchController extends Controller
         $state = tap(Str::random(32), function ($str) use ($request){
             $request->session()->put('state', $str);
         });
-        $url = route('token');
-        $id = config('twitch-api.client_id');
-        $url = "https://id.twitch.tv/oauth2/authorize?client_id=$id&redirect_uri=$url&response_type=code&scope=" . self::$scope . "&state=$state";
-        //Bug with API, encodes url
-        //$url = Twitch::getOAuthAuthorizeUrl('code', [Scope::CHANNEL_READ_SUBSCRIPTIONS, Scope::V5_USER_SUBSCRIPTIONS], $state);
+        Twitch::setRedirectUri(route('token'));
+        $url = Twitch::getOAuthAuthorizeUrl('code', [Scope::CHANNEL_READ_SUBSCRIPTIONS, Scope::V5_USER_SUBSCRIPTIONS], $state);
         return redirect()->away($url);
     }
 
@@ -59,32 +54,13 @@ class TwitchController extends Controller
             return "Changed/Invalid scope";
         }
 
-        try {
-            $client = new Client(['base_uri' => "https://id.twitch.tv/oauth2/token"]);
-            $response = $client->post('', [
-                'query' => [
-                    'client_id' => config('twitch-api.client_id'),
-                    'client_secret' => config('twitch-api.client_secret'),
-                    'code' => $request->get('code'),
-                    'grant_type' => 'authorization_code',
-                    'redirect_uri' => route('token')
-                ]
-            ]);
-        } catch (RequestException $exception) {
-            return $this->redirectError(['Unknown error', json_decode($exception->getResponse()->getBody())->message]);
+        Twitch::setRedirectUri(route('token'));
+        $result = Twitch::getOAuthToken($request->get('code'));
+        if (!$result->success()) {
+            return $this->redirectError(['Unknown error', json_decode($result->exception->getResponse()->getBody())->message]);
         }
-        //Bug with API, encodes url
-        /*
-         $result = Twitch::getOAuthToken($request->get('code'));
-        if ($result->success()) {
-            $response = $result->shift();
-        } else {
-            return $this->redirectError([$result->error()]);
-        }
-         */
-
         $request->session()->remove('state');
-        $response = json_decode($response->getBody());
+        $response = $result->data();
         Session::put('access_token', $response->access_token);
 
         $user = TwitchUtils::getRemoteUser();

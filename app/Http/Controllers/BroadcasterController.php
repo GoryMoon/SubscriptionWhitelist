@@ -114,7 +114,12 @@ class BroadcasterController extends Controller
     }
 
     public function userlist() {
-        return view('broadcaster.userlist', ['channel_id' => TwitchUtils::getDbUser()->channel->id]);
+        $db_user = TwitchUtils::getDbUser();
+        return view('broadcaster.userlist',
+            [
+                'channel_id' => $db_user->channel->id,
+                'name' => $db_user->name
+            ]);
     }
 
     public function userlistData(Request $request) {
@@ -163,16 +168,26 @@ class BroadcasterController extends Controller
         $total = self::getStatBase($channel->id);
         $subs = self::getStatBase($channel->id)->whereNotNull('user_id');
         $custom = self::getStatBase($channel->id)->whereNull('user_id');
-        return self::getStatBase($channel->id)->where('valid', false)->unionAll($custom)->unionAll($subs)->unionAll($total)->get();
+        $invalid = self::getStatBase($channel->id)->where('valid', false);
+        $minecraft = self::getStatBase($channel->id)->whereNotNull('minecraft_id');
+        return self::getStatBase($channel->id)->whereNotNull('steam_id')
+            ->unionAll($minecraft)
+            ->unionAll($invalid)
+            ->unionAll($custom)
+            ->unionAll($subs)
+            ->unionAll($total)
+            ->get();
     }
 
     public function listStats() {
         $result = $this->getStats();
         return response()->json([
-            'total' => $result[3]->num,
-            'subscribers' => $result[2]->num,
-            'custom' => $result[1]->num,
-            'invalid' => $result[0]->num
+            'total' => $result[5]->num,
+            'subscribers' => $result[4]->num,
+            'custom' => $result[3]->num,
+            'invalid' => $result[2]->num,
+            'minecraft' => $result[1]->num,
+            'steam' => $result[0]->num,
         ]);
     }
 
@@ -198,6 +213,8 @@ class BroadcasterController extends Controller
             $whitelist[] = $entry;
         }
         SyncAllMinecraftNames::dispatch($channel, $whitelist);
+        $channel->whitelist_dirty = true;
+        $channel->save();
 
         return redirect()->route('broadcaster.list')->with('success', 'Names successfully added to the whitelist');
     }
@@ -260,10 +277,12 @@ class BroadcasterController extends Controller
             'day' => $day,
             'twodays' => $twodays,
             'whitelist' => (object)[
-                'total' => $result[3]->num,
-                'subscribers' => $result[2]->num,
-                'custom' => $result[1]->num,
-                'invalid' => $result[0]->num
+                'total' => $result[5]->num,
+                'subscribers' => $result[4]->num,
+                'custom' => $result[3]->num,
+                'invalid' => $result[2]->num,
+                'minecraft' => $result[1]->num,
+                'steam' => $result[0]->num
             ]
         ]);
     }
