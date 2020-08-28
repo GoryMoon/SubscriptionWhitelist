@@ -46,7 +46,7 @@
             <b-form ref="steam_form" method="POST" :action="route('subscriber.steam.link', {channel: channel_name})">
                 <slot name="csrf"></slot>
                 <input ref="steamHiddenInput" type="hidden" name="_method" value="POST">
-                <b-button @click="steamUnlink" v-if="steam_linked" variant="primary">Unlink Steam to Whitelist</b-button>
+                <b-button @click="steamUnlink" v-if="steam_linked" variant="primary">Unlink Steam from Whitelist</b-button>
                 <b-button @click="steamLink" v-else variant="primary">Link Steam to Whitelist</b-button>
             </b-form>
         </div>

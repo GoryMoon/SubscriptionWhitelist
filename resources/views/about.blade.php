@@ -44,6 +44,9 @@
                             <a href="https://github.com/guzzle/guzzle">guzzle/guzzle</a>: Guzzle is a PHP HTTP client library
                         </li>
                         <li>
+                            <a href="https://github.com/invisnik/laravel-steam-auth">invisnik/laravel-steam-auth</a>: Laravel Steam Auth
+                        </li>
+                        <li>
                             <a href="https://github.com/antonioribeiro/version">pragmarx/version</a>: Take control over your Laravel app version
                         </li>
                         <li>

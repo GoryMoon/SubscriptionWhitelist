@@ -34,6 +34,7 @@
                 <h2>Formats</h2>
                 <p>Supports a bunch of different formats for the list: <b-badge variant="primary">newline</b-badge >, <b-badge variant="primary">csv</b-badge> &amp; <b-badge variant="primary">json array</b-badge></p>
                 <p>Minecraft: Verifies name against Mojang and have lists based on the returned username, auto updates on name change &amp; <b-badge variant="primary">minecraft whitelist</b-badge> format</p>
+                <p>SteamID: Allows for a list of SteamID64 in the standard formats for use, users need to connect their Steam and then allow the use of the ID on the list.</p>
             </div>
             <div class="col-lg-1 d-lg-none">
                 <hr>
