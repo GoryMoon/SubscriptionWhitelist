@@ -39,26 +39,8 @@
     <meta name="og:site_name" content="Subscriber Whitelist">
     <meta name="og:type" content="website">
 
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
-    <script>
-        window.addEventListener("load", function(){
-            window.cookieconsent.initialise({
-                "palette": {
-                    "popup": {
-                        "background": "#000"
-                    },
-                    "button": {
-                        "background": "#4b367c"
-                    }
-                },
-                law: {
-                    countryCode: '{{ geoip()->getLocation(Request::ip())->getAttribute('iso_code') }}',
-                    regionalLaw: false
-                },
-                location: false
-            })});
-    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
@@ -153,5 +135,23 @@
         </footer>
     </div>
     <script src="{{ mix('js/app.js') }}"></script>
+    <script>
+        window.addEventListener("load", function(){
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#000"
+                    },
+                    "button": {
+                        "background": "#4b367c"
+                    }
+                },
+                law: {
+                    countryCode: '{{ geoip()->getLocation(Request::ip())->getAttribute('iso_code') }}',
+                    regionalLaw: false
+                },
+                location: false
+            })});
+    </script>
 </body>
 </html>

@@ -48,7 +48,7 @@
                     </p>
                     <label for="login_name">Enter login name to verify removal</label>
                     <remove-account-component
-                        route="{{ route('profile.delete') }}"
+                        url="{{ route('profile.delete') }}"
                         name="{{ $name }}"
                     >
                         @method('DELETE')

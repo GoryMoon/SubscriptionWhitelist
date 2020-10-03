@@ -1,5 +1,5 @@
 <template>
-    <form ref="form" @submit="validName" class="form-inline" id="delete_form" :action="route" method="POST">
+    <form ref="form" @submit="validName" class="form-inline" id="delete_form" :action="url" method="POST">
         <slot></slot>
         <label for="login_name" class="sr-only">Enter username to remove</label>
         <input v-model="verifyName" type="text" class="form-control mb-2 mr-sm-2 border-danger" id="login_name" placeholder="Login name">
@@ -10,7 +10,7 @@
 <script>
 export default {
     props: {
-        route: {
+        url: {
             type: String,
             required: true
         },
