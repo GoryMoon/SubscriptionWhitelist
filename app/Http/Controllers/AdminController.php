@@ -68,6 +68,10 @@ class AdminController extends Controller
         return view('admin.channels', ['channels' => $channels]);
     }
 
+    public function statsChannel(Request $request, Channel $channel) {
+        return view('admin.channel_stats', array_merge(['channel' => $channel], BroadcasterController::getStatsArray($channel)));
+    }
+
     public function viewChannel(Request $request, Channel $channel) {
         $sort = $request->query('sort');
         $query = $channel->whitelist();
@@ -92,7 +96,7 @@ class AdminController extends Controller
         }
         $whitelist = $query->paginate(15);
 
-        return view('admin.channel_view', array_merge(['channel' => $channel, 'whitelists' => $whitelist], BroadcasterController::getStatsArray($channel)));
+        return view('admin.channel_view', ['channel' => $channel, 'whitelists' => $whitelist]);
     }
 
     public function deleteWhitelist(Channel $channel, Whitelist $whitelist) {

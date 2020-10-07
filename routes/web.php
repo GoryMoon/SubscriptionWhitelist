@@ -44,6 +44,7 @@ Route::middleware('twitch')->group(function () {
         Route::get('/', 'AdminController@index')->name('admin');
         Route::get('/stats', 'AdminController@stats')->name('admin.stats');
         Route::get('/channel', 'AdminController@channels')->name('admin.channel');
+        Route::get('/channel/stats/{channel}', 'AdminController@statsChannel')->name('admin.channel.stats');
         Route::get('/channel/{channel}', 'AdminController@viewChannel')->name('admin.channel.view');
         Route::delete('/channel/{channel}/{whitelist}', 'AdminController@deleteWhitelist')->name('admin.channel.whitelist.delete');
     });
