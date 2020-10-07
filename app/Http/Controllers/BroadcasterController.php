@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SyncAllMinecraftNames;
 use App\Jobs\SyncChannel;
 use App\Mail\Contact;
+use App\Models\Channel;
 use App\Models\RequestStat;
 use App\Models\Whitelist;
 use App\Utils\TwitchUtils;
@@ -163,8 +164,7 @@ class BroadcasterController extends Controller
         return DB::table('whitelists')->selectRaw('COUNT(id) as num')->where('channel_id', $id);
     }
 
-    private function getStats() {
-        $channel = TwitchUtils::getDbUser()->channel;
+    private static function getStats(Channel $channel) {
         $total = self::getStatBase($channel->id);
         $subs = self::getStatBase($channel->id)->whereNotNull('user_id');
         $custom = self::getStatBase($channel->id)->whereNull('user_id');
@@ -180,7 +180,7 @@ class BroadcasterController extends Controller
     }
 
     public function listStats() {
-        $result = $this->getStats();
+        $result = $this->getStats(TwitchUtils::getDbUser()->channel);
         return response()->json([
             'total' => $result[5]->num,
             'subscribers' => $result[4]->num,
@@ -265,13 +265,11 @@ class BroadcasterController extends Controller
         return response()->json();
     }
 
-    public function stats() {
-        $channel = TwitchUtils::getDbUser()->channel;
-
-        $result = $this->getStats();
+    public static function getStatsArray(Channel $channel) {
+        $result = self::getStats($channel);
         list($formatted, $day, $twodays) = RequestStat::parseStats($channel->stats);
 
-        return view('broadcaster.stats', [
+        return [
             'stats' => json_encode($formatted),
             'total' => $channel->requests,
             'day' => $day,
@@ -284,6 +282,11 @@ class BroadcasterController extends Controller
                 'minecraft' => $result[1]->num,
                 'steam' => $result[0]->num
             ]
-        ]);
+        ];
+    }
+
+    public function stats() {
+        $channel = TwitchUtils::getDbUser()->channel;
+        return view('broadcaster.stats', self::getStatsArray($channel));
     }
 }

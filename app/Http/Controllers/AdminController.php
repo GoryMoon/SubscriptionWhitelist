@@ -6,6 +6,7 @@ use App\Models\Channel;
 use App\Models\RequestStat;
 use App\Models\TwitchUser;
 use App\Models\Whitelist;
+use App\Utils\TwitchUtils;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use DB;
@@ -83,11 +84,15 @@ class AdminController extends Controller
                 $query = $query->orderBy('user_id', $order);
             } else if ($sort == 'valid') {
                 $query = $query->orderBy('valid', $order);
+            } else if ($sort == 'minecraft') {
+                $query = $query->orderBy('minecraft_id', $order);
+            } else if ($sort == 'steam') {
+                $query = $query->orderBy('steam_id', $order);
             }
         }
         $whitelist = $query->paginate(15);
 
-        return view('admin.channel_view', ['channel' => $channel, 'whitelists' => $whitelist]);
+        return view('admin.channel_view', array_merge(['channel' => $channel, 'whitelists' => $whitelist], BroadcasterController::getStatsArray($channel)));
     }
 
     public function deleteWhitelist(Channel $channel, Whitelist $whitelist) {
