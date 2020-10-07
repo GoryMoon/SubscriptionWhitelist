@@ -38,6 +38,10 @@
                     Requests last 48h: @bold{{ $twodays }}@endbold
                 </li>
             </ul>
+            <h5>Graph of request for last 48-hours:</h5>
+            <request-chart-component
+                data="{{ $stats }}"
+            ></request-chart-component>
         </div>
     </div>
 @endsection

@@ -69,7 +69,12 @@ class AdminController extends Controller
     }
 
     public function statsChannel(Request $request, Channel $channel) {
-        return view('admin.channel_stats', array_merge(['channel' => $channel], BroadcasterController::getStatsArray($channel)));
+        list($formatted) = RequestStat::parseStats($channel->stats);
+        return view('admin.channel_stats', array_merge(
+            ['channel' => $channel],
+            BroadcasterController::getStatsArray($channel),
+            ['stats' => json_encode($formatted)],
+        ));
     }
 
     public function viewChannel(Request $request, Channel $channel) {
