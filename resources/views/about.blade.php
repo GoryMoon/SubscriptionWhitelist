@@ -126,7 +126,7 @@
                             <a href="https://github.com/moment/moment">moment</a>: Parse, validate, manipulate, and display dates
                         </li>
                         <li>
-                            <a href="https://github.com/FezVrasta/popper.js">popper.js</a>: A kickass library to manage your poppers
+                            <a href="https://github.com/atomiks/tippyjs">tippy.js</a>: The complete tooltip, popover, dropdown, and menu solution for the web
                         </li>
                         <li>
                             <a href="https://github.com/pusher/pusher-js">pusher-js</a>: Pusher JavaScript library for browsers, React Native, NodeJS and web workers
