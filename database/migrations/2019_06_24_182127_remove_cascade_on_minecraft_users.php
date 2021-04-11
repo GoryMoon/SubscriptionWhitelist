@@ -15,7 +15,7 @@ class RemoveCascadeOnMinecraftUsers extends Migration
     {
         Schema::table('whitelists', function (Blueprint $table) {
             $table->dropForeign(['minecraft_id']);
-            $table->foreign("minecraft_id")->references('id')->on('minecraft_users')->onDelete('set null');
+            $table->foreignId("minecraft_id")->constrained("minecraft_users")->nullOnDelete();
         });
     }
 
@@ -28,7 +28,7 @@ class RemoveCascadeOnMinecraftUsers extends Migration
     {
         Schema::table('whitelists', function (Blueprint $table) {
             $table->dropForeign(['minecraft_id']);
-            $table->foreign("minecraft_id")->references('id')->on('minecraft_users')->onDelete('cascade');
+            $table->foreignId("minecraft_id")->constrained("minecraft_users")->cascadeOnDelete();
         });
     }
 }

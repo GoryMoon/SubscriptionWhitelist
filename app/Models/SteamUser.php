@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -12,15 +13,21 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property string $steam_id
+ * @property string $name
+ * @property string $profile_url
  * @property int $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read TwitchUser $user
+ * @property-read Collection|Whitelist[] $whitelist
+ * @property-read int|null $whitelist_count
  * @method static Builder|SteamUser newModelQuery()
  * @method static Builder|SteamUser newQuery()
  * @method static Builder|SteamUser query()
  * @method static Builder|SteamUser whereCreatedAt($value)
  * @method static Builder|SteamUser whereId($value)
+ * @method static Builder|SteamUser whereName($value)
+ * @method static Builder|SteamUser whereProfileUrl($value)
  * @method static Builder|SteamUser whereSteamId($value)
  * @method static Builder|SteamUser whereUpdatedAt($value)
  * @method static Builder|SteamUser whereUserId($value)
@@ -28,6 +35,7 @@ use Illuminate\Support\Carbon;
  */
 class SteamUser extends Model
 {
+    protected $hidden = ['id', 'user_id', 'created_at', 'updated_at'];
     protected $fillable = [
         'steam_id',
         'name',

@@ -3,8 +3,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Utils\TwitchUtils;
+use Auth;
 use Closure;
+use Illuminate\Http\Request;
 use Redirect;
 use Session;
 
@@ -13,20 +14,20 @@ class Twitch
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        if (!TwitchUtils::hasUser()) {
+        if (!Auth::check()) {
             $parts = explode('/', $request->path());
             if ($parts[0] !== 'telescope' && $parts[0] !== 'horizon') {
                 Session::put('redirect', $request->fullUrl());
             }
             return Redirect::route('login');
-        } else if (is_null(TwitchUtils::getDbUser())) {
-            TwitchUtils::logout();
+        } else if (is_null(Auth::user())) {
+            Auth::logout();
             return Redirect::route('login');
         }
 

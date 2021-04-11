@@ -7,7 +7,7 @@
             <h1 class="jumbotron-heading">Subscription Whitelist</h1>
             <p class="lead text-muted">Create a list that your twitch subscribers can add their username to and/or<br>Add your name to a list setup by the streamer you watch.</p>
             <p>
-                @if(\App\Utils\TwitchUtils::hasUser())
+                @if($hasUser)
                     <b-button variant="primary" href="{{ route('dashboard') }}">Dashboard</b-button>
                     <p class="small text-muted">Get started by going to the dashboard</p>
                 @else

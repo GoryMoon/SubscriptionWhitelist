@@ -7,10 +7,10 @@ use App\Models\Whitelist;
 use App\Notifications\MCSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 
 class SyncAllMinecraftNames implements ShouldQueue
@@ -19,12 +19,12 @@ class SyncAllMinecraftNames implements ShouldQueue
     /**
      * @var Channel|null
      */
-    private $channel;
+    private ?Channel $channel;
 
     /**
      * @var Collection
      */
-    private $whitelist;
+    private Collection $whitelist;
 
     /**
      * Create a new job instance.

@@ -18,9 +18,9 @@ class CreateWhitelists extends Migration
             $table->string('username');
             $table->boolean('valid')->default(true);
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('twitch_users')->onDelete('cascade');
+            $table->foreignId("user_id")->constrained("twitch_users")->cascadeOnDelete();
             $table->unsignedBigInteger('channel_id');
-            $table->foreign('channel_id')->references('id')->on('channels')->onDelete('cascade');
+            $table->foreignId("channel_id")->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

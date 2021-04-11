@@ -27,21 +27,24 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontFlash = [
+        'current_password',
         'password',
         'password_confirmation',
     ];
 
-    /**
-     * Report or log an exception.
-     *
-     * @param Throwable $exception
-     * @return void
-     */
-    public function report(Throwable $exception)
+
+    public function register()
     {
-        parent::report($exception);
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 
+    /**
+     * Register the exception handling callbacks for the application.
+     *
+     * @return void
+     */
     /**
      * Render an exception into an HTTP response.
      *
@@ -51,7 +54,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        $this->container->singleton(AppPolicy::class, function ($app) {
+        $this->container->singleton(AppPolicy::class, function () {
             return new AppPolicy();
         });
         app(AppPolicy::class)->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE);

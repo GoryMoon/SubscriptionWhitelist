@@ -15,7 +15,7 @@ class AddSteamUserToWhitelists extends Migration
     {
         Schema::table('whitelists', function (Blueprint $table) {
             $table->unsignedBigInteger("steam_id")->nullable();
-            $table->foreign("steam_id")->references('id')->on('steam_users')->onDelete("set null");
+            $table->foreignId("steam_id")->constrained("steam_users")->nullOnDelete();
         });
     }
 

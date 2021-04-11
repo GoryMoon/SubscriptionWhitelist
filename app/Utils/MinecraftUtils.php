@@ -4,6 +4,7 @@
 namespace App\Utils;
 
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
@@ -13,24 +14,30 @@ use Illuminate\Support\Facades\Log;
 class MinecraftUtils
 {
 
-    private static $instance;
-    private $http;
+    private static MinecraftUtils $instance;
+    private Client $http;
 
-    public static function instance() {
-        if (is_null(self::$instance)) {
-            self::$instance = new MinecraftUtils;
-        }
-        return self::$instance;
+    protected function __construct(){
+        $this->http = new Client(['base_uri' => "https://api.mojang.com/"]);
+    }
+    protected function __clone() {}
+
+    /**
+     * @throws Exception
+     */
+    public function __wakeup(){
+        throw new Exception("Cannot unserialize a singleton.");
     }
 
     /**
-     * @return Client
+     * @return MinecraftUtils
      */
-    public function getHttp() {
-        if (is_null($this->http)) {
-            $this->http = new Client(['base_uri' => "https://api.mojang.com/"]);
+    public static function instance(): MinecraftUtils
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new static();
         }
-        return $this->http;
+        return self::$instance;
     }
 
     /**
@@ -39,10 +46,11 @@ class MinecraftUtils
      * @param null $body
      * @return bool|mixed|null
      */
-    private function executeRequest($method, $url, $body = null) {
+    private function executeRequest($method, $url, $body = null)
+    {
         try {
             $request = new Request($method, $url, [], $body);
-            $response = $this->getHttp()->send($request);
+            $response = $this->http->send($request);
             $result = json_decode($response->getBody());
         } catch (RequestException $exception) {
             if (!is_null($exception->getResponse())) {
@@ -77,7 +85,7 @@ class MinecraftUtils
      * @param array[] $names
      * @return bool|mixed|null
      */
-    public function getProfiles($names) {
+    public function getProfiles(array $names) {
         $response = $this->executeRequest('POST', "profiles/minecraft", json_encode($names));
         if (!is_null($response) && $response != false) {
             return $response;
@@ -85,7 +93,12 @@ class MinecraftUtils
         return null;
     }
 
-    public function getLatestName($uuid) {
+    /**
+     * @param $uuid
+     * @return null|string
+     */
+    public function getLatestName($uuid): ?string
+    {
         $response = $this->executeRequest('GET', "user/profiles/$uuid/names");
         if (!is_null($response) && $response != false) {
             return collect($response)->last()->name;

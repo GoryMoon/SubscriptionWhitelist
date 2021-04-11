@@ -21,7 +21,7 @@ class CreateTwitchUsers extends Migration
             $table->string('broadcaster_type');
             $table->string('access_token')->nullable();
             $table->unsignedBigInteger('channel_id')->nullable();
-            $table->foreign('channel_id')->references('id')->on('channels')->onDelete('set null');
+            $table->foreignId("channel_id")->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

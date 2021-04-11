@@ -5,42 +5,49 @@ namespace App\Http\Controllers;
 use App\Jobs\SyncChannel;
 use App\Jobs\SyncUser;
 use App\Utils\TwitchUtils;
+use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\MessageBag;
-use Illuminate\Support\Str;
 use Illuminate\Support\ViewErrorBag;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use romanzipp\Twitch\Enums\Scope;
-use romanzipp\Twitch\Facades\Twitch;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class TwitchController extends Controller
 {
 
-    private static $scope = "channel:read:subscriptions+user_subscriptions";
-
-    public function index() {
-        if (TwitchUtils::hasUser()) {
+    /**
+     * @return View|RedirectResponse
+     */
+    public function index()
+    {
+        if (Auth::check()) {
             return redirect()->route('home');
         }
         return view('login');
     }
 
-    public function authorizeTwitch(Request $request) {
-        $state = tap(Str::random(32), function ($str) use ($request){
-            $request->session()->put('state', $str);
-        });
-        Twitch::setRedirectUri(route('token'));
-        $url = Twitch::getOAuthAuthorizeUrl('code', [Scope::CHANNEL_READ_SUBSCRIPTIONS, Scope::V5_USER_SUBSCRIPTIONS], $state);
-        return redirect()->away($url);
+    /**
+     * @return RedirectResponse
+     */
+    public function authorizeTwitch(): RedirectResponse
+    {
+        return Socialite::driver('twitch')
+            ->setScopes([Scope::CHANNEL_READ_SUBSCRIPTIONS, "user:read:subscriptions"])
+            ->redirect();
     }
 
-    public function token(Request $request) {
-        $state = $request->session()->get('state');
-        if (is_null($state)) {
-            return "Invalid session";
-        }
-
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function token(Request $request): RedirectResponse
+    {
+        // Check if there where an error authing the user
         $error = $request->get('error');
         if (!is_null($error)) {
             if ($error == "access_denied") {
@@ -50,45 +57,30 @@ class TwitchController extends Controller
             }
         }
 
-        if (self::$scope != str_replace(' ', '+', $request->get('scope'))) {
-            return "Changed/Invalid scope";
+        // Get user from socialite driver
+        try {
+            $twitchUser = Socialite::driver('twitch')->user();
+        } catch (InvalidStateException $e) {
+            report($e);
+            return $this->redirectError(['Invalid session, try refreshing before retrying']);
+        } catch (Exception $e) {
+            report($e);
+            return $this->redirectError(['Unknown error', $e->getMessage()]);
         }
 
-        Twitch::setRedirectUri(route('token'));
-        $result = Twitch::getOAuthToken($request->get('code'));
-        if (!$result->success()) {
-            return $this->redirectError(['Unknown error', json_decode($result->exception->getResponse()->getBody())->message]);
-        }
-        $request->session()->remove('state');
-        $response = $result->data();
-        Session::put('access_token', $response->access_token);
-
-        $user = TwitchUtils::getRemoteUser();
-        if (is_null($user)) {
-            return $this->redirectError();
+        // Create/Update and login user
+        if (($user = TwitchUtils::handleDbUserLogin($twitchUser)) && !isset($user)) {
+            return $this->redirectError(['Error creating user']);
         }
 
-        if (!isset($user->id) || !isset($user->login) || !isset($user->display_name) || !isset($user->broadcaster_type)) {
-            return $this->redirectError();
-        }
-
-        TwitchUtils::setSessionUser($user);
-
-        if (!TwitchUtils::handleDbUserLogin($user)) {
-            return $this->redirectError();
-        }
-
-        $db_user = TwitchUtils::getDbUser();
-        $db_user->refresh_token = $response->refresh_token;
-        $db_user->save();
-        SyncUser::dispatch($db_user, TwitchUtils::getSessionAccessToken());
-        Auth::guard()->login($db_user);
-
-        $channel = $db_user->channel;
-        if (!is_null($channel) && isset($channel) && $channel->enabled && $channel->sync) {
+        // Sync user subscription status and channel
+        $channel = $user->channel;
+        if (isset($channel) && $channel->enabled && $channel->sync) {
             SyncChannel::dispatch($channel);
         }
+        SyncUser::dispatch($user, $twitchUser->token);
 
+        // Redirect back or to dashboard
         $redirect = Session::get('redirect');
         if (!is_null($redirect)) {
             Session::remove('redirect');
@@ -98,16 +90,23 @@ class TwitchController extends Controller
         }
     }
 
-    private function redirectError($message = ['Something went wrong']) {
+    /**
+     * @param string[] $message
+     * @return RedirectResponse
+     */
+    private function redirectError($message = ['Something went wrong']): RedirectResponse
+    {
         Auth::logout();
-        TwitchUtils::logout();
         $errors = new ViewErrorBag;
         return redirect()->route('login')->with('errors', $errors->put('default', new MessageBag($message)));
     }
 
-    public function logout() {
+    /**
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
+    {
         Auth::logout();
-        TwitchUtils::logout();
         return redirect()->route('login');
     }
 

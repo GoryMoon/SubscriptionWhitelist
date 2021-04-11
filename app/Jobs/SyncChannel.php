@@ -7,32 +7,29 @@ use App\Models\Whitelist;
 use App\Notifications\SubSyncDone;
 use App\Utils\TwitchUtils;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 class SyncChannel implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     /**
-     * @var Whitelist[]
+     * @var Collection|Whitelist[]
      */
     private $whitelists;
-
-    /**
-     * @var Channel
-     */
-    private $channel;
-
-    public $tries = 2;
+    private Channel $channel;
+    public int $tries = 2;
 
     /**
      * Create a new job instance.
      *
      * @param Channel $channel
-     * @param null $whitelists
+     * @param Collection|Whitelist[] $whitelists
      */
     public function __construct(Channel $channel, $whitelists = null)
     {
@@ -108,7 +105,7 @@ class SyncChannel implements ShouldQueue
      *
      * @return array
      */
-    public function tags()
+    public function tags(): array
     {
         return ['sync', 'sync_channel:' . $this->channel->id];
     }

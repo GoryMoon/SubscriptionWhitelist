@@ -9,8 +9,8 @@
             <input ref="hiddenInput" type="hidden" name="_method" value="PUT">
             <b-form-group>
                 <label :for="getId">Username:</label>
-                <img v-if="hasMcName" class="minecraft_logo" src="/images/minecraft_logo_success.png" data-toggle="tooltip" data-placement="top" :title="'Minecraft name: ' + mc_name">
-                <img v-else class="minecraft_logo" src="/images/minecraft_logo_error.png" data-toggle="tooltip" data-placement="top" title="No Minecraft name found for this username">
+                <img v-if="hasMcName" class="minecraft_logo" src="/images/minecraft_logo_success.png" data-placement="top" :alt="'Minecraft name: ' + mc_name" :data-tippy-content="'Minecraft name: ' + mc_name">
+                <img v-else class="minecraft_logo" src="/images/minecraft_logo_error.png" data-toggle="tooltip" data-placement="top" alt="No Minecraft name found for this username" data-tippy-content="No Minecraft name found for this username">
                 <input type="text"
                        :disabled="!isValid"
                        :class="getClasses"

@@ -83,7 +83,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Ignored Paths & Commands
+    | Allowed / Ignored Paths & Commands
     |--------------------------------------------------------------------------
     |
     | The following array lists the URI paths and Artisan commands that will
@@ -92,11 +92,12 @@ return [
     |
     */
 
+    'only_paths' => [
+        // 'api/*'
+    ],
+
     'ignore_paths' => [
         'nova-api*',
-        'token',
-        'broadcaster/list/data*',
-        'broadcaster/list/stats'
     ],
 
     'ignore_commands' => [
@@ -115,6 +116,7 @@ return [
     */
 
     'watchers' => [
+        Watchers\BatchWatcher::class => env('TELESCOPE_BATCH_WATCHER', true),
         Watchers\CacheWatcher::class => env('TELESCOPE_CACHE_WATCHER', true),
 
         Watchers\CommandWatcher::class => [
@@ -137,6 +139,7 @@ return [
         Watchers\ModelWatcher::class => [
             'enabled' => env('TELESCOPE_MODEL_WATCHER', true),
             'events' => ['eloquent.*'],
+            'hydrations' => true,
         ],
 
         Watchers\NotificationWatcher::class => env('TELESCOPE_NOTIFICATION_WATCHER', true),

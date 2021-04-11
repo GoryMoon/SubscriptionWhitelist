@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Channel;
 use App\Models\RequestStat;
-use App\Models\TwitchUser;
 use App\Models\Whitelist;
-use App\Utils\TwitchUtils;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
+use Carbon\Carbon;
 use DB;
-use Response;
+use Exception;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -68,18 +69,27 @@ class AdminController extends Controller
         return view('admin.channels', ['channels' => $channels]);
     }
 
-    public function statsChannel(Request $request, Channel $channel) {
-        list($formatted) = RequestStat::parseStats($channel->stats);
+    /**
+     * @param Channel $channel
+     * @return View
+     */
+    public function statsChannel(Channel $channel): View
+    {
         return view('admin.channel_stats', array_merge(
             ['channel' => $channel],
             BroadcasterController::getStatsArray($channel),
-            ['stats' => json_encode($formatted)],
         ));
     }
 
-    public function viewChannel(Request $request, Channel $channel) {
+    /**
+     * @param Request $request
+     * @param Channel $channel
+     * @return View
+     */
+    public function viewChannel(Request $request, Channel $channel): View
+    {
         $sort = $request->query('sort');
-        $query = $channel->whitelist();
+        $query = $channel->whitelist()->with('user:id', 'minecraft:id', 'steam:id');
         $order = 'desc';
         if ($request->query('order') == 'asc') {
             $order = 'asc';
@@ -104,7 +114,14 @@ class AdminController extends Controller
         return view('admin.channel_view', ['channel' => $channel, 'whitelists' => $whitelist]);
     }
 
-    public function deleteWhitelist(Channel $channel, Whitelist $whitelist) {
+    /**
+     * @param Channel $channel
+     * @param Whitelist $whitelist
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function deleteWhitelist(Channel $channel, Whitelist $whitelist): RedirectResponse
+    {
         $whitelist->delete();
         $channel->whitelist_dirty = true;
         $channel->save();
@@ -112,9 +129,13 @@ class AdminController extends Controller
         return back();
     }
 
-    public function stats() {
+    /**
+     * @return View
+     */
+    public function stats(): View
+    {
         $channels = Channel::get();
-        $data = RequestStat::get();
+        $data = RequestStat::whereDate('created_at', '>=', Carbon::now()->subDays(2)->subHour()->toDateTimeString())->get();
 
         $requests = $channels->map(function ($values) {
             return $values->requests;
@@ -134,14 +155,14 @@ class AdminController extends Controller
             ->unionAll($total)
             ->get();
 
-        list($formatted, $day, $twodays) = RequestStat::parseStats($data);
+        list($formatted, $day, $two_days) = RequestStat::parseStats($data);
 
         return view('admin.stats', [
             'stats' => json_encode($formatted),
             'total' => $requests,
             'channels' => $channels,
             'day' => $day,
-            'twodays' => $twodays,
+            'twodays' => $two_days,
             'whitelist' => (object)[
                 'total' => $result[5]->num,
                 'subscribers' => $result[4]->num,

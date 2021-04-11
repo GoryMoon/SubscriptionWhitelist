@@ -53,6 +53,15 @@
                             <a href="https://github.com/pusher/pusher-http-php">pusher/pusher-php-server</a>: Library for interacting with the Pusher REST API
                         </li>
                         <li>
+                            <a href="https://github.com/fruitcake/laravel-cors">fruitcake/laravel-cors</a>: Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application
+                        </li>
+                        <li>
+                            <a href="https://github.com/spatie/laravel-csp">spatie/laravel-csp</a>: Set content security policy headers in a Laravel app
+                        </li>
+                        <li>
+                            <a href="https://github.com/bepsvpt/secure-headers">bepsvpt/secure-headers</a>: PHP Secure Headers
+                        </li>
+                        <li>
                             <a href="https://github.com/romanzipp/Laravel-Twitch">romanzipp/laravel-twitch</a>: Twitch PHP Wrapper for Laravel
                         </li>
                         <li>
@@ -77,7 +86,7 @@
                             <a href="https://github.com/vuejs/vue">vue</a>: Reactive, component-oriented view layer for modern web interfaces.
                         </li>
                         <li>
-                            <a href="https://github.com/axios/axios">axios</a>: Promise based HTTP client for the browser and node.js
+                            <a href="https://github.com/sindresorhus/ky">ky</a>: Tiny and elegant HTTP client based on the browser Fetch API
                         </li>
                         <li>
                             <a href="https://github.com/twbs/bootstrap">bootstrap</a>: Sleek, intuitive, and powerful front-end framework for faster and easier web development.
@@ -121,6 +130,9 @@
                         </li>
                         <li>
                             <a href="https://github.com/pusher/pusher-js">pusher-js</a>: Pusher JavaScript library for browsers, React Native, NodeJS and web workers
+                        </li>
+                        <li>
+                            <a href="https://github.com/DmitryBaranovskiy/raphael">vue-morris</a>: JavaScript Vector Library
                         </li>
                         <li>
                             <a href="https://github.com/bbonnin/vue-morris">vue-morris</a>: Vue.js components wrapping <a href="https://morrisjs.github.io/morris.js/">Morris.js</a> lib

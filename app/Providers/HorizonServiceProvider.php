@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Utils\TwitchUtils;
+use Illuminate\Http\Request;
 use Laravel\Horizon\Horizon;
-use Illuminate\Support\Facades\Gate;
 use Laravel\Horizon\HorizonApplicationServiceProvider;
 
 class HorizonServiceProvider extends HorizonApplicationServiceProvider
@@ -16,9 +15,9 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
      */
     public function boot()
     {
-        Horizon::auth(function ($request) {
-            $user = TwitchUtils::getDbUser();
-            return app()->environment('local') || (!is_null($user) && $user->uid == config('whitelist.admin_id'));
+        Horizon::auth(function (Request $request) {
+            $user = $request->user();
+            return app()->environment('local') || (!is_null($user) && $user->admin);
         });
 
         Horizon::routeMailNotificationsTo('whitelist@gorymoon.se');
