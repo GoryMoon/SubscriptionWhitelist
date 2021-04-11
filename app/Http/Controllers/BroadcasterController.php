@@ -301,10 +301,8 @@ class BroadcasterController extends Controller
      */
     public function removeEntry($id): JsonResponse
     {
-        $decoded_id = Hashids::connection('whitelist')->decode($id);
-        $channel = Auth::user()->channel()->with(['whitelist' => function(HasMany $q) use ($decoded_id) {
-            $q->where('id', '==', $decoded_id);
-        }])->first();
+        $decoded_id = Hashids::connection('whitelist')->decode($id)[0];
+        $channel = Auth::user()->channel;
         if (is_null($channel)) {
             response()->json((object)['message' => 'Invalid user'], 403);
         }
