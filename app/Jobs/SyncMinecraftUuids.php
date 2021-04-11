@@ -53,7 +53,7 @@ class SyncMinecraftUuids implements ShouldQueue
             $name = MinecraftUtils::instance()->getLatestName($user->uuid);
             $requests++;
 
-            if ($user->username != $name) {
+            if (!is_null($name) && $user->username != $name) {
                 $user->username = $name;
                 $user->save();
                 if (is_null($channel)) {
