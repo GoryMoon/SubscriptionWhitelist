@@ -40,10 +40,13 @@ return [
         'main' => [
             'salt' => env('HASHIDS_SALT'),
             'length' => env('HASHIDS_LENGTH')
-            // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
         'user' => [
             'salt' => env('HASHIDS_USER_SALT'),
+            'length' => env('HASHIDS_LENGTH')
+        ],
+        'whitelist' => [
+            'salt' => env('HASHIDS_WHITELIST_SALT'),
             'length' => env('HASHIDS_LENGTH')
         ],
         'alternative' => [

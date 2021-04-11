@@ -3,9 +3,9 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class Contact extends Mailable implements ShouldQueue
 {
@@ -14,22 +14,22 @@ class Contact extends Mailable implements ShouldQueue
     /**
      * @var string
      */
-    public $contact;
+    public string $contact;
 
     /**
      * @var string
      */
-    public $message;
+    public string $message;
 
     /**
      * @var string
      */
-    public $name;
+    public string $name;
 
     /**
      * @var string
      */
-    public $display_name;
+    public string $display_name;
 
     /**
      * Create a new message instance.
@@ -52,7 +52,7 @@ class Contact extends Mailable implements ShouldQueue
      *
      * @return $this
      */
-    public function build()
+    public function build(): Contact
     {
         return $this
             ->subject('Contact from ' . $this->display_name . " (" . $this->name . ')')
@@ -64,7 +64,7 @@ class Contact extends Mailable implements ShouldQueue
      *
      * @return array
      */
-    public function tags()
+    public function tags(): array
     {
         return ['mail', 'contact'];
     }

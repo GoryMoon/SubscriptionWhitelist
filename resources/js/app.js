@@ -4,16 +4,19 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-import route from 'ziggy'; // dynamic dependency from composer package
-import { Ziggy } from "../assets/js/ziggy";
+import route from 'ziggyjs'; // dynamic dependency from composer package
+import { Ziggy } from './ziggy';
 window.Ziggy = Ziggy;
 
 require('./bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+window.Vue = Vue;
 require('bootstrap4-toggle');
+import {default as tippy} from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTwitch, faCcPaypal, faGithub, faSteam } from '@fortawesome/free-brands-svg-icons'
+import { faTwitch, faCcPaypal, faGithub, faSteam } from '@fortawesome/free-brands-svg-icons';
 import {
     faPlus,
     faTrash,
@@ -41,11 +44,11 @@ import {
     faCross,
     faLink,
     faExternalLinkAlt
-} from '@fortawesome/free-solid-svg-icons'
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import BootstrapVue from 'bootstrap-vue';
 import VueClipboard from 'vue-clipboard2';
-import Raphael from 'raphael/raphael'
+import Raphael from 'raphael/raphael';
 
 library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
@@ -55,7 +58,7 @@ library.add(
     );
 Vue.component('fa', FontAwesomeIcon);
 Vue.use(BootstrapVue);
-Vue.use(VueClipboard)
+Vue.use(VueClipboard);
 Vue.mixin({
     methods: {
         route: route
@@ -87,6 +90,11 @@ $(document).ready(function () {
 
 window.refreshTooltips = function refreshTooltips() {
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
+        for (let tooltip of $('[data-tippy-content]')) {
+            if ("_tippy" in tooltip) {
+                tooltip._tippy.destroy();
+            }
+        }
+        tippy('[data-tippy-content]');
     });
 };

@@ -2,11 +2,10 @@
 
 namespace App\Providers;
 
-use App\Utils\TwitchUtils;
-use Laravel\Horizon\Horizon;
+use Illuminate\Http\Request;
 use Laravel\Telescope\EntryType;
-use Laravel\Telescope\Telescope;
 use Laravel\Telescope\IncomingEntry;
+use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
 
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
@@ -18,9 +17,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function boot()
     {
-        Telescope::auth(function ($request) {
-            $user = TwitchUtils::getDbUser();
-            return app()->environment('local') || (!is_null($user) && $user->uid == config('whitelist.admin_id'));
+        Telescope::auth(function (Request $request) {
+            $user = $request->user();
+            return app()->environment('local') || (!is_null($user) && $user->admin);
         });
     }
 

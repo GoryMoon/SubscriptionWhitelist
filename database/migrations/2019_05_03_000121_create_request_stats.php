@@ -16,7 +16,7 @@ class CreateRequestStats extends Migration
         Schema::create('request_stats', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('channel_id');
-            $table->foreign('channel_id')->references('id')->on('channels')->onDelete('cascade');
+            $table->foreignId("channel_id")->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

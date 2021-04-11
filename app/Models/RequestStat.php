@@ -5,6 +5,7 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Collection;
  * @property int $channel_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Channel $channel
  * @method static Builder|RequestStat newModelQuery()
  * @method static Builder|RequestStat newQuery()
  * @method static Builder|RequestStat query()
@@ -24,12 +26,12 @@ use Illuminate\Support\Collection;
  * @method static Builder|RequestStat whereId($value)
  * @method static Builder|RequestStat whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read Channel $channel
  */
 class RequestStat extends Model
 {
 
-    public function channel() {
+    public function channel(): BelongsTo
+    {
         return $this->belongsTo(Channel::class);
     }
 
@@ -38,15 +40,16 @@ class RequestStat extends Model
      * @param  RequestStat[]|Collection $data
      * @return int[]
      */
-    public static function parseStats($data) {
+    public static function parseStats($data): array
+    {
         $stats = $data->countBy(function ($time) {
             return $time->created_at->minute(0)->second(0)->toDateTimeString();
         });
 
-        $time = \Carbon\Carbon::now()->minute(0)->second(0);
+        $time = Carbon::now()->minute(0)->second(0);
         $formatted = array();
         $day = 0;
-        $twodays = 0;
+        $two_days = 0;
         for ($i = 0; $i < 48; $i++) {
             $stat = $stats->get($time->format("Y-m-d H:i:s"), 0);
             $formatted[] = [
@@ -55,13 +58,13 @@ class RequestStat extends Model
             ];
             $time->subHour();
             if ($i > 24) {
-                $twodays += $stat;
+                $two_days += $stat;
             } else {
                 $day += $stat;
-                $twodays += $stat;
+                $two_days += $stat;
             }
         }
-        return array( $formatted, $day, $twodays );
+        return array( $formatted, $day, $two_days );
     }
 
 }

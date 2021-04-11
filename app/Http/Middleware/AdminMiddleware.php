@@ -2,21 +2,22 @@
 
 namespace App\Http\Middleware;
 
-use App\Utils\TwitchUtils;
+use Auth;
 use Closure;
+use Illuminate\Http\Request;
 
 class AdminMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param Request $request
+     * @param Closure $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        if (TwitchUtils::getDbUser()->uid !== config('whitelist.admin_id')) {
+        if (!Auth::user()->admin) {
             return redirect()->route('home');
         }
         return $next($request);

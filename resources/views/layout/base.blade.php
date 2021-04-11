@@ -55,11 +55,11 @@
                 </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            @if(\App\Utils\TwitchUtils::hasDBUser())
+                            @if(Auth::check())
                                 <li class="nav-item">
                                     <a class="nav-link {{ \App\Helpers::isRoute('dashboard', 'active') }}" href="{{ route('dashboard') }}">Dashboard</a>
                                 </li>
-                                @if(\App\Utils\TwitchUtils::hasSubscribers())
+                                @if(Auth::user()->broadcaster)
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle {{ \App\Helpers::isRouteBase('broadcaster', 'active') }}" href="#" id="broadcasterDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Broadcaster
@@ -75,7 +75,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link {{ \App\Helpers::isRoute('subscriber', 'active') }}" href="{{ route('subscriber') }}">Subscriber</a>
                                 </li>
-                                @if(\App\Utils\TwitchUtils::getDbUser()->uid == config('whitelist.admin_id'))
+                                @if(Auth::user()->admin)
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle {{ \App\Helpers::isRouteBase('admin', 'active') }}" href="#" id="adminDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Admin
@@ -93,10 +93,10 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ \App\Helpers::isRoute('about', 'active') }}" href="{{ route('about') }}">About</a>
                             </li>
-                            @if(\App\Utils\TwitchUtils::hasDBUser())
+                            @if(Auth::check())
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle {{ \App\Helpers::isRoute('profile', 'active') }}" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ \App\Utils\TwitchUtils::getDbUser()->display_name }}
+                                    {{ Auth::user()->display_name }}
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a href="{{ route('profile') }}" class="dropdown-item {{ \App\Helpers::isRoute('profile', 'active') }}">Profile</a>

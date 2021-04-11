@@ -6,10 +6,10 @@ use App\Models\MinecraftUser;
 use App\Notifications\MCSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SyncMinecraftUuids implements ShouldQueue
 {
@@ -45,7 +45,6 @@ class SyncMinecraftUuids implements ShouldQueue
         $channel = null;
         for ($i = 0; $i < count($this->users); $i++) {
             $user = $this->users[$i];
-            $user->uuid;
             if ($requests >= 550) {
                 SyncMinecraftUuids::dispatch(array_slice($this->users, $i))->delay(now()->addMinutes(11));
                 break;

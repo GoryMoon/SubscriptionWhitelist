@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Utils\TwitchUtils;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Invisnik\LaravelSteamAuth\SteamAuth;
 
@@ -17,14 +16,14 @@ class SteamController extends Controller
      *
      * @var SteamAuth
      */
-    protected $steam;
+    protected SteamAuth $steam;
 
     /**
      * The redirect URL.
      *
      * @var string
      */
-    protected $redirectURL = '/';
+    protected string $redirectURL = '/';
 
     /**
      * AuthController constructor.
@@ -39,35 +38,33 @@ class SteamController extends Controller
     /**
      * Redirect the user to the authentication page
      *
-     * @return RedirectResponse|Redirector
+     * @return RedirectResponse
      */
-    public function redirectToSteam()
+    public function redirectToSteam(): RedirectResponse
     {
         $this->steam->setRedirectUrl(route('auth.steam.handle'));
         return $this->steam->redirect();
     }
 
-    public function unlink()
+    public function unlink(Request $request): RedirectResponse
     {
-        $user = TwitchUtils::getDbUser();
-        $user->steam()->delete();
+        $request->user()->steam()->delete();
         return redirect()->route('profile');
     }
 
     /**
      * Get user info and log in
      *
-     * @return RedirectResponse|Redirector
+     * @return RedirectResponse
      */
-    public function handle()
+    public function handle(Request $request): RedirectResponse
     {
         try {
             if ($this->steam->validate()) {
                 $info = $this->steam->getUserInfo();
 
                 if (!is_null($info)) {
-                    $user = TwitchUtils::getDbUser();
-                    $user->steam()->create([
+                    $request->user()->steam()->create([
                         'steam_id' => $info->steamID64,
                         'name' => $info->personaname,
                         'profile_url' => $info->profileurl

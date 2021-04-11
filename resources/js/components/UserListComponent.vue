@@ -48,21 +48,22 @@
         ></search-bar>
         <vuetable ref="vuetable"
                   :fields="fields"
-                  :api-url="route('broadcaster.data').url()"
+                  :api-url="route('broadcaster.data')"
                   :css="css.table"
-                  pagination-path=""
                   :sort-order="sortOrder"
                   :show-sort-icons="true"
                   :per-page="perPage"
                   :row-class="onRowClass"
                   :append-params="moreParams"
+                  pagination-path=""
+                  track-by="hash_id"
                   @vuetable:pagination-data="onPageinationData"
                   @vuetable:load-success="onRefresh"
         >
             <template v-slot:actions="props">
                 <div slot="actions">
                     <button class="btn btn-danger mt-1"
-                            @click="onDeleteItem(props.rowData.id)"
+                            @click="onDeleteItem(props.rowData.hash_id)"
                             v-b-tooltip.hover
                             title="Remove"
                     ><fa icon="trash"></fa></button>
@@ -151,13 +152,27 @@
     </div>
 </template>
 <script>
-    import Vuetable from 'vuetable-2/src/components/Vuetable'
-    import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-    import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
-    import BootstrapCss from './bootstrap'
-    import SearchBar from './SearchBarComponent'
+import Vuetable from 'vuetable-2/src/components/Vuetable'
+import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
+import BootstrapCss from './bootstrap'
+import SearchBar from './SearchBarComponent'
+import ky from 'ky'
 
-    Vue.use(Vuetable);
+const token = $('meta[name="csrf-token"]').attr('content');
+const api = ky.extend({
+    hooks: {
+        beforeRequest: [
+            request => {
+                request.headers.set('X-Requested-With', 'XMLHttpRequest');
+                request.headers.set('X-CSRF-TOKEN', token);
+            }
+        ]
+    }
+});
+
+
+Vue.use(Vuetable);
 export default {
     components: {
         Vuetable,
@@ -186,14 +201,14 @@ export default {
                     title: 'Status',
                     formatter: (val) => {
                         let status = val.valid ?
-                            '<i class="fas fa-check text-success" data-toggle="tooltip" data-placement="top" title="Valid subscription"></i>':
-                            '<i class="fas fa-times text-danger" data-toggle="tooltip" data-placement="top" title="Invalid subscription"></i>';
+                            '<i class="fas fa-check text-success" data-toggle="tooltip" data-placement="top" data-tippy-content="Valid subscription"></i>':
+                            '<i class="fas fa-times text-danger" data-toggle="tooltip" data-placement="top" data-tippy-content="Invalid subscription"></i>';
                         if (val.minecraft !== "") {
-                            status += ' <img class="minecraft_logo" src="/images/minecraft_logo_success.png" data-toggle="tooltip" data-placement="top" title="Minecraft name: ' + val.minecraft + '">';
+                            status += ' <img class="minecraft_logo" src="/images/minecraft_logo_success.png" data-toggle="tooltip" data-placement="top" data-tippy-content="Minecraft name: ' + val.minecraft + '">';
                         }
 
                         if (val.steam) {
-                            status += ' <i class="fab fa-steam text-success" data-toggle="tooltip" data-placement="top" title="Steam Linked">';
+                            status += ' <i class="fab fa-steam text-success" data-toggle="tooltip" data-placement="top" data-tippy-content="Steam Linked">';
                         }
 
                         return status;
@@ -297,7 +312,7 @@ export default {
             }
         }, 1000, { leading: true, trailing: false}),
         sync: _.debounce(function () {
-            axios.post(this.route('broadcaster.sync').url()).then(() => {
+            api.post(this.route('broadcaster.sync')).then(() => {
                 this.$bvToast.toast("Queued userlist syncing", {
                     title: 'Subscriber Whitelist',
                     variant: 'primary',
@@ -307,74 +322,75 @@ export default {
             });
         }, 3000, { leading: true, trailing: false}),
         removeInvalid() {
-            axios.delete(this.route('broadcaster.invalid').url()).then((response) => {
-                this.$refs.vuetable.refresh();
-                this.$refs['remove-invalid'].hide();
-                this.$bvToast.toast("Successfully removed invalid subscriptions", {
-                    title: 'Subscriber Whitelist',
-                    variant: 'success',
-                    solid: true,
-                    autoHideDelay: 2000
-                });
-            }).catch((error) => {
-                this.$bvToast.toast(error, {
-                    title: 'Subscriber Whitelist',
-                    variant: 'danger',
-                    solid: true,
-                    autoHideDelay: 2000
-                });
+            api.delete(this.route('broadcaster.invalid')).then(async response => {
+                if (response.ok) {
+                    this.$refs.vuetable.refresh();
+                    this.$refs['remove-invalid'].hide();
+                    this.$bvToast.toast("Successfully removed invalid subscriptions", {
+                        title: 'Subscriber Whitelist',
+                        variant: 'success',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
+                } else {
+                    let error = await response.json();
+                    this.$bvToast.toast(error.message, {
+                        title: 'Subscriber Whitelist',
+                        variant: 'danger',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
+                }
             });
         },
         removeAll() {
-            axios.delete(this.route('broadcaster.delete').url()).then(response => {
-                this.$refs.vuetable.refresh();
-                this.$refs['remove-all'].hide();
-                this.$bvToast.toast("Successfully removed all usernames", {
-                    title: 'Subscriber Whitelist',
-                    variant: 'success',
-                    solid: true,
-                    autoHideDelay: 2000
-                });
-            }).catch((error) => {
-                this.$bvToast.toast(error, {
-                    title: 'Subscriber Whitelist',
-                    variant: 'danger',
-                    solid: true,
-                    autoHideDelay: 2000
-                });
+            api.delete(this.route('broadcaster.delete'), {throwHttpErrors: false}).then(async response => {
+                if (response.ok) {
+                    this.$refs.vuetable.refresh();
+                    this.$refs['remove-all'].hide();
+                    this.$bvToast.toast("Successfully removed all usernames", {
+                        title: 'Subscriber Whitelist',
+                        variant: 'success',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
+                } else {
+                    let error = await response.json();
+                    this.$bvToast.toast(error.message, {
+                        title: 'Subscriber Whitelist',
+                        variant: 'danger',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
+                }
             });
         },
         onDeleteItem(id) {
-            axios.delete(this.route('broadcaster.delete_entry', {id: id}).url()).then(response => {
-                this.$refs.vuetable.refresh();
-                this.$refs['remove-all'].hide();
-                this.$bvToast.toast("Successfully removed " + response.data.user, {
-                    title: 'Subscriber Whitelist',
-                    variant: 'success',
-                    solid: true,
-                    autoHideDelay: 2000
-                });
-            }).catch((error) => {
-                let message = error.message;
-                if (error.response) {
-                    message = error.response.data;
-                    if (message.message) {
-                        message = message.message;
-                    }
-                } else if (error.request) {
-                    message = error.request;
+            api.delete(this.route('broadcaster.delete_entry', {id: id}), {throwHttpErrors: false}).then(async response => {
+                if (response.ok) {
+                    let data = await response.json();
+                    this.$refs.vuetable.refresh();
+                    this.$refs['remove-all'].hide();
+                    this.$bvToast.toast("Successfully removed " + data.user, {
+                        title: 'Subscriber Whitelist',
+                        variant: 'success',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
+                } else {
+                    let error = await response.json();
+                    this.$bvToast.toast(error.message, {
+                        title: 'Subscriber Whitelist',
+                        variant: 'danger',
+                        solid: true,
+                        autoHideDelay: 2000
+                    });
                 }
-                this.$bvToast.toast(message, {
-                    title: 'Subscriber Whitelist',
-                    variant: 'danger',
-                    solid: true,
-                    autoHideDelay: 2000
-                });
             });
         },
         onRefresh() {
-            axios.get(this.route('broadcaster.list_stats')).then(response => {
-                this.infoData = response.data;
+            api.get(this.route('broadcaster.list_stats')).then(async response => {
+                this.infoData = await response.json();
             });
         }
     },

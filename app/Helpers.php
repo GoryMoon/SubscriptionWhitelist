@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Route;
 use Request;
+use Route;
 
 class Helpers
 {
@@ -14,11 +14,13 @@ class Helpers
      * @param $false string Value to return if false
      * @return string Value returned based on current route
      */
-    public static function isRoute($route, $true, $false = '') {
+    public static function isRoute(string $route, string $true, string $false = ''): string
+    {
         return Route::currentRouteName() == $route ? $true : $false;
     }
 
-    public static function isRouteBase($route, $true, $false = '') {
+    public static function isRouteBase(string $route, string $true, string $false = ''): string
+    {
         return explode('.', Route::currentRouteName())[0] == $route ? $true: $false;
     }
 
@@ -26,7 +28,8 @@ class Helpers
      * @param $row
      * @return string[] Query array
      */
-    public static function sortQuery($row) {
+    public static function sortQuery($row): array
+    {
         $sort = Request::query('sort');
         $order = Request::query('order', 'desc');
         if ($sort == $row) {

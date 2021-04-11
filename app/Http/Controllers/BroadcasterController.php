@@ -10,8 +10,15 @@ use App\Models\RequestStat;
 use App\Models\Whitelist;
 use App\Utils\TwitchUtils;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -19,9 +26,13 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class BroadcasterController extends Controller
 {
-    public function index() {
-        $user = TwitchUtils::getDbUser();
-        $channel = $user->channel;
+    /**
+     * @param Request $request
+     * @return View
+     */
+    public function index(Request $request): View
+    {
+        $channel = $request->user()->channel;
         $id = Hashids::encode($channel->id);
         $base_url = route('home'). "/list/$id/";
         $db_plans = json_decode($channel->valid_plans);
@@ -50,9 +61,13 @@ class BroadcasterController extends Controller
         ]);
     }
 
-    public function links() {
-        $user = TwitchUtils::getDbUser();
-        $channel = $user->channel;
+    /**
+     * @param Request $request
+     * @return View
+     */
+    public function links(Request $request): View
+    {
+        $channel = $request->user()->channel;
         $id = Hashids::encode($channel->id);
         $base_url = route('home'). "/list/$id/";
 
@@ -62,7 +77,12 @@ class BroadcasterController extends Controller
         ]);
     }
 
-    public function updateSettings(Request $request) {
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateSettings(Request $request): RedirectResponse
+    {
         $inputs = $request->validate([
             'list_toggle' => 'required|boolean',
             'sync_option' => [
@@ -81,7 +101,7 @@ class BroadcasterController extends Controller
         if ($plans['tier2']) array_push($new_plans, '2000');
         if ($plans['tier3']) array_push($new_plans, '3000');
 
-        $user = TwitchUtils::getDbUser();
+        $user = $request->user();
         $channel = $user->channel;
         $channel->valid_plans = json_encode($new_plans);
         $channel->enabled = $inputs['list_toggle'];
@@ -91,8 +111,7 @@ class BroadcasterController extends Controller
 
 
         if ($channel->sync && is_null($user->access_token)) {
-            $user->access_token = TwitchUtils::getSessionAccessToken();
-            $user->save();
+            TwitchUtils::tokenRefresh($user);
         } else if (!$channel->sync && !is_null($user->access_token)) {
             $user->access_token = null;
             $user->save();
@@ -101,21 +120,31 @@ class BroadcasterController extends Controller
         return redirect()->route('broadcaster')->with('success', 'Successfully saved settings');
     }
 
-    public function contact(Request $request) {
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function contact(Request $request): RedirectResponse
+    {
         $validated = $request->validate([
             'contact_email' => 'required|email',
             'contact_message' => 'required'
         ]);
         $to = $validated['contact_email'];
-        $user = TwitchUtils::getDbUser();
+        $user = $request->user();
         $message = $validated['contact_message'];
         Mail::to("whitelist@gorymoon.se")->queue(new Contact($user->display_name, $user->name, $to, $message));
 
         return redirect()->route('broadcaster')->with('success', 'Message successfully sent');
     }
 
-    public function userlist() {
-        $db_user = TwitchUtils::getDbUser();
+    /**
+     * @param Request $request
+     * @return View
+     */
+    public function userlist(Request $request): View
+    {
+        $db_user = $request->user();
         return view('broadcaster.userlist',
             [
                 'channel_id' => $db_user->channel->id,
@@ -123,8 +152,13 @@ class BroadcasterController extends Controller
             ]);
     }
 
-    public function userlistData(Request $request) {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function userlistData(Request $request): JsonResponse
+    {
+        $channel = $request->user()->channel;
         $query = $channel->whitelist()->newQuery();
 
         if ($request->has('sort') && $request->sort != "") {
@@ -146,7 +180,7 @@ class BroadcasterController extends Controller
 
         $perPage = $request->has('per_page') ? (int) $request->per_page : 15;
 
-        $pagination = $query->paginate($perPage);
+        $pagination = $query->with(['minecraft', 'steam'])->paginate($perPage);
         $pagination->appends([
             'sort' => $request->sort,
             'filter' => $request->filter,
@@ -160,11 +194,17 @@ class BroadcasterController extends Controller
      * @param $id
      * @return Builder
      */
-    private static function getStatBase($id) {
+    private static function getStatBase($id): Builder
+    {
         return DB::table('whitelists')->selectRaw('COUNT(id) as num')->where('channel_id', $id);
     }
 
-    private static function getStats(Channel $channel) {
+    /**
+     * @param Channel $channel
+     * @return Collection
+     */
+    private static function getStats(Channel $channel): Collection
+    {
         $total = self::getStatBase($channel->id);
         $subs = self::getStatBase($channel->id)->whereNotNull('user_id');
         $custom = self::getStatBase($channel->id)->whereNull('user_id');
@@ -179,8 +219,12 @@ class BroadcasterController extends Controller
             ->get();
     }
 
-    public function listStats() {
-        $result = $this->getStats(TwitchUtils::getDbUser()->channel);
+    /**
+     * @return JsonResponse
+     */
+    public function listStats(): JsonResponse
+    {
+        $result = $this->getStats(Auth::user()->channel);
         return response()->json([
             'total' => $result[5]->num,
             'subscribers' => $result[4]->num,
@@ -191,8 +235,13 @@ class BroadcasterController extends Controller
         ]);
     }
 
-    public function addUser(Request $request) {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function addUser(Request $request): RedirectResponse
+    {
+        $channel = Auth::user()->channel;
         $inputs = $request->validate([
             'usernames' => 'required|array',
             'usernames.*' => Rule::unique('whitelists', 'username')->where(function ($query) use($channel) {
@@ -201,7 +250,7 @@ class BroadcasterController extends Controller
         ]);
 
         if (is_null($channel)) {
-            response()->json('Invalid user', 403);
+            response()->json((object)['message' => 'Invalid user'], 403);
         }
 
         $whitelist = [];
@@ -219,33 +268,50 @@ class BroadcasterController extends Controller
         return redirect()->route('broadcaster.list')->with('success', 'Names successfully added to the whitelist');
     }
 
-    public function removeAll() {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @return JsonResponse
+     */
+    public function removeAll(): JsonResponse
+    {
+        $channel = Auth::user()->channel;
         if (is_null($channel)) {
-            response()->json('Invalid user', 403);
+            response()->json((object)['message' => 'Invalid user'], 403);
         }
         $channel->whitelist()->delete();
         return response()->json();
     }
 
-    public function removeInvalid() {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @return JsonResponse
+     */
+    public function removeInvalid(): JsonResponse
+    {
+        $channel = Auth::user()->channel;
         if (is_null($channel)) {
-            response()->json('Invalid user', 403);
+            response()->json((object)['message' => 'Invalid user'], 403);
         }
         $channel->whitelist()->where('valid', '0')->delete();
         return response()->json();
     }
 
-    public function removeEntry($id) {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @param $id
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function removeEntry($id): JsonResponse
+    {
+        $decoded_id = Hashids::connection('whitelist')->decode($id);
+        $channel = Auth::user()->channel()->with(['whitelist' => function(HasMany $q) use ($decoded_id) {
+            $q->where('id', '==', $decoded_id);
+        }])->first();
         if (is_null($channel)) {
-            response()->json('Invalid user', 403);
+            response()->json((object)['message' => 'Invalid user'], 403);
         }
 
-        $entry = $channel->whitelist->find($id);
+        $entry = $channel->whitelist->find($decoded_id);
         if (is_null($entry)) {
-            return response()->json('User not in whitelist', 404);
+            return response()->json((object)['message' => 'User not in whitelist'], 404);
         }
         $name = $entry->username;
         $entry->delete();
@@ -255,8 +321,12 @@ class BroadcasterController extends Controller
         return response()->json([ 'user' => $name ]);
     }
 
-    public function sync() {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @return JsonResponse
+     */
+    public function sync(): JsonResponse
+    {
+        $channel = Auth::user()->channel;
         if (is_null($channel)) {
             response()->json('Invalid user', 403);
         }
@@ -265,15 +335,21 @@ class BroadcasterController extends Controller
         return response()->json();
     }
 
-    public static function getStatsArray(Channel $channel) {
+    /**
+     * @param Channel $channel
+     * @return array
+     */
+    public static function getStatsArray(Channel $channel): array
+    {
         $result = self::getStats($channel);
-        list($formatted, $day, $twodays) = RequestStat::parseStats($channel->stats);
+        $stats = $channel->stats()->whereDate('created_at', '>=', Carbon::now()->subDays(2)->subHour()->toDateTimeString())->get();
+        list($formatted, $day, $two_days) = RequestStat::parseStats($stats);
 
         return [
             'stats' => json_encode($formatted),
             'total' => $channel->requests,
             'day' => $day,
-            'twodays' => $twodays,
+            'twodays' => $two_days,
             'whitelist' => (object)[
                 'total' => $result[5]->num,
                 'subscribers' => $result[4]->num,
@@ -285,8 +361,11 @@ class BroadcasterController extends Controller
         ];
     }
 
-    public function stats() {
-        $channel = TwitchUtils::getDbUser()->channel;
+    /**
+     * @return View
+     */
+    public function stats(): View {
+        $channel = Auth::user()->channel;
         return view('broadcaster.stats', self::getStatsArray($channel));
     }
 }

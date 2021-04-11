@@ -23,9 +23,12 @@ class AppPolicy extends Basic
             ->addDirective(Directive::OBJECT, Keyword::NONE)
             ->addDirective(Directive::SCRIPT, Keyword::SELF)
             ->addDirective(Directive::STYLE, Keyword::SELF)
+            ->addDirective(Directive::FONT, Keyword::SELF)
 
             ->addDirective(Directive::SCRIPT, 'cdn.jsdelivr.net')
             ->addDirective(Directive::STYLE, 'cdn.jsdelivr.net')
+            ->addDirective(Directive::STYLE, 'fonts.googleapis.com')
+            ->addDirective(Directive::FONT, 'fonts.gstatic.com')
             ->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE)
             ->addDirective(Directive::SCRIPT, Keyword::UNSAFE_EVAL)
             ->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE)

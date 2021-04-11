@@ -6,10 +6,10 @@ use App\Models\Whitelist;
 use App\Notifications\MCUserSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 
 class SyncMinecraftName implements ShouldQueue
 {
@@ -17,7 +17,7 @@ class SyncMinecraftName implements ShouldQueue
     /**
      * @var Whitelist
      */
-    private $whitelist;
+    private Whitelist $whitelist;
 
     /**
      * Create a new job instance.
