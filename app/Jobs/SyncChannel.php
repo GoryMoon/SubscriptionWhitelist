@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Log;
 
 class SyncChannel implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var Collection|Whitelist[]
@@ -54,7 +57,7 @@ class SyncChannel implements ShouldQueue
         $size = count($this->whitelists);
         $name = $this->channel->owner->name;
         Log::info("Syncing channel $name", [$this->channel]);
-        for ($i = 0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; ++$i) {
             $entry = $this->whitelists[$i];
             if (is_null($entry->user)) {
                 continue;
@@ -65,7 +68,7 @@ class SyncChannel implements ShouldQueue
             }
 
             $channels[] = $entry;
-            if ($i + 1 == $size || count($channels) == 80) {
+            if ($i + 1 == $size || 80 == count($channels)) {
                 $channels = collect($channels)->mapWithKeys(function ($item) {
                     return [$item->user->uid => $item];
                 });
@@ -73,7 +76,7 @@ class SyncChannel implements ShouldQueue
                     return $key;
                 }));
 
-                if (!is_null($subs)) {
+                if ( ! is_null($subs)) {
                     foreach ($subs as $key => $value) {
                         $whitelist = $channels->get($key);
 
@@ -86,12 +89,12 @@ class SyncChannel implements ShouldQueue
                 } else {
                     $this->fail();
                 }
-                $checked++;
+                ++$checked;
                 $channels = [];
             }
         }
 
-        if ($changed && !$this->channel->whitelist_dirty) {
+        if ($changed && ! $this->channel->whitelist_dirty) {
             $this->channel->whitelist_dirty = true;
             $this->channel->save();
             Log::info("Channel $name had changed subscriptions, marked dirty");

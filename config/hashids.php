@@ -10,7 +10,6 @@
  */
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Connection Name
@@ -36,25 +35,22 @@ return [
     */
 
     'connections' => [
-
         'main' => [
             'salt' => env('HASHIDS_SALT'),
-            'length' => env('HASHIDS_LENGTH')
+            'length' => env('HASHIDS_LENGTH'),
         ],
         'user' => [
             'salt' => env('HASHIDS_USER_SALT'),
-            'length' => env('HASHIDS_LENGTH')
+            'length' => env('HASHIDS_LENGTH'),
         ],
         'whitelist' => [
             'salt' => env('HASHIDS_WHITELIST_SALT'),
-            'length' => env('HASHIDS_LENGTH')
+            'length' => env('HASHIDS_LENGTH'),
         ],
         'alternative' => [
             'salt' => 'your-salt-string',
             'length' => 'your-length-integer',
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
-
     ],
-
 ];

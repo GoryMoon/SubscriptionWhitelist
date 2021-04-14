@@ -24,15 +24,26 @@ class AdminController extends Controller
     /**
      * @return Builder
      */
-    private static function getStatBase(){
+    private static function getStatBase(): Builder
+    {
         return DB::table('whitelists')->selectRaw('COUNT(id) as num');
     }
 
-    public function index() {
+    /**
+     * @return View
+     */
+    public function index(): View
+    {
         return view('admin.index');
     }
 
-    public function channels(Request $request) {
+    /**
+     * @param Request $request
+     *
+     * @return View
+     */
+    public function channels(Request $request): View
+    {
         $sort = $request->query('sort');
         $query = Channel::with('owner')
             ->select([
@@ -40,37 +51,39 @@ class AdminController extends Controller
                 'twitch_users.channel_id',
                 'twitch_users.name',
                 'twitch_users.display_name',
-                'twitch_users.broadcaster_type'
+                'twitch_users.broadcaster_type',
             ])
             ->withCount('whitelist')
             ->join('twitch_users', 'channels.id', '=', 'twitch_users.channel_id');
         $order = 'desc';
-        if ($request->query('order') == 'asc') {
+        if ('asc' == $request->query('order')) {
             $order = 'asc';
         }
-        if (!is_null($sort)) {
-            if ($sort == 'id') {
+        if ( ! is_null($sort)) {
+            if ('id' == $sort) {
                 $query = $query->orderBy('id', $order);
-            } else if ($sort == 'name') {
+            } elseif ('name' == $sort) {
                 $query = $query->orderBy('twitch_users.name', $order);
-            } else if ($sort == 'dname') {
+            } elseif ('dname' == $sort) {
                 $query = $query->orderBy('twitch_users.display_name', $order);
-            } else if ($sort == 'type') {
+            } elseif ('type' == $sort) {
                 $query = $query->orderBy('twitch_users.broadcaster_type', $order);
-            } else if ($sort == 'enabled') {
+            } elseif ('enabled' == $sort) {
                 $query = $query->orderBy('enabled', $order);
-            } else if ($sort == 'whitelist') {
+            } elseif ('whitelist' == $sort) {
                 $query = $query->orderBy('whitelist_count', $order);
-            } else if ($sort == 'requests') {
+            } elseif ('requests' == $sort) {
                 $query = $query->orderBy('requests', $order);
             }
         }
         $channels = $query->paginate(15);
+
         return view('admin.channels', ['channels' => $channels]);
     }
 
     /**
      * @param Channel $channel
+     *
      * @return View
      */
     public function statsChannel(Channel $channel): View
@@ -84,6 +97,7 @@ class AdminController extends Controller
     /**
      * @param Request $request
      * @param Channel $channel
+     *
      * @return View
      */
     public function viewChannel(Request $request, Channel $channel): View
@@ -91,21 +105,21 @@ class AdminController extends Controller
         $sort = $request->query('sort');
         $query = $channel->whitelist()->with('user:id', 'minecraft:id', 'steam:id');
         $order = 'desc';
-        if ($request->query('order') == 'asc') {
+        if ('asc' == $request->query('order')) {
             $order = 'asc';
         }
-        if (!is_null($sort)) {
-            if ($sort == 'id') {
+        if ( ! is_null($sort)) {
+            if ('id' == $sort) {
                 $query = $query->orderBy('id', $order);
-            } else if ($sort == 'name') {
+            } elseif ('name' == $sort) {
                 $query = $query->orderBy('username', $order);
-            } else if ($sort == 'type') {
+            } elseif ('type' == $sort) {
                 $query = $query->orderBy('user_id', $order);
-            } else if ($sort == 'valid') {
+            } elseif ('valid' == $sort) {
                 $query = $query->orderBy('valid', $order);
-            } else if ($sort == 'minecraft') {
+            } elseif ('minecraft' == $sort) {
                 $query = $query->orderBy('minecraft_id', $order);
-            } else if ($sort == 'steam') {
+            } elseif ('steam' == $sort) {
                 $query = $query->orderBy('steam_id', $order);
             }
         }
@@ -117,8 +131,10 @@ class AdminController extends Controller
     /**
      * @param Channel $channel
      * @param Whitelist $whitelist
-     * @return RedirectResponse
+     *
      * @throws Exception
+     *
+     * @return RedirectResponse
      */
     public function deleteWhitelist(Channel $channel, Whitelist $whitelist): RedirectResponse
     {
@@ -163,15 +179,14 @@ class AdminController extends Controller
             'channels' => $channels,
             'day' => $day,
             'twodays' => $two_days,
-            'whitelist' => (object)[
+            'whitelist' => (object) [
                 'total' => $result[5]->num,
                 'subscribers' => $result[4]->num,
                 'custom' => $result[3]->num,
                 'invalid' => $result[2]->num,
                 'minecraft' => $result[1]->num,
-                'steam' => $result[0]->num
-            ]
+                'steam' => $result[0]->num,
+            ],
         ]);
     }
-
 }

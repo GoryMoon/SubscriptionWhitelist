@@ -18,7 +18,6 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
     ];
 
     /**
@@ -32,11 +31,9 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
         });
     }
 
@@ -45,11 +42,13 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
+
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  Request  $request
-     * @param  Throwable $exception
+     * @param Request $request
+     * @param Throwable $exception
+     *
      * @return Response
      */
     public function render($request, Throwable $exception)
@@ -59,6 +58,7 @@ class Handler extends ExceptionHandler
         });
         app(AppPolicy::class)->addDirective(Directive::SCRIPT, Keyword::UNSAFE_INLINE);
         app(AppPolicy::class)->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE);
+
         return parent::render($request, $exception);
     }
 }

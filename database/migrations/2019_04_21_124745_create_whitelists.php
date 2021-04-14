@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateWhitelists extends Migration
 {
@@ -18,9 +18,9 @@ class CreateWhitelists extends Migration
             $table->string('username');
             $table->boolean('valid')->default(true);
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreignId("user_id")->constrained("twitch_users")->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('twitch_users')->cascadeOnDelete();
             $table->unsignedBigInteger('channel_id');
-            $table->foreignId("channel_id")->constrained()->cascadeOnDelete();
+            $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

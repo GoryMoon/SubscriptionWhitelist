@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
      * A policy will determine which CSP headers will be set. A valid CSP policy is
      * any class that extends `Spatie\Csp\Policies\Policy`

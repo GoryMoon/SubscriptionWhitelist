@@ -24,7 +24,8 @@ class MCUserSyncDone extends Notification
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
+     *
      * @return array
      */
     public function via($notifiable)
@@ -32,11 +33,10 @@ class MCUserSyncDone extends Notification
         return ['broadcast'];
     }
 
-
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'name' => $this->name
+            'name' => $this->name,
         ]);
     }
 }

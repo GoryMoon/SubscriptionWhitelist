@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
      * Redirect URL after login
      */

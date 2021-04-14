@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMinecraftUsers extends Migration
 {
@@ -15,8 +15,8 @@ class CreateMinecraftUsers extends Migration
     {
         Schema::create('minecraft_users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->uuid("uuid");
-            $table->string("username");
+            $table->uuid('uuid');
+            $table->string('username');
             $table->timestamps();
         });
     }

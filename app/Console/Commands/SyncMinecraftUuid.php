@@ -44,7 +44,7 @@ class SyncMinecraftUuid extends Command
         $whitelist = TwitchUser::where('name', $channel_name)->with('channel.whitelist.minecraft')->first()->channel->whitelist;
         $users = [];
         foreach ($whitelist as $entry) {
-            if (!is_null($entry->minecraft)) {
+            if ( ! is_null($entry->minecraft)) {
                 $users[] = $entry->minecraft;
             }
         }

@@ -13,7 +13,10 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncMinecraftUuids implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var null
@@ -43,7 +46,7 @@ class SyncMinecraftUuids implements ShouldQueue
         }
 
         $channel = null;
-        for ($i = 0; $i < count($this->users); $i++) {
+        for ($i = 0; $i < count($this->users); ++$i) {
             $user = $this->users[$i];
             if ($requests >= 550) {
                 SyncMinecraftUuids::dispatch(array_slice($this->users, $i))->delay(now()->addMinutes(11));
@@ -51,9 +54,9 @@ class SyncMinecraftUuids implements ShouldQueue
             }
 
             $name = MinecraftUtils::instance()->getLatestName($user->uuid);
-            $requests++;
+            ++$requests;
 
-            if (!is_null($name) && $user->username != $name) {
+            if ( ! is_null($name) && $user->username != $name) {
                 $user->username = $name;
                 $user->save();
                 if (is_null($channel)) {
@@ -61,11 +64,10 @@ class SyncMinecraftUuids implements ShouldQueue
                 }
             }
         }
-        if (!is_null($channel)) {
+        if ( ! is_null($channel)) {
             $channel->notify(new MCSyncDone());
             $channel->whitelist_dirty = true;
             $channel->save();
         }
-
     }
 }

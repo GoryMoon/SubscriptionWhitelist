@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'admin_id'     => env('ADMIN_UID', ''),
+    'admin_id' => env('ADMIN_UID', ''),
 ];

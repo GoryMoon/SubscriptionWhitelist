@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateTwitchUsers extends Migration
 {
@@ -21,7 +21,7 @@ class CreateTwitchUsers extends Migration
             $table->string('broadcaster_type');
             $table->string('access_token')->nullable();
             $table->unsignedBigInteger('channel_id')->nullable();
-            $table->foreignId("channel_id")->constrained()->nullOnDelete();
+            $table->foreignId('channel_id')->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

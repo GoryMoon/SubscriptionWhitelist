@@ -49,7 +49,7 @@ class Kernel extends HttpKernel
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
         AddCspHeaders::class,
-        SecureHeadersMiddleware::class
+        SecureHeadersMiddleware::class,
     ];
 
     /**
@@ -93,6 +93,6 @@ class Kernel extends HttpKernel
         'verified' => EnsureEmailIsVerified::class,
         'twitch' => Twitch::class,
         'broadcaster' => Broadcaster::class,
-        'admin' => AdminMiddleware::class
+        'admin' => AdminMiddleware::class,
     ];
 }

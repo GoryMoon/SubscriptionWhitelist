@@ -9,7 +9,8 @@ use Illuminate\Queue\SerializesModels;
 
 class Contact extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var string
@@ -55,7 +56,7 @@ class Contact extends Mailable implements ShouldQueue
     public function build(): Contact
     {
         return $this
-            ->subject('Contact from ' . $this->display_name . " (" . $this->name . ')')
+            ->subject('Contact from ' . $this->display_name . ' (' . $this->name . ')')
             ->markdown('emails.contact');
     }
 

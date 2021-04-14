@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Validation Language Lines
@@ -137,7 +136,7 @@ return [
         ],
         'username-*' => [
             'unique' => 'The username :input is already taken in the whitelist.',
-            'rquired' => 'You need to provide a username, to remove click the delete button'
+            'rquired' => 'You need to provide a username, to remove click the delete button',
         ],
     ],
 
@@ -153,5 +152,4 @@ return [
     */
 
     'attributes' => [],
-
 ];

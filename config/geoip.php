@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Logging Configuration
@@ -50,7 +49,6 @@ return [
     */
 
     'services' => [
-
         'maxmind_database' => [
             'class' => \Torann\GeoIP\Services\MaxMindDatabase::class,
             'database_path' => storage_path('app/geoip.mmdb'),
@@ -82,14 +80,14 @@ return [
         ],
 
         'ipdata' => [
-            'class'  => \Torann\GeoIP\Services\IPData::class,
-            'key'    => env('IPDATA_API_KEY'),
+            'class' => \Torann\GeoIP\Services\IPData::class,
+            'key' => env('IPDATA_API_KEY'),
             'secure' => true,
         ],
 
         'ipfinder' => [
-            'class'  => \Torann\GeoIP\Services\IPFinder::class,
-            'key'    => env('IPFINDER_API_KEY'),
+            'class' => \Torann\GeoIP\Services\IPFinder::class,
+            'key' => env('IPFINDER_API_KEY'),
             'secure' => true,
             'locales' => ['en'],
         ],
@@ -160,5 +158,4 @@ return [
         'default' => true,
         'currency' => 'USD',
     ],
-
 ];

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Middleware;
 
 use Auth;
@@ -16,18 +15,21 @@ class Twitch
      *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check()) {
+        if ( ! Auth::check()) {
             $parts = explode('/', $request->path());
-            if ($parts[0] !== 'telescope' && $parts[0] !== 'horizon') {
+            if ('telescope' !== $parts[0] && 'horizon' !== $parts[0]) {
                 Session::put('redirect', $request->fullUrl());
             }
+
             return Redirect::route('login');
-        } else if (is_null(Auth::user())) {
+        } elseif (is_null(Auth::user())) {
             Auth::logout();
+
             return Redirect::route('login');
         }
 

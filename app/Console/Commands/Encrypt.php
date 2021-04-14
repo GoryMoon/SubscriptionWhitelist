@@ -38,6 +38,6 @@ class Encrypt extends Command
     public function handle()
     {
         $data = $this->argument('data');
-        $this->info("Encrypted: " . encrypt($data));
+        $this->info('Encrypted: ' . encrypt($data));
     }
 }

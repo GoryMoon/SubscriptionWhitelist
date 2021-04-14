@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'whitelist' => [
         'broadcaster',
@@ -16,6 +15,6 @@ return [
         'subscriber',
         'subscriber.save',
         'subscriber.steam.link',
-        'profile'
-    ]
+        'profile',
+    ],
 ];

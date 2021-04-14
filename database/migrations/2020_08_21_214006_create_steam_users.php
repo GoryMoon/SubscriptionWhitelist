@@ -18,8 +18,8 @@ class CreateSteamUsers extends Migration
             $table->string('steam_id');
             $table->string('name');
             $table->string('profile_url');
-            $table->unsignedBigInteger("user_id");
-            $table->foreignId("user_id")->constrained("twitch_users")->cascadeOnDelete();
+            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained('twitch_users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

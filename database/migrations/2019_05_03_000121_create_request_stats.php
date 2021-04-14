@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateRequestStats extends Migration
 {
@@ -16,7 +16,7 @@ class CreateRequestStats extends Migration
         Schema::create('request_stats', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('channel_id');
-            $table->foreignId("channel_id")->constrained()->cascadeOnDelete();
+            $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

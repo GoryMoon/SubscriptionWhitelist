@@ -36,24 +36,26 @@ class SteamController extends Controller
     }
 
     /**
-     * Redirect the user to the authentication page
+     * Redirect the user to the authentication page.
      *
      * @return RedirectResponse
      */
     public function redirectToSteam(): RedirectResponse
     {
         $this->steam->setRedirectUrl(route('auth.steam.handle'));
+
         return $this->steam->redirect();
     }
 
     public function unlink(Request $request): RedirectResponse
     {
         $request->user()->steam()->delete();
+
         return redirect()->route('profile');
     }
 
     /**
-     * Get user info and log in
+     * Get user info and log in.
      *
      * @return RedirectResponse
      */
@@ -63,19 +65,20 @@ class SteamController extends Controller
             if ($this->steam->validate()) {
                 $info = $this->steam->getUserInfo();
 
-                if (!is_null($info)) {
+                if ( ! is_null($info)) {
                     $request->user()->steam()->create([
                         'steam_id' => $info->steamID64,
                         'name' => $info->personaname,
-                        'profile_url' => $info->profileurl
+                        'profile_url' => $info->profileurl,
                     ]);
 
                     return redirect()->route('profile');
                 }
             }
         } catch (GuzzleException | Exception $e) {
-            Log::error("Error handling steam connection", array($e));
+            Log::error('Error handling steam connection', [$e]);
         }
+
         return $this->redirectToSteam();
     }
 }

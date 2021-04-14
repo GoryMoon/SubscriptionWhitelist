@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Log;
 
 class CleanRequestStats implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Execute the job.
@@ -27,6 +30,7 @@ class CleanRequestStats implements ShouldQueue
             $amount = RequestStat::whereDate('created_at', '<', Carbon::now()->subDays(2))->delete();
         } catch (Exception $e) {
             Log::error('Failed to delete old stat data', ['ex' => $e]);
+
             return;
         }
         Log::info('Removed ' . $amount . ' stat data');

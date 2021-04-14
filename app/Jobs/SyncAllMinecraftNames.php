@@ -15,7 +15,10 @@ use Illuminate\Support\Collection;
 
 class SyncAllMinecraftNames implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
     /**
      * @var Channel|null
      */
@@ -38,7 +41,6 @@ class SyncAllMinecraftNames implements ShouldQueue
         $this->whitelist = collect($whitelist);
     }
 
-
     /**
      * Execute the job.
      *
@@ -51,7 +53,7 @@ class SyncAllMinecraftNames implements ShouldQueue
             $names[] = $item->username;
         }
         $response = MinecraftUtils::instance()->getProfiles($names);
-        if (!is_null($response)) {
+        if ( ! is_null($response)) {
             $whitelistMap = $this->whitelist->mapWithKeys(function ($item, $key) {
                 return [strtolower($item['username']) => $item];
             });

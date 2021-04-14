@@ -12,7 +12,10 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncUser implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     private TwitchUser $user;
     private string $access_token;
@@ -45,7 +48,7 @@ class SyncUser implements ShouldQueue
                 $whitelist->valid = $subbed;
                 $whitelist->save();
 
-                if (!$channel->whitelist_dirty) {
+                if ( ! $channel->whitelist_dirty) {
                     $channel->whitelist_dirty = true;
                     $channel->save();
                 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services\Csp;
-
 
 use Spatie\Csp\Directive;
 use Spatie\Csp\Keyword;
@@ -10,7 +8,6 @@ use Spatie\Csp\Policies\Basic;
 
 class AppPolicy extends Basic
 {
-
     public function configure()
     {
         $this

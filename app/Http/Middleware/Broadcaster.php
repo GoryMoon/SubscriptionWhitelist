@@ -14,13 +14,15 @@ class Broadcaster
      *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::user()->broadcaster) {
+        if ( ! Auth::user()->broadcaster) {
             return Redirect::route('home');
         }
+
         return $next($request);
     }
 }

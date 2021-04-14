@@ -19,7 +19,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         Telescope::auth(function (Request $request) {
             $user = $request->user();
-            return app()->environment('local') || (!is_null($user) && $user->admin);
+
+            return app()->environment('local') || ( ! is_null($user) && $user->admin);
         });
     }
 
@@ -43,10 +44,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                    $entry->isFailedJob() ||
                    $entry->isScheduledTask() ||
                    $entry->hasMonitoredTag() ||
-                   $entry->type === EntryType::LOG ||
-                   $entry->type === EntryType::CACHE ||
-                   $entry->type === EntryType::REDIS ||
-                   $entry->type === EntryType::MAIL;
+                   EntryType::LOG === $entry->type ||
+                   EntryType::CACHE === $entry->type ||
+                   EntryType::REDIS === $entry->type ||
+                   EntryType::MAIL === $entry->type;
         });
     }
 

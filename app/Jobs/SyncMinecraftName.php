@@ -13,7 +13,10 @@ use Illuminate\Queue\SerializesModels;
 
 class SyncMinecraftName implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
     /**
      * @var Whitelist
      */
@@ -39,7 +42,7 @@ class SyncMinecraftName implements ShouldQueue
         $response = MinecraftUtils::instance()->getProfile($this->whitelist->username);
         $channel = $this->whitelist->channel;
         $name = '';
-        if (!is_null($response)) {
+        if ( ! is_null($response)) {
             $data = $this->whitelist->minecraft()->updateOrCreate(['uuid' => $response->id], ['username' => $response->name]);
             $name = $data->username;
             $this->whitelist->minecraft()->associate($data);

@@ -9,14 +9,15 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
- * App\Models\MinecraftUser
+ * App\Models\MinecraftUser.
  *
  * @property int $id
  * @property string $uuid
  * @property string $username
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @property-read Whitelist|null $whitelist
+ * @property \App\Models\Whitelist|null $whitelist
+ *
  * @method static Builder|MinecraftUser newModelQuery()
  * @method static Builder|MinecraftUser newQuery()
  * @method static Builder|MinecraftUser query()
@@ -36,5 +37,4 @@ class MinecraftUser extends Model
     {
         return $this->hasOne(Whitelist::class);
     }
-
 }

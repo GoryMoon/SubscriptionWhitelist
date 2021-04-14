@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class RemoveCascadeOnMinecraftUsers extends Migration
 {
@@ -15,7 +15,7 @@ class RemoveCascadeOnMinecraftUsers extends Migration
     {
         Schema::table('whitelists', function (Blueprint $table) {
             $table->dropForeign(['minecraft_id']);
-            $table->foreignId("minecraft_id")->constrained("minecraft_users")->nullOnDelete();
+            $table->foreignId('minecraft_id')->constrained('minecraft_users')->nullOnDelete();
         });
     }
 
@@ -28,7 +28,7 @@ class RemoveCascadeOnMinecraftUsers extends Migration
     {
         Schema::table('whitelists', function (Blueprint $table) {
             $table->dropForeign(['minecraft_id']);
-            $table->foreignId("minecraft_id")->constrained("minecraft_users")->cascadeOnDelete();
+            $table->foreignId('minecraft_id')->constrained('minecraft_users')->cascadeOnDelete();
         });
     }
 }

@@ -17,7 +17,8 @@ class HorizonServiceProvider extends HorizonApplicationServiceProvider
     {
         Horizon::auth(function (Request $request) {
             $user = $request->user();
-            return app()->environment('local') || (!is_null($user) && $user->admin);
+
+            return app()->environment('local') || ( ! is_null($user) && $user->admin);
         });
 
         Horizon::routeMailNotificationsTo('whitelist@gorymoon.se');

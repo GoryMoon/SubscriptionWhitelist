@@ -17,24 +17,26 @@ class MainController extends Controller
     public function home(): View
     {
         return view('home', [
-            'hasUser' => Auth::check()
+            'hasUser' => Auth::check(),
         ]);
     }
 
     /**
      * @param Request $request
+     *
      * @return View
      */
     public function dashboard(Request $request): View
     {
         $user = $request->user();
         $enabled = false;
-        if (!is_null($user->channel)) {
+        if ( ! is_null($user->channel)) {
             $enabled = $user->channel->enabled;
         }
+
         return view('dashboard', [
             'isBroadcaster' => $user->broadcaster,
-            'disabled' => !$enabled
+            'disabled' => ! $enabled,
         ]);
     }
 
@@ -44,10 +46,11 @@ class MainController extends Controller
     public function profile(): View
     {
         $user = Auth::user();
+
         return view('profile', [
             'display_name' => $user->display_name,
             'name' => $user->name,
-            'steam' => $user->steam
+            'steam' => $user->steam,
         ]);
     }
 
@@ -55,14 +58,15 @@ class MainController extends Controller
     {
         try {
             $user = Auth::user();
-            if (!is_null($user)) {
+            if ( ! is_null($user)) {
                 $channel = $user->channel;
-                if (!is_null($channel)) {
+                if ( ! is_null($channel)) {
                     $channel->delete();
                 }
                 $user->delete();
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
         TwitchUtils::revokeToken(Auth::user()->access_token);
         Auth::logout();
 
@@ -75,7 +79,7 @@ class MainController extends Controller
     public function privacy(): View
     {
         return view('privacy_tos', [
-            'home' => route('home')
+            'home' => route('home'),
         ]);
     }
 
