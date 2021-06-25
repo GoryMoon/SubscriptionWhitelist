@@ -26,6 +26,18 @@ name3</textarea>
 </div>
 <hr>
 <div class="form-group">
+    <label for="nl_link">Newline with Twitch usernames link (newline separated list)</label>
+    <copy-link-component link="{{ $base_url }}minecraft_twitch_nl"></copy-link-component>
+</div>
+<div>
+    <label for="nl_example">Newline with Twitch example</label>
+    <textarea id="nl_example" class="form-control text-monospace" cols="30" rows="3" readonly>
+name1:twich1
+name2:alternateName
+name3</textarea>
+</div>
+<hr>
+<div class="form-group">
     <label for="json_array_link">JSON array link</label>
     <copy-link-component link="{{ $base_url }}minecraft_json_array"></copy-link-component>
 </div>
