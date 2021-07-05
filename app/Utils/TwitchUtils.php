@@ -147,7 +147,7 @@ class TwitchUtils
         do {
             $access_token = $user->access_token;
             if (is_null($access_token)) {
-                Log::error('Access token was null');
+                Log::error('Sub check: Access token was null', [$user, $broadcaster]);
 
                 return false;
             }
@@ -242,13 +242,8 @@ class TwitchUtils
                     $channel->delete();
                 } catch (Exception $e) {
                     report($e);
-                    Log::error('Channel deletion error', [$e->getMessage()]);
+                    Log::error('Channel deletion error', [$channel, $e->getMessage()]);
                 }
-            }
-            if ( ! is_null($user->access_token)) {
-                $user->access_token = null;
-                $user->refresh_token = null;
-                $user->save();
             }
         }
 
@@ -304,16 +299,9 @@ class TwitchUtils
         $response = json_decode($response->getBody());
         Log::debug('Token refreshed', [$owner, $response]);
 
-        if ( ! is_null($owner)) {
-            $channel = $owner->channel;
-            if ( ! is_null($channel)) {
-                if ($channel->sync) {
-                    $owner->access_token = $response->access_token;
-                }
-                $owner->refresh_token = $response->refresh_token;
-                $owner->save();
-            }
-        }
+        $owner->access_token = $response->access_token;
+        $owner->refresh_token = $response->refresh_token;
+        $owner->save();
 
         return true;
     }

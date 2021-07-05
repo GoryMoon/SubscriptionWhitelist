@@ -15,31 +15,22 @@
                     <p>You can delete your information at anytime in your profile when logged in, doing so will remove your username/usernames from any whitelists.</p>
                     <p>We store:</p>
                     <ul>
-                        <li>For all users:
-                            <ul>
-                                <li>Twitch Id - To verify your subscriptions and identify you on login</li>
-                                <li>Twitch Display Name - To show when you're logged in</li>
-                                <li>Twitch Broadcaster Type - To determine if you are a broadcaster or not</li>
-                                <li>Zero or more provided usernames for the whitelists</li>
-                                <li>If you names matches an MC name the uuid and name is stored</li>
-                            </ul>
-                        </li>
-                        <li>For broadcasters:
-                            <ul>
-                                <li>Twitch Display Name - To show your channels name when adding to list</li>
-                                <li>(Optional) Twitch AccessToken - To periodically check subscription statuses</li>
-                            </ul>
-                        </li>
+                        <li>Twitch Id - To verify your subscriptions and identify you on login</li>
+                        <li>Twitch Display Name - To show when you're logged in and To show your channels name when adding to list</li>
+                        <li>Twitch Broadcaster Type - To determine if you are a broadcaster or not</li>
+                        <li>Twitch AccessToken - Used to check subscription statuses</li>
+                        <li>Zero or more provided usernames for the whitelists</li>
+                        <li>If you names matches an MC name the uuid and name is stored</li>
                     </ul>
                     <p>We don’t share any personally identifying information publicly or with third-parties, except when required to by law.</p>
                     <p>Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.</p>
                     <p>You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with your desired services.</p>
                     <p>To enrich and perfect your online experience, Subscriber Whitelist uses "Cookies", similar technologies and services provided by others to display personalized content, appropriate advertising and store your preferences on your computer.</p>
-                    <p>A cookie is a string of information that a website stores on a visitor's computer, and that the visitor's browser provides to the website each time the visitor returns. Subscriber Whitelist uses cookies to help Subscriber Whitelist identify visitors and their usage of {{ $home }}. Subscriber Whitelist visitors who do not wish to have cookies placed on their computers should set their browsers to refuse cookies before using Subscriber Whitelist's websites, with the drawback that any features of Subscriber Whitelist's websites will not function properly without the aid of cookies.</p>
+                    <p>A cookie is a string of information that a website stores on a visitor's computer, and that the visitor's browser provides to the website each time the visitor returns. Subscriber Whitelist uses cookies to help Subscriber Whitelist identify visitors and their usage of <a href="{{ $home }}">{{ $home }}</a>. Subscriber Whitelist visitors who do not wish to have cookies placed on their computers should set their browsers to refuse cookies before using Subscriber Whitelist's websites, with the drawback that any features of Subscriber Whitelist's websites will not function properly without the aid of cookies.</p>
                     <p>By continuing to navigate our website without changing your cookie settings, you hereby acknowledge and agree to Subscriber Whitelist's use of cookies.</p>
                     <p>Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.</p>
                     <p>If you have any questions about this Privacy Policy, please contact us via <show-email-component></show-email-component></p>
-                    <p>This policy is effective as of 25 June 2019.</p>
+                    <p>This policy is effective as of 5 July 2021.</p>
                 </div>
             </div>
         </div>

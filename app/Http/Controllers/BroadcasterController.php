@@ -117,13 +117,6 @@ class BroadcasterController extends Controller
         $channel->sync_option = $inputs['sync_option'];
         $channel->save();
 
-        if ($channel->sync && is_null($user->access_token)) {
-            TwitchUtils::tokenRefresh($user);
-        } elseif ( ! $channel->sync && ! is_null($user->access_token)) {
-            $user->access_token = null;
-            $user->save();
-        }
-
         return redirect()->route('broadcaster')->with('success', 'Successfully saved settings');
     }
 
