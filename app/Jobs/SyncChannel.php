@@ -55,6 +55,7 @@ class SyncChannel implements ShouldQueue
         $checked = 0;
         $channels = [];
         $size = count($this->whitelists);
+        $owner_id = $this->channel->owner->id;
         $name = $this->channel->owner->name;
         Log::info("Syncing channel $name", [$this->channel]);
         for ($i = 0; $i < $size; ++$i) {
@@ -80,6 +81,9 @@ class SyncChannel implements ShouldQueue
                     foreach ($subs as $key => $value) {
                         $whitelist = $channels->get($key);
 
+                        if ($whitelist->user_id === $owner_id) {
+                            $value = true; // Whitelist on own channel are always valid
+                        }
                         if ($whitelist->valid != $value) {
                             $whitelist->valid = $value;
                             $whitelist->save();

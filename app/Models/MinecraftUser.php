@@ -35,6 +35,6 @@ class MinecraftUser extends Model
 
     public function whitelist(): HasOne
     {
-        return $this->hasOne(Whitelist::class);
+        return $this->hasOne(Whitelist::class, 'minecraft_id');
     }
 }
