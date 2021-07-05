@@ -8,7 +8,6 @@ use App\Mail\Contact;
 use App\Models\Channel;
 use App\Models\RequestStat;
 use App\Models\Whitelist;
-use App\Utils\TwitchUtils;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
