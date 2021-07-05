@@ -32,7 +32,7 @@ name3</textarea>
 <div>
     <label for="nl_example">Newline with Twitch example</label>
     <textarea id="nl_example" class="form-control text-monospace" cols="30" rows="3" readonly>
-name1:twich1
+name1:twitch1
 name2:alternateName
 name3</textarea>
 </div>
