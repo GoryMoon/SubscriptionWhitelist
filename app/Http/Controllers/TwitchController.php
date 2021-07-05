@@ -37,7 +37,7 @@ class TwitchController extends Controller
     public function authorizeTwitch(): RedirectResponse
     {
         return Socialite::driver('twitch')
-            ->setScopes([Scope::CHANNEL_READ_SUBSCRIPTIONS, 'user:read:subscriptions'])
+            ->setScopes([Scope::CHANNEL_READ_SUBSCRIPTIONS, Scope::USER_READ_SUBSCRIPTIONS])
             ->redirect();
     }
 

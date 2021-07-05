@@ -169,6 +169,10 @@ class TwitchUtils
 
                     return false;
                 }
+            } elseif (404 === $result->getStatus()) {
+                Log::info('User ' . $user->display_name . ' is not subscribed to ' . $broadcaster->display_name);
+
+                return false;
             } else {
                 Log::error('Unknown error: ' . $result->getErrorMessage(), [$result->getException()->getMessage(), $broadcaster]);
 
