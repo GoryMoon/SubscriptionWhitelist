@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>
-            Generic username/Minecraft username
+            Generic or Minecraft username
         </h4>
 
         <b-form ref="form" method="POST" :action="route('subscriber.save', {channel: channel_name})">
