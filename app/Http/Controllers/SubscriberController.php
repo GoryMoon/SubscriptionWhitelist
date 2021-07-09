@@ -56,7 +56,7 @@ class SubscriberController extends Controller
             return $this->redirectError(['add' => "This channel's whitelist isn't enabled"]);
         }
         if ($this->checkWhitelisted($user, $broadcaster->channel)) {
-            return $this->redirectError(['add' => 'You are already whitelisted to this channel']);
+            return $this->redirectError(['add' => 'You are already whitelisted to this channel, you can edit your entry below']);
         }
         if ( ! TwitchUtils::checkIfSubbed($user, $broadcaster)) {
             return $this->redirectError(['add' => 'You are not subscribed to this channel, you can not add to its whitelist']);
