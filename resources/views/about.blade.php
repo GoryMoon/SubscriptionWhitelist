@@ -73,6 +73,15 @@
                         <li>
                             <a href="https://github.com/vinkla/laravel-hashids">vinkla/hashids</a>: A Hashids bridge for Laravel
                         </li>
+                        <li>
+                            <a href="https://github.com/laravel/socialite">laravel/socialite</a>: Laravel wrapper around OAuth 1 & OAuth 2 libraries
+                        </li>
+                        <li>
+                            <a href="https://github.com/SocialiteProviders/Manager">socialiteproviders/manager</a>: Easily add new or override built-in providers in Laravel Socialite.
+                        </li>
+                        <li>
+                            <a href="https://github.com/SocialiteProviders/Twitch">socialiteproviders/twitch</a>: Twitch OAuth2 Provider for Laravel Socialite
+                        </li>
                     </ul>
                     <h5>JavaScript</h5>
                     <ul>
@@ -132,7 +141,7 @@
                             <a href="https://github.com/pusher/pusher-js">pusher-js</a>: Pusher JavaScript library for browsers, React Native, NodeJS and web workers
                         </li>
                         <li>
-                            <a href="https://github.com/DmitryBaranovskiy/raphael">vue-morris</a>: JavaScript Vector Library
+                            <a href="https://github.com/DmitryBaranovskiy/raphael">raphael</a>: JavaScript Vector Library
                         </li>
                         <li>
                             <a href="https://github.com/bbonnin/vue-morris">vue-morris</a>: Vue.js components wrapping <a href="https://morrisjs.github.io/morris.js/">Morris.js</a> lib

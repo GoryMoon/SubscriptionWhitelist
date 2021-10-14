@@ -33,6 +33,26 @@
                             </div>
                             <hr>
                         </li>
+                        @if($isBroadcaster)
+                        <li>
+                            <div class="row">
+                                <div class="col">
+                                    <h5><fa :icon="['fab','patreon']"></fa> Patreon</h5>
+                                    @if(!is_null($patreon))
+                                        <a href="{{ $patreon->url }}"><fa icon="external-link-alt"></fa> {{ $patreon->vanity }}</a>
+                                    @endif
+                                </div>
+                                <div class="col-4 col-md-4 text-right">
+                                    @if(is_null($patreon))
+                                        <a href="{{ route('auth.patreon.link') }}" class="btn btn-primary">Link</a>
+                                    @else
+                                        <a href="{{ route('auth.patreon.unlink') }}" class="btn btn-primary">Unlink</a>
+                                    @endif
+                                </div>
+                            </div>
+                            <hr>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </div>

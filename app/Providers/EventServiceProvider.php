@@ -14,8 +14,8 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         SocialiteWasCalled::class => [
-            // ... other providers
             'SocialiteProviders\\Twitch\\TwitchExtendSocialite@handle',
+            'App\\Patreon\\PatreonExtendSocialite@handle',
         ],
     ];
 

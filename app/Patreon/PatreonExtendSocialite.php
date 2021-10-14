@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Patreon;
+
+use SocialiteProviders\Manager\SocialiteWasCalled;
+
+class PatreonExtendSocialite
+{
+    /**
+     * Register the provider.
+     *
+     * @param SocialiteWasCalled $socialiteWasCalled
+     */
+    public function handle(SocialiteWasCalled $socialiteWasCalled)
+    {
+        $socialiteWasCalled->extendSocialite('patreon', PatreonProvider::class);
+    }
+}

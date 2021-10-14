@@ -2,11 +2,8 @@
 
 <?php /**
  * @var string $name
- * @var array $plans
- * @var boolean $enabled
  * @var string $base_url
- * @var boolean $sync
- * @var string $sync_option
+ * @var \App\Models\PatreonUser $patreon
  */ ?>
 @section('b_content')
     @if ($errors->any())
@@ -43,6 +40,15 @@
                 <li class="nav-item">
                     <a class="nav-link" id="pills-steam-tab" data-toggle="pill" href="#pills-steam" role="tab" aria-controls="pills-steam" aria-selected="false">Steam (SteamID64)</a>
                 </li>
+                @if(!is_null($patreon))
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-patreon-tab" data-toggle="pill" href="#pills-patreon" role="tab" aria-controls="pills-patreon" aria-selected="false">Patreon</a>
+                </li>
+                @else
+                <li class="nav-item">
+                    <a class="nav-link disabled" id="pills-patreon-tab" href="#" aria-disabled="true">Patreon (Connect in profile to use this)</a>
+                </li>
+                @endif
             </ul>
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-general" role="tabpanel" aria-labelledby="pills-general-tab">
@@ -54,6 +60,11 @@
                 <div class="tab-pane fade" id="pills-steam" role="tabpanel" aria-labelledby="pills-steam-tab">
                     @include('broadcaster.links.steam')
                 </div>
+                @if(!is_null($patreon))
+                <div class="tab-pane fade" id="pills-patreon" role="tabpanel" aria-labelledby="pills-patreon-tab">
+                    @include('broadcaster.links.patreon')
+                </div>
+                @endif
             </div>
         </div>
     </div>

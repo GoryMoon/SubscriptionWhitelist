@@ -14,13 +14,12 @@ class CreateTwitchUsers extends Migration
     public function up()
     {
         Schema::create('twitch_users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('uid');
             $table->string('name');
             $table->string('display_name');
             $table->string('broadcaster_type');
             $table->string('access_token')->nullable();
-            $table->unsignedBigInteger('channel_id')->nullable();
             $table->foreignId('channel_id')->constrained()->nullOnDelete();
             $table->timestamps();
         });

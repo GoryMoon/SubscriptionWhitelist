@@ -14,7 +14,7 @@ class CreateMinecraftUsers extends Migration
     public function up()
     {
         Schema::create('minecraft_users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->uuid('uuid');
             $table->string('username');
             $table->timestamps();

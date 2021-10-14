@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWhitelists extends Migration
+class CreatePatreonUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateWhitelists extends Migration
      */
     public function up()
     {
-        Schema::create('whitelists', function (Blueprint $table) {
+        Schema::create('patreon_users', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->boolean('valid')->default(true);
+            $table->string('patreon_id');
+            $table->string('vanity')->nullable();
+            $table->string('url')->nullable();
+            $table->string('campaign_id')->nullable();
+            $table->string('access_token', 500);
+            $table->string('refresh_token', 500);
             $table->foreignId('user_id')->constrained('twitch_users')->cascadeOnDelete();
-            $table->foreignId('channel_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ class CreateWhitelists extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('whitelists');
+        Schema::dropIfExists('patreon_users');
     }
 }

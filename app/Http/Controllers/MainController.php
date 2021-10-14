@@ -50,7 +50,9 @@ class MainController extends Controller
         return view('profile', [
             'display_name' => $user->display_name,
             'name' => $user->name,
+            'isBroadcaster' => $user->broadcaster,
             'steam' => $user->steam,
+            'patreon' => $user->patreon,
         ]);
     }
 

@@ -16,7 +16,7 @@ import {default as tippy} from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTwitch, faCcPaypal, faGithub, faSteam } from '@fortawesome/free-brands-svg-icons';
+import { faTwitch, faCcPaypal, faGithub, faSteam, faPatreon } from '@fortawesome/free-brands-svg-icons';
 import {
     faPlus,
     faTrash,
@@ -54,7 +54,7 @@ library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
     faSort, faSortUp, faSortDown, faAngleLeft, faAngleRight, faAngleDoubleLeft, faAngleDoubleRight,
     faEdit, faCcPaypal, faGripLinesVertical, faGithub, faList, faChartArea, faCopy, faUsers,
-    faCheck, faCross, faSteam, faLink, faExternalLinkAlt
+    faCheck, faCross, faSteam, faPatreon, faLink, faExternalLinkAlt
     );
 Vue.component('fa', FontAwesomeIcon);
 Vue.use(BootstrapVue);

@@ -5,10 +5,8 @@ namespace App\Models;
 use Eloquent;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -26,7 +24,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property string $name
  * @property string $display_name
  * @property string $broadcaster_type
- * @property string $access_token
+ * @property string|null $access_token
  * @property int|null $channel_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -36,6 +34,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @property bool $broadcaster
  * @property DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property int|null $notifications_count
+ * @property \App\Models\PatreonUser|null $patreon
  * @property \App\Models\SteamUser|null $steam
  * @property Collection|\App\Models\Whitelist[] $whitelist
  * @property int|null $whitelist_count
@@ -55,7 +54,7 @@ use Vinkla\Hashids\Facades\Hashids;
  * @method static Builder|TwitchUser whereUpdatedAt($value)
  * @mixin Eloquent
  */
-class TwitchUser extends Model implements AuthenticatableContract
+class TwitchUser extends TokenModel implements AuthenticatableContract
 {
     use Notifiable;
     use Authenticatable;
@@ -100,75 +99,13 @@ class TwitchUser extends Model implements AuthenticatableContract
     }
 
     /**
-     * Encrypts the token and sets it.
+     * Returns the connected patreon account if any.
      *
-     * @param string|null $value string
+     * @return HasOne
      */
-    public function setRefreshTokenAttribute(?string $value)
+    public function patreon(): HasOne
     {
-        if (is_null($value)) {
-            $this->attributes['refresh_token'] = null;
-        } else {
-            $this->attributes['refresh_token'] = encrypt($value);
-        }
-    }
-
-    /**
-     * Decrypts the refresh token and returns it.
-     *
-     * @param string|null $value string
-     *
-     * @return string|null
-     */
-    public function getRefreshTokenAttribute(?string $value): ?string
-    {
-        if ( ! is_null($value)) {
-            try {
-                return decrypt($value);
-            } catch (DecryptException $e) {
-                report($e);
-
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Encrypts the token and sets it.
-     *
-     * @param string|null $value string
-     */
-    public function setAccessTokenAttribute(?string $value)
-    {
-        if (is_null($value)) {
-            $this->attributes['access_token'] = null;
-        } else {
-            $this->attributes['access_token'] = encrypt($value);
-        }
-    }
-
-    /**
-     * Decrypts the access token and returns it.
-     *
-     * @param string|null $value string
-     *
-     * @return string
-     */
-    public function getAccessTokenAttribute(?string $value): ?string
-    {
-        if ( ! is_null($value)) {
-            try {
-                return decrypt($value);
-            } catch (DecryptException $e) {
-                report($e);
-
-                return null;
-            }
-        }
-
-        return null;
+        return $this->hasOne(PatreonUser::class, 'user_id');
     }
 
     public function getAdminAttribute(): bool

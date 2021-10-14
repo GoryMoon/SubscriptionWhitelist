@@ -1,6 +1,7 @@
 <template>
     <b-input-group>
         <b-form-input
+            :id="id"
             type="text"
             v-model="link"
             class="selectable"
@@ -22,9 +23,13 @@
 
 <script>
     export default {
-        props: [
-            'link'
-        ],
+        props: {
+            link: String,
+            id: {
+                type: String,
+                default: '',
+            }
+        },
         methods:{
             onCopy(e) {
                 this.$bvToast.toast("Copied link", {

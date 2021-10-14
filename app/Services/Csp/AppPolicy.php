@@ -3,11 +3,17 @@
 namespace App\Services\Csp;
 
 use Spatie\Csp\Directive;
+use Spatie\Csp\Exceptions\InvalidDirective;
+use Spatie\Csp\Exceptions\InvalidValueSet;
 use Spatie\Csp\Keyword;
 use Spatie\Csp\Policies\Basic;
 
 class AppPolicy extends Basic
 {
+    /**
+     * @throws InvalidValueSet
+     * @throws InvalidDirective
+     */
     public function configure()
     {
         $this
@@ -31,6 +37,7 @@ class AppPolicy extends Basic
             ->addDirective(Directive::STYLE, Keyword::UNSAFE_INLINE)
 
             ->addDirective(Directive::IMG, 'data:')
+            ->addDirective(Directive::IMG, '*.patreonusercontent.com')
 
             ->addDirective(Directive::SCRIPT, 'js.pusher.com')
             ->addDirective(Directive::CONNECT, 'wss://*.pusher.com')
