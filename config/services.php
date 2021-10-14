@@ -34,4 +34,10 @@ return [
         'client_secret' => env('TWITCH_CLIENT_SECRET'),
         'redirect' => env('TWITCH_REDIRECT_URI'),
     ],
+
+    'patreon' => [
+        'client_id' => env('PATREON_CLIENT_ID'),
+        'client_secret' => env('PATREON_CLIENT_SECRET'),
+        'redirect' => env('PATREON_REDIRECT_URI'),
+    ],
 ];

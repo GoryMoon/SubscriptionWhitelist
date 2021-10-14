@@ -8,6 +8,7 @@ use App\Mail\Contact;
 use App\Models\Channel;
 use App\Models\RequestStat;
 use App\Models\Whitelist;
+use App\Patreon\PatreonAPI;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -72,9 +73,30 @@ class BroadcasterController extends Controller
         $id = Hashids::encode($channel->id);
         $base_url = route('home') . "/list/$id/";
 
+        $patreonTiers = null;
+        if ($channel->owner->patreon) {
+            $patreonTiers = [];
+            $api = new PatreonAPI($request->user()->patreon);
+            $campaign = $api->getCampaign($request->user()->patreon->campaign_id, [
+                'include' => 'tiers',
+                'fields[tier]' => ['title', 'published'],
+            ]);
+            foreach ($campaign->included as $tier) {
+                if ( ! $tier->attributes->published) {
+                    continue;
+                }
+
+                $patreonTiers[] = [
+                    'id' => $tier->id,
+                    'title' => $tier->attributes->title,
+                ];
+            }
+        }
+
         return view('broadcaster.links', [
             'name' => $channel->owner->name,
             'base_url' => $base_url,
+            'patreon' => $patreonTiers,
         ]);
     }
 

@@ -14,7 +14,7 @@ class CreateChannels extends Migration
     public function up()
     {
         Schema::create('channels', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->boolean('enabled')->default(false);
             $table->json('valid_plans')->nullable();
             $table->boolean('sync')->default(false);

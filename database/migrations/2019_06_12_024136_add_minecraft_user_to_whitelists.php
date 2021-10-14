@@ -14,7 +14,6 @@ class AddMinecraftUserToWhitelists extends Migration
     public function up()
     {
         Schema::table('whitelists', function (Blueprint $table) {
-            $table->unsignedBigInteger('minecraft_id')->nullable();
             $table->foreignId('minecraft_id')->constrained('minecraft_users')->cascadeOnDelete();
         });
     }

@@ -14,6 +14,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BroadcasterController;
 use App\Http\Controllers\MainController;
+use App\Http\Controllers\PatreonController;
 use App\Http\Controllers\SteamController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\TwitchController;
@@ -46,6 +47,14 @@ Route::middleware('twitch')->group(function () {
     Route::get('profile/steam/link', [SteamController::class, 'redirectToSteam'])->name('auth.steam.link');
     Route::get('profile/steam/unlink', [SteamController::class, 'unlink'])->name('auth.steam.unlink');
     Route::get('profile/steam/handle', [SteamController::class, 'handle'])->name('auth.steam.handle');
+
+    Route::middleware('broadcaster')->group(function () {
+        Route::get('profile/patreon/link', [PatreonController::class, 'redirectToPatreon'])->name('auth.patreon.link');
+        Route::get('profile/patreon/unlink', [PatreonController::class, 'unlink'])->name('auth.patreon.unlink');
+        Route::get('profile/patreon/handle', [PatreonController::class, 'handle'])->name('auth.patreon.handle');
+        Route::get('profile/patreon/campaigns', [PatreonController::class, 'viewCampaigns'])->name('patreon.campaigns.view');
+        Route::post('profile/patreon/campaigns', [PatreonController::class, 'setCampaign'])->name('patreon.campaigns.set');
+    });
 
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin');

@@ -16,6 +16,7 @@ yarn-error.log
 /public/mix-manifest.json
 _ide_helper.php
 .phpstorm.meta.php
+.php-cs-fixer.cache
 .php_cs.cache
 
 # User-specific stuff

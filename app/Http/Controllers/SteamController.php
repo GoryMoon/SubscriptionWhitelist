@@ -57,6 +57,8 @@ class SteamController extends Controller
     /**
      * Get user info and log in.
      *
+     * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function handle(Request $request): RedirectResponse
@@ -75,7 +77,7 @@ class SteamController extends Controller
                     return redirect()->route('profile');
                 }
             }
-        } catch (GuzzleException | Exception $e) {
+        } catch (GuzzleException|Exception $e) {
             Log::error('Error handling steam connection', [$e]);
         }
 

@@ -14,11 +14,10 @@ class CreateSteamUsers extends Migration
     public function up()
     {
         Schema::create('steam_users', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('steam_id');
             $table->string('name');
             $table->string('profile_url');
-            $table->unsignedBigInteger('user_id');
             $table->foreignId('user_id')->constrained('twitch_users')->cascadeOnDelete();
             $table->timestamps();
         });
