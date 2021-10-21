@@ -1547,6 +1547,11 @@ boolbase@^1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
+bootstrap-switch-button@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-switch-button/-/bootstrap-switch-button-1.1.0.tgz#f59136172fa8b7c8eef781193803b9fb467038a0"
+  integrity sha512-RvEkM8Ig5tetj/mPzmehEUlPdEXnmo/KkvkXwBbr1R8X8YtNBAAH+/sdcO3oaRLxSSwDw70aC201D8Ee8N82Iw==
+
 bootstrap-vue@^2.21.2:
   version "2.21.2"
   resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.21.2.tgz#ec38f66c3a2205becccddb6158a991d96509ed0b"
@@ -1557,11 +1562,6 @@ bootstrap-vue@^2.21.2:
     popper.js "^1.16.1"
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.1.0"
-
-bootstrap4-toggle@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/bootstrap4-toggle/-/bootstrap4-toggle-3.6.1.tgz#867f2c350727022e6358ec0d43e43b7cfb609f74"
-  integrity sha512-eRejcTc9YurhZ64nHY9Ii9DQn+F9/R74H9RPoeANVM3N1+C2lZ2tUuFCx1w3orOJ1y/iG4A7iCwdDZphMDIrYg==
 
 "bootstrap@>=4.5.3 <5.0.0", bootstrap@^4.6.0:
   version "4.6.0"
