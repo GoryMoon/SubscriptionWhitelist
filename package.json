@@ -14,7 +14,7 @@
         "laravel-mix": "^6.0.34",
         "postcss": "^8.3.9",
         "resolve-url-loader": "^4.0.0",
-        "sass": "^1.42.1",
+        "sass": "^1.43.3",
         "sass-loader": "^12.2.0",
         "vue-loader": "^15.9.8",
         "vue-template-compiler": "^2.6.14"
@@ -40,6 +40,6 @@
         "vue": "^2.6.14",
         "vue-clipboard2": "^0.3.3",
         "vue-morris": "^1.1.0",
-        "vuetable-2": "^2.0.0-beta.4"
+        "vuetable-3": "^3.4.0"
     }
 }
