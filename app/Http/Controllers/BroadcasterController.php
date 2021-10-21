@@ -186,15 +186,18 @@ class BroadcasterController extends Controller
         $channel = $request->user()->channel;
         $query = $channel->whitelist()->newQuery();
 
+        $order = 'asc';
+        if ($request->has('order') && '' != $request->order) {
+            $order = $request->order;
+        }
         if ($request->has('sort') && '' != $request->sort) {
             // handle multisort
             $sorts = explode(',', $request->sort);
             foreach ($sorts as $sort) {
-                list($sortCol, $sortDir) = explode('|', $sort);
-                $query = $query->orderBy($sortCol, $sortDir);
+                $query = $query->orderBy($sort, $order);
             }
         } else {
-            $query = $query->orderBy('id', 'asc');
+            $query = $query->orderBy('id', $order);
         }
 
         if ($request->exists('filter')) {
