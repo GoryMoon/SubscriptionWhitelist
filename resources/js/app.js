@@ -11,7 +11,7 @@ window.Ziggy = Ziggy;
 require('./bootstrap');
 import Vue from 'vue';
 window.Vue = Vue;
-require('bootstrap4-toggle');
+require('bootstrap-switch-button');
 import {default as tippy} from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 

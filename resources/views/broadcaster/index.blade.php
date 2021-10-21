@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label class="sr-only" for="list_toggle">Enable or disable whitelist</label>
                     <input type="hidden" name="list_toggle" value="0">
-                    <input type="checkbox" {{ $enabled ? 'checked': '' }} class="form-control" value="1" id="list_toggle" name="list_toggle" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+                    <input type="checkbox" {{ $enabled ? 'checked': '' }} class="form-control" value="1" id="list_toggle" name="list_toggle" data-toggle="switchbutton" data-onlabel="Enabled" data-offlabel="Disabled" data-onstyle="success" data-offstyle="danger">
                 </div>
                 <hr>
                 <h5><fa icon="star" class="text-primary"></fa> Subscriptions</h5>
@@ -64,7 +64,7 @@
                     <p>Enable or disable auto syncing of subscriptions (you can manually sync users in the users tab above)</p>
                     <label class="sr-only" for="sync_toggle">Enable or disable auto syncing of subscriptions</label>
                     <input type="hidden" name="sync_toggle" value="0">
-                    <input type="checkbox" {{ $sync ? 'checked': '' }} class="form-control ml-2" id="sync_toggle" value="1" name="sync_toggle" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-onstyle="success" data-offstyle="secondary">
+                    <input type="checkbox" {{ $sync ? 'checked': '' }} class="form-control ml-2" id="sync_toggle" value="1" name="sync_toggle" data-toggle="switchbutton" data-onlabel="Enabled" data-offlabel="Disabled" data-onstyle="success" data-offstyle="secondary">
                 </div>
                 <div class="form-group">
                     <label for="sync_options">Sync options</label>
