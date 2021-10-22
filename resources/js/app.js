@@ -48,7 +48,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import BootstrapVue from 'bootstrap-vue';
 import VueClipboard from 'vue-clipboard2';
-import Raphael from 'raphael/raphael';
 
 library.add(
     faTwitch, faPlus, faTrash, faTimes, faStar, faSave, faSearch, faUser, faPaperPlane, faSync,
@@ -64,7 +63,6 @@ Vue.mixin({
         route: route
     }
 });
-window.Raphael = Raphael;
 
 /**
  * The following block of code may be used to automatically register your
