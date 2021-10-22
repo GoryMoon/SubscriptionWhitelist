@@ -1,47 +1,78 @@
 <template>
-    <div>
-        <line-chart
-                ref="line_chart"
-                id="request-chart"
-                :data="getData()"
-                xkey="time"
-                ykeys='["requests"]'
-                grid="true"
-
-        ></line-chart>
-    </div>
+    <line-chart
+        :data="getData()"
+        :options="options"
+    />
 </template>
 <script>
-import { LineChart } from 'vue-morris'
+import { Line } from 'vue-chartjs'
 import moment from 'moment'
+import LineChart from "./LineChartComponent";
 
 
 export default {
+    extends: Line,
     components: {
-        LineChart
+        LineChart,
     },
     props: ['data'],
-    mounted() {
-        window.addEventListener('resize', _.debounce(this.handleResize, 100, { leading: false, trailing: true}));
+    data() {
+        return {
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            min: 0,
+                            stepSize: 1,
+                        }
+                    }],
+                    xAxes: [{
+                        type: 'time',
+                        distribution: 'series',
+                        time: {
+                            unit: 'minute',
+                            displayFormats: {
+                                minute: 'hh:mm'
+                            }
+                        }
+                    }]
+                },
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    intersect: false
+                }
+            }
+        }
     },
     methods: {
         getData() {
             let localData = JSON.parse(this.data);
+
+            let labels = [];
+            for (let i = 47; i >= 0; i--)
+                labels.push(moment().add(-i, 'h').seconds(0).minutes(0).format('YYYY-MM-DD HH:mm:ss'));
+
             let result = [];
-            for (let i = 0; i < localData.length; i++) {
-                let time = moment(localData[i].time, "YYYY-M-DTH:m:sZ").format("YYYY-MM-DD HH:mm:ss");
-                let requests = localData[i].requests;
-                result.push({
-                    time: time,
-                    requests: requests
-                })
+            for (let i = localData.length - 1; i >= 0; i--) {
+                result.push(localData[i].requests)
             }
 
-            return result;
-        },
-        handleResize() {
-            this.$refs.line_chart.chart.redraw();
+            return {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'requests',
+                        backgroundColor: '#4b367c',
+                        data: result
+                    }
+                ]
+            };
         }
-    }
+    },
 }
 </script>
