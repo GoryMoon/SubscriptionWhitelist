@@ -9,7 +9,7 @@
                 <div class="card-text">
                     <p>
                         This site is made by <a href="https://twitter.com/Gory_moon">@Gory_Moon</a> as a hobby project and because a previous site that had this functionality was removed.<br>
-                        If you want to donate to help run this site you can do it here <a href="https://paypal.me/GustafJ"><fa style="font-size: x-large" :icon="['fab','cc-paypal']"></fa></a>, it's not needed as I use this for other personal stuff but it's much appreciated.
+                        If you want to donate to help run this site you can do it here <a href="https://paypal.me/GustafJ"><fa style="font-size: x-large" :icon="['fab','cc-paypal']"></fa></a> or <a href="https://www.patreon.com/GoryMoon">Patreon <fa style="font-size: x-large" :icon="['fab','patreon']"></fa></a>, it's not needed as I use this for other personal stuff but it's much appreciated.
                     </p>
                     <p>
                         I will continue to add features and work on this as time goes, if you have suggestions you can post a issue on the github below.
@@ -29,58 +29,58 @@
                     <h5>PHP</h5>
                     <ul>
                         <li>
-                            <a href="https://laravel.com/">Laravel</a>: Main page framework
+                            <a href="https://laravel.com/">Laravel</a>: Main page framework.
                         </li>
                         <li>
-                            <a href="https://lumen.laravel.com/">Lumen</a>: Api page framework
+                            <a href="https://lumen.laravel.com/">Lumen</a>: Api page framework.
                         </li>
                         <li>
-                            <a href="https://horizon.laravel.com/">laravel/horizon</a>: Dashboard and code-driven configuration for Laravel queues
+                            <a href="https://horizon.laravel.com/">laravel/horizon</a>: Dashboard and code-driven configuration for Laravel queues.
                         </li>
                         <li>
                             <a href="https://github.com/laravel/telescope">laravel/telescope</a>: An elegant debug assistant for the Laravel framework.
                         </li>
                         <li>
-                            <a href="https://github.com/guzzle/guzzle">guzzle/guzzle</a>: Guzzle is a PHP HTTP client library
+                            <a href="https://github.com/guzzlehttp/guzzle">guzzlehttp/guzzle</a>: Guzzle is a PHP HTTP client library.
                         </li>
                         <li>
-                            <a href="https://github.com/invisnik/laravel-steam-auth">invisnik/laravel-steam-auth</a>: Laravel Steam Auth
+                            <a href="https://github.com/invisnik/laravel-steam-auth">invisnik/laravel-steam-auth</a>: Laravel Steam Auth.
                         </li>
                         <li>
-                            <a href="https://github.com/antonioribeiro/version">pragmarx/version</a>: Take control over your Laravel app version
+                            <a href="https://github.com/antonioribeiro/version">pragmarx/version</a>: Take control over your Laravel app version.
                         </li>
                         <li>
-                            <a href="https://github.com/pusher/pusher-http-php">pusher/pusher-php-server</a>: Library for interacting with the Pusher REST API
+                            <a href="https://github.com/pusher/pusher-http-php">pusher/pusher-php-server</a>: Library for interacting with the Pusher REST API.
                         </li>
                         <li>
-                            <a href="https://github.com/fruitcake/laravel-cors">fruitcake/laravel-cors</a>: Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application
+                            <a href="https://github.com/fruitcake/laravel-cors">fruitcake/laravel-cors</a>: Adds CORS (Cross-Origin Resource Sharing) headers support in your Laravel application.
                         </li>
                         <li>
-                            <a href="https://github.com/spatie/laravel-csp">spatie/laravel-csp</a>: Set content security policy headers in a Laravel app
+                            <a href="https://github.com/spatie/laravel-csp">spatie/laravel-csp</a>: Set content security policy headers in a Laravel app.
                         </li>
                         <li>
-                            <a href="https://github.com/bepsvpt/secure-headers">bepsvpt/secure-headers</a>: PHP Secure Headers
+                            <a href="https://github.com/bepsvpt/secure-headers">bepsvpt/secure-headers</a>: Add security related headers to HTTP response. The package includes Service Providers for easy Laravel integration.
                         </li>
                         <li>
-                            <a href="https://github.com/romanzipp/Laravel-Twitch">romanzipp/laravel-twitch</a>: Twitch PHP Wrapper for Laravel
+                            <a href="https://github.com/romanzipp/Laravel-Twitch">romanzipp/laravel-twitch</a>: Twitch PHP Wrapper for Laravel.
                         </li>
                         <li>
-                            <a href="https://github.com/tightenco/ziggy">tightenco/ziggy</a>: Use your Laravel Named Routes inside JavaScript
+                            <a href="https://github.com/tightenco/ziggy">tightenco/ziggy</a>: Use your Laravel Named Routes inside JavaScript.
                         </li>
                         <li>
                             <a href="https://github.com/Torann/laravel-geoip">torann/geoip</a>: Support for multiple GeoIP services. (Used for cookie displaying)
                         </li>
                         <li>
-                            <a href="https://github.com/vinkla/laravel-hashids">vinkla/hashids</a>: A Hashids bridge for Laravel
+                            <a href="https://github.com/vinkla/laravel-hashids">vinkla/hashids</a>: A Hashids bridge for Laravel.
                         </li>
                         <li>
-                            <a href="https://github.com/laravel/socialite">laravel/socialite</a>: Laravel wrapper around OAuth 1 & OAuth 2 libraries
+                            <a href="https://github.com/laravel/socialite">laravel/socialite</a>: Laravel wrapper around OAuth 1 & OAuth 2 libraries.
                         </li>
                         <li>
                             <a href="https://github.com/SocialiteProviders/Manager">socialiteproviders/manager</a>: Easily add new or override built-in providers in Laravel Socialite.
                         </li>
                         <li>
-                            <a href="https://github.com/SocialiteProviders/Twitch">socialiteproviders/twitch</a>: Twitch OAuth2 Provider for Laravel Socialite
+                            <a href="https://github.com/SocialiteProviders/Twitch">socialiteproviders/twitch</a>: Twitch OAuth2 Provider for Laravel Socialite.
                         </li>
                     </ul>
                     <h5>JavaScript</h5>
@@ -123,7 +123,7 @@
                             <a href="https://github.com/FortAwesome/vue-fontawesome">@fortawesome/vue-fontawesome</a>: Official Vue component for Font Awesome 5
                         </li>
                         <li>
-                            <a href="https://github.com/gitbrent/bootstrap4-toggle">bootstrap4-toggle</a>: Bootstrap 4 Toggle is a bootstrap 4 plugin that converts checkboxes into toggles.
+                            <a href="https://github.com/gitbrent/bootstrap-switch-button">bootstrap-switch-button</a>: Bootstrap Switch Button is a bootstrap 4 plugin that converts checkboxes into switch button toggles.
                         </li>
                         <li>
                             <a href="https://github.com/laravel/echo">laravel-echo</a>: Laravel Echo library for beautiful Pusher and Socket.IO integration
@@ -141,13 +141,16 @@
                             <a href="https://github.com/pusher/pusher-js">pusher-js</a>: Pusher JavaScript library for browsers, React Native, NodeJS and web workers
                         </li>
                         <li>
-                            <a href="https://github.com/DmitryBaranovskiy/raphael">raphael</a>: JavaScript Vector Library
+                            <a href="https://github.com/chartjs/Chart.js">chart.js</a>: Simple HTML5 charts using the canvas element.
                         </li>
                         <li>
-                            <a href="https://github.com/bbonnin/vue-morris">vue-morris</a>: Vue.js components wrapping <a href="https://morrisjs.github.io/morris.js/">Morris.js</a> lib
+                            <a href="https://github.com/apertureless/vue-chartjs">vue-chartjs</a>: Vue.js wrapper for chart.js for creating beautiful charts.
                         </li>
                         <li>
-                            <a href="https://github.com/ratiw/vuetable-2">vuetable-2</a>: Datatable component for Vue 2.x
+                            <a href="https://github.com/Inndy/vue-clipboard2">vue-clipboard2</a>: A Vuejs2 & Vuejs3 binding for clipboard.js
+                        </li>
+                        <li>
+                            <a href="https://github.com/mannyyang/vuetable-3">vuetable-3</a>: Datatable component for Vue 2.x
                         </li>
                     </ul>
                 </div>
