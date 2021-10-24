@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
         // Stats for all channels.
         Channel::all()->each(function (Channel $channel) {
             RequestStat::factory()

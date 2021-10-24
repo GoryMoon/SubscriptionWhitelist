@@ -10,7 +10,6 @@ use App\Models\Whitelist;
 use App\Patreon\PatreonAPI;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
