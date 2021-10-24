@@ -58,7 +58,7 @@ export default {
                 labels.push(moment().add(-i, 'h').seconds(0).minutes(0).format('YYYY-MM-DD HH:mm:ss'));
 
             let result = [];
-            for (let i = localData.length - 1; i >= 0; i--) {
+            for (let i = 0; i < localData.length; i++) {
                 result.push(localData[i].number);
             }
 
