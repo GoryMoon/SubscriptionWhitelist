@@ -59,7 +59,7 @@ export default {
 
             let result = [];
             for (let i = localData.length - 1; i >= 0; i--) {
-                result.push(localData[i].requests)
+                result.push(localData[i].number);
             }
 
             return {

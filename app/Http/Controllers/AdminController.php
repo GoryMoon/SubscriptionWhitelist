@@ -151,7 +151,6 @@ class AdminController extends Controller
     public function stats(): View
     {
         $channels = Channel::get();
-        $data = RequestStat::whereDate('created_at', '>=', Carbon::now()->subDays(2)->subHour()->toDateTimeString())->get();
 
         $requests = $channels->map(function ($values) {
             return $values->requests;
@@ -171,14 +170,23 @@ class AdminController extends Controller
             ->unionAll($total)
             ->get();
 
-        list($formatted, $day, $two_days) = RequestStat::parseStats($data);
+        $timeBase = Carbon::now()->minute(0)->second(0);
+        $countStats = RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays()->toDateTimeString())
+            ->union(RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
+            ->get();
+
+        $timestamp = Carbon::now()->subDays(2)->minute(0)->second(0)->toDateTimeString();
+        $stats = RequestStat::where('created_at', '>=', $timestamp)
+            ->selectRaw('DATE_FORMAT(created_at, \'%Y-%m-%d %H:00:00\') as hour, count(*) as number')
+            ->groupBy('hour')
+            ->orderBy('hour')->get();
 
         return view('admin.stats', [
-            'stats' => json_encode($formatted),
+            'stats' => json_encode($stats),
             'total' => $requests,
             'channels' => $channels,
-            'day' => $day,
-            'twodays' => $two_days,
+            'day' => $countStats[0]->num,
+            'twodays' => $countStats[1]->num,
             'whitelist' => (object) [
                 'total' => $result[5]->num,
                 'subscribers' => $result[4]->num,

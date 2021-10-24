@@ -6,7 +6,6 @@ use App\Jobs\SyncAllMinecraftNames;
 use App\Jobs\SyncChannel;
 use App\Mail\Contact;
 use App\Models\Channel;
-use App\Models\RequestStat;
 use App\Models\Whitelist;
 use App\Patreon\PatreonAPI;
 use Carbon\Carbon;
@@ -379,14 +378,23 @@ class BroadcasterController extends Controller
     public static function getStatsArray(Channel $channel): array
     {
         $result = self::getStats($channel);
-        $stats = $channel->stats()->whereDate('created_at', '>=', Carbon::now()->subDays(2)->subHour()->toDateTimeString())->get();
-        list($formatted, $day, $two_days) = RequestStat::parseStats($stats);
+        $timeBase = Carbon::now()->minute(0)->second(0);
+        $countStats = $channel->stats()->selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays()->toDateTimeString())
+            ->union($channel->stats()->selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
+            ->get();
+
+        $timestamp = Carbon::now()->subDays(2)->minute(0)->second(0)->toDateTimeString();
+        $stats = $channel->stats()
+            ->where('created_at', '>=', $timestamp)
+            ->selectRaw('DATE_FORMAT(created_at, \'%Y-%m-%d %H:00:00\') as hour, count(*) as number')
+            ->groupBy('hour')
+            ->orderBy('hour')->get();
 
         return [
-            'stats' => json_encode($formatted),
+            'stats' => json_encode($stats),
             'total' => $channel->requests,
-            'day' => $day,
-            'twodays' => $two_days,
+            'day' => $countStats[0]->num,
+            'twodays' => $countStats[1]->num,
             'whitelist' => (object) [
                 'total' => $result[5]->num,
                 'subscribers' => $result[4]->num,
