@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Channel;
+use App\Models\RequestStat;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+
+        // Stats for all channels.
+        Channel::all()->each(function (Channel $channel) {
+            RequestStat::factory()
+                ->count(rand(0, 500))
+                ->for($channel)
+                ->create();
+        });
     }
 }
