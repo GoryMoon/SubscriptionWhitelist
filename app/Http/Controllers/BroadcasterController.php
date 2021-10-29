@@ -380,7 +380,7 @@ class BroadcasterController extends Controller
         $result = self::getStats($channel);
         $timeBase = Carbon::now()->minute(0)->second(0);
         $countStats = $channel->stats()->selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays()->toDateTimeString())
-            ->union($channel->stats()->selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
+            ->unionAll($channel->stats()->selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
             ->get();
 
         $timestamp = Carbon::now()->subDays(2)->minute(0)->second(0)->toDateTimeString();

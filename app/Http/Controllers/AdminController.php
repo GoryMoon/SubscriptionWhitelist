@@ -172,7 +172,7 @@ class AdminController extends Controller
 
         $timeBase = Carbon::now()->minute(0)->second(0);
         $countStats = RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays()->toDateTimeString())
-            ->union(RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
+            ->unionAll(RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
             ->get();
 
         $timestamp = Carbon::now()->subDays(2)->minute(0)->second(0)->toDateTimeString();
