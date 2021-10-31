@@ -39,9 +39,7 @@
                 </li>
             </ul>
             <h5>Graph of request for last 48-hours:</h5>
-            <request-chart-component
-                data="{{ $stats }}"
-            ></request-chart-component>
+            <request-chart-component></request-chart-component>
         </div>
     </div>
 @endsection

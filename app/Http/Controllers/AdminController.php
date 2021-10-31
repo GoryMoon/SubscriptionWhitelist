@@ -83,16 +83,24 @@ class AdminController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param Channel $channel
      *
-     * @return View
+     * @return View|JsonResponse
      */
-    public function statsChannel(Channel $channel): View
+    public function statsChannel(Request $request, Channel $channel)
     {
-        return view('admin.channel_stats', array_merge(
-            ['channel' => $channel],
-            BroadcasterController::getStatsArray($channel),
-        ));
+        if ($request->ajax()) {
+            $hours = $request->query('hours');
+            $data = RequestStat::parseStats($channel->stats(), $hours);
+
+            return response()->json($data);
+        } else {
+            return view('admin.channel_stats', array_merge(
+                ['channel' => $channel],
+                BroadcasterController::getStatsArray($channel),
+            ));
+        }
     }
 
     /**
