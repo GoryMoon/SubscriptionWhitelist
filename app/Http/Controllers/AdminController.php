@@ -10,6 +10,7 @@ use DB;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -146,55 +147,57 @@ class AdminController extends Controller
     }
 
     /**
-     * @return View
+     * @param Request $request
+     *
+     * @return View|JsonResponse
      */
-    public function stats(): View
+    public function stats(Request $request)
     {
-        $channels = Channel::get();
+        if ($request->ajax()) {
+            $hours = $request->query('hours');
+            $data = RequestStat::parseStats(RequestStat::query(), $hours);
 
-        $requests = $channels->map(function ($values) {
-            return $values->requests;
-        })->sum();
+            return response()->json($data);
+        } else {
+            $channels = Channel::get();
 
-        $channels = Channel::where('enabled', true)->count();
-        $total = self::getStatBase();
-        $subs = self::getStatBase()->whereNotNull('user_id');
-        $custom = self::getStatBase()->whereNull('user_id');
-        $invalid = self::getStatBase()->where('valid', false);
-        $minecraft = self::getStatBase()->whereNotNull('minecraft_id');
-        $result = self::getStatBase()->whereNotNull('steam_id')
-            ->unionAll($minecraft)
-            ->unionAll($invalid)
-            ->unionAll($custom)
-            ->unionAll($subs)
-            ->unionAll($total)
-            ->get();
+            $requests = $channels->map(function ($values) {
+                return $values->requests;
+            })->sum();
 
-        $timeBase = Carbon::now()->minute(0)->second(0);
-        $countStats = RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays()->toDateTimeString())
-            ->unionAll(RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
-            ->get();
+            $channels = Channel::where('enabled', true)->count();
+            $total = self::getStatBase();
+            $subs = self::getStatBase()->whereNotNull('user_id');
+            $custom = self::getStatBase()->whereNull('user_id');
+            $invalid = self::getStatBase()->where('valid', false);
+            $minecraft = self::getStatBase()->whereNotNull('minecraft_id');
+            $result = self::getStatBase()->whereNotNull('steam_id')
+                ->unionAll($minecraft)
+                ->unionAll($invalid)
+                ->unionAll($custom)
+                ->unionAll($subs)
+                ->unionAll($total)
+                ->get();
 
-        $timestamp = Carbon::now()->subDays(2)->minute(0)->second(0)->toDateTimeString();
-        $stats = RequestStat::where('created_at', '>=', $timestamp)
-            ->selectRaw('DATE_FORMAT(created_at, \'%Y-%m-%d %H:00:00\') as hour, count(*) as number')
-            ->groupBy('hour')
-            ->orderBy('hour')->get();
+            $timeBase = Carbon::now()->minute(0)->second(0);
+            $countStats = RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays()->toDateTimeString())
+                ->unionAll(RequestStat::selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
+                ->get();
 
-        return view('admin.stats', [
-            'stats' => json_encode($stats),
-            'total' => $requests,
-            'channels' => $channels,
-            'day' => $countStats[0]->num,
-            'twodays' => $countStats[1]->num,
-            'whitelist' => (object) [
-                'total' => $result[5]->num,
-                'subscribers' => $result[4]->num,
-                'custom' => $result[3]->num,
-                'invalid' => $result[2]->num,
-                'minecraft' => $result[1]->num,
-                'steam' => $result[0]->num,
-            ],
-        ]);
+            return view('admin.stats', [
+                'total' => $requests,
+                'channels' => $channels,
+                'day' => $countStats[0]->num,
+                'twodays' => $countStats[1]->num,
+                'whitelist' => (object) [
+                    'total' => $result[5]->num,
+                    'subscribers' => $result[4]->num,
+                    'custom' => $result[3]->num,
+                    'invalid' => $result[2]->num,
+                    'minecraft' => $result[1]->num,
+                    'steam' => $result[0]->num,
+                ],
+            ]);
+        }
     }
 }

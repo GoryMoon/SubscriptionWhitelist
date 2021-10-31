@@ -30,7 +30,7 @@
     <div class="card mb-3">
         <div class="card-body">
             <h3>List links</h3>
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" id="pills-general-tab" data-toggle="pill" href="#pills-general" role="tab" aria-controls="pills-general" aria-selected="true">General</a>
                 </li>
@@ -40,7 +40,7 @@
                 <li class="nav-item">
                     <a class="nav-link" id="pills-steam-tab" data-toggle="pill" href="#pills-steam" role="tab" aria-controls="pills-steam" aria-selected="false">Steam (SteamID64)</a>
                 </li>
-                @if(!is_null($patreon))
+                @if(!is_null($has_patreon))
                 <li class="nav-item">
                     <a class="nav-link" id="pills-patreon-tab" data-toggle="pill" href="#pills-patreon" role="tab" aria-controls="pills-patreon" aria-selected="false">Patreon</a>
                 </li>
@@ -60,7 +60,7 @@
                 <div class="tab-pane fade" id="pills-steam" role="tabpanel" aria-labelledby="pills-steam-tab">
                     @include('broadcaster.links.steam')
                 </div>
-                @if(!is_null($patreon))
+                @if(!is_null($has_patreon))
                 <div class="tab-pane fade" id="pills-patreon" role="tabpanel" aria-labelledby="pills-patreon-tab">
                     @include('broadcaster.links.patreon')
                 </div>

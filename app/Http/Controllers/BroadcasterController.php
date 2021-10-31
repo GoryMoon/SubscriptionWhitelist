@@ -6,6 +6,7 @@ use App\Jobs\SyncAllMinecraftNames;
 use App\Jobs\SyncChannel;
 use App\Mail\Contact;
 use App\Models\Channel;
+use App\Models\RequestStat;
 use App\Models\Whitelist;
 use App\Patreon\PatreonAPI;
 use Carbon\Carbon;
@@ -15,11 +16,13 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Log;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BroadcasterController extends Controller
@@ -64,38 +67,48 @@ class BroadcasterController extends Controller
     /**
      * @param Request $request
      *
-     * @return View
+     * @return View|JsonResponse|Response
      */
-    public function links(Request $request): View
+    public function links(Request $request)
     {
         $channel = $request->user()->channel;
         $id = Hashids::encode($channel->id);
         $base_url = route('home') . "/list/$id/";
 
-        $patreonTiers = null;
-        if ($channel->owner->patreon) {
+        $patreon = $request->user()->patreon;
+        if ($request->ajax() && true == $request->query('patreon', false)) {
             $patreonTiers = [];
-            $api = new PatreonAPI($request->user()->patreon);
-            $campaign = $api->getCampaign($request->user()->patreon->campaign_id, [
-                'include' => 'tiers',
-                'fields[tier]' => ['title', 'published'],
-            ]);
-            foreach ($campaign->included as $tier) {
-                if ( ! $tier->attributes->published) {
-                    continue;
-                }
+            if ($patreon) {
+                try {
+                    $api = new PatreonAPI($patreon);
+                    $campaign = $api->getCampaign($request->user()->patreon->campaign_id, [
+                        'include' => 'tiers',
+                        'fields[tier]' => ['title', 'published'],
+                    ]);
+                    foreach ($campaign->included as $tier) {
+                        if ( ! $tier->attributes->published) {
+                            continue;
+                        }
 
-                $patreonTiers[] = [
-                    'id' => $tier->id,
-                    'title' => $tier->attributes->title,
-                ];
+                        $patreonTiers[] = [
+                            'id' => $tier->id,
+                            'title' => $tier->attributes->title,
+                        ];
+                    }
+                } catch (Exception $e) {
+                    Log::error($e->getMessage(), [$e]);
+
+                    return response('', 500);
+                }
             }
+
+            return response()->json($patreonTiers);
         }
 
         return view('broadcaster.links', [
             'name' => $channel->owner->name,
             'base_url' => $base_url,
-            'patreon' => $patreonTiers,
+            'has_patreon' => null != $patreon,
         ]);
     }
 
@@ -383,15 +396,7 @@ class BroadcasterController extends Controller
             ->unionAll($channel->stats()->selectRaw('COUNT(id) as num')->where('created_at', '>=', $timeBase->subDays(2)->toDateTimeString()))
             ->get();
 
-        $timestamp = Carbon::now()->subDays(2)->minute(0)->second(0)->toDateTimeString();
-        $stats = $channel->stats()
-            ->where('created_at', '>=', $timestamp)
-            ->selectRaw('DATE_FORMAT(created_at, \'%Y-%m-%d %H:00:00\') as hour, count(*) as number')
-            ->groupBy('hour')
-            ->orderBy('hour')->get();
-
         return [
-            'stats' => json_encode($stats),
             'total' => $channel->requests,
             'day' => $countStats[0]->num,
             'twodays' => $countStats[1]->num,
@@ -407,12 +412,18 @@ class BroadcasterController extends Controller
     }
 
     /**
-     * @return View
+     * @return View|JsonResponse
      */
-    public function stats(): View
+    public function stats(Request $request)
     {
         $channel = Auth::user()->channel;
+        if ($request->ajax()) {
+            $hours = $request->query('hours');
+            $data = RequestStat::parseStats($channel->stats(), $hours);
 
-        return view('broadcaster.stats', self::getStatsArray($channel));
+            return response()->json($data);
+        } else {
+            return view('broadcaster.stats', self::getStatsArray($channel));
+        }
     }
 }

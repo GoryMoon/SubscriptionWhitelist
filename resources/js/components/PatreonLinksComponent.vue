@@ -4,7 +4,7 @@
             <p>
                 Filter users by cent amount or tier
             </p>
-            <b-tabs v-model="selectedTab" content-class="mt-3">
+            <b-tabs v-model="selectedTab" v-on:activate-tab="onTabChange" content-class="mt-3">
                 <b-tab title="Pledge amount">
                     <b-form-group>
                         <label for="patreon_cent_min">The minimum pledged amount in cents. (Inclusive)<br/>(0 is default) (Based on the currency used on your Patreon)</label>
@@ -21,14 +21,24 @@
                     </b-form-group>
                 </b-tab>
                 <b-tab title="Tier">
-                    <label>Select tier to filter users by.</label>
-                    <b-form-group>
-                        <b-form-select v-model="tierSelected" :options="options">
-                            <template #first>
-                                <b-form-select-option :value="null">Please select a tier (No tier)</b-form-select-option>
-                            </template>
-                        </b-form-select>
-                    </b-form-group>
+                    <div v-if="loadedTiers === 1">
+                        <label>Select tier to filter users by.</label>
+                        <b-form-group>
+                            <b-form-select v-model="tierSelected" :options="options">
+                                <template #first>
+                                    <b-form-select-option :value="null">Please select a tier (No tier)</b-form-select-option>
+                                </template>
+                            </b-form-select>
+                        </b-form-group>
+                    </div>
+                    <div v-else-if="loadedTiers !== -2" class="ml-2">
+                        <span>Loading tiers... </span>
+                        <b-spinner style="height: 0.9rem; width: 0.9rem;" label="Loading tiers"/>
+                    </div>
+                    <b-alert :show="loadedTiers === -2" variant="danger">
+                        Error loading tiers, try again later or use different method to filter users.
+                        <b-button variant="outline-primary" v-on:click="onTabChange(1)"><fa icon="sync"/> Try again</b-button>
+                    </b-alert>
                 </b-tab>
             </b-tabs>
             <hr/>
@@ -86,69 +96,86 @@ name3</textarea>
 </template>
 
 <script>
-    export default {
-        props: {
-            link: String,
-            tiers: {
-                type: Object
-            }
-        },
-        data() {
-            return {
-                selectedTab: 0,
-                tierSelected: null,
-                centMin: null,
-                centMax: null,
-                payed: false,
-                total: false,
-                former: false,
-            }
-        },
-        computed: {
-            hasMinOrMax() {
-                return this.centMax > 0 || this.centMin > 0;
-            },
-            useTiers() {
-                return this.selectedTab === 1;
-            },
-            haveTier() {
-              return this.tierSelected != null;
-            },
-            options() {
-                let opt = [];
-                for (let tier of this.tiers) {
-                    opt.push({ value: tier.id, text: tier.title });
-                }
-                return opt;
-            },
-            query() {
-                let query = '';
-                if (!this.useTiers) {
-                    if (this.centMin && this.centMin > 0) {
-                        query += 'min=' + this.centMin;
+import api from '../ky'
+export default {
+    props: {
+        link: String,
+    },
+    data() {
+        return {
+            selectedTab: 0,
+            tierSelected: null,
+            centMin: null,
+            centMax: null,
+            payed: false,
+            total: false,
+            former: false,
+            loadedTiers: -1,
+            tiers: [],
+        }
+    },
+    methods: {
+        onTabChange(tab) {
+            if (tab === 1 && (this.loadedTiers < 0)) {
+                this.loadedTiers = 0;
+                api.get('', {searchParams: [['patreon', true]]}).then(async response => {
+                    if (response.ok) {
+                        this.tiers = await response.json();
+                        this.loadedTiers = 1;
+                    } else {
+                        this.loadedTiers = -2;
                     }
-                    if (this.centMax && this.centMax > 0)
-                    {
-                        query += (query.length > 0 ? '&' : '') + 'max=' + this.centMax;
-                    }
-                    if (this.total && (this.centMax > 0 || this.centMin > 0)) {
-                        query += (query.length > 0 ? '&': '') + 'to=1'
-                    }
-                } else {
-                    if (this.haveTier) {
-                        query += 't=' + this.tierSelected;
-                    }
-                }
-                if (this.payed) {
-                    query += (query.length > 0 ? '&': '') + 'py=1'
-                }
-                if (this.former && !this.haveTier) {
-                    query += (query.length > 0 ? '&': '') + 'f=1'
-                }
-                return query.length > 0 ? '?' + query: '';
+                }).catch(() => {
+                    this.loadedTiers = -2;
+                });
             }
         }
+    },
+    computed: {
+        hasMinOrMax() {
+            return this.centMax > 0 || this.centMin > 0;
+        },
+        useTiers() {
+            return this.selectedTab === 1;
+        },
+        haveTier() {
+          return this.tierSelected != null;
+        },
+        options() {
+            let opt = [];
+            for (let tier of this.tiers) {
+                opt.push({ value: tier.id, text: tier.title });
+            }
+            return opt;
+        },
+        query() {
+            let query = '';
+            if (!this.useTiers) {
+                if (this.centMin && this.centMin > 0) {
+                    query += 'min=' + this.centMin;
+                }
+                if (this.centMax && this.centMax > 0)
+                {
+                    query += (query.length > 0 ? '&' : '') + 'max=' + this.centMax;
+                }
+                if (this.total && (this.centMax > 0 || this.centMin > 0)) {
+                    query += (query.length > 0 ? '&': '') + 'to=1'
+                }
+            } else {
+                if (this.haveTier) {
+                    query += 't=' + this.tierSelected;
+                }
+            }
+            if (this.payed) {
+                query += (query.length > 0 ? '&': '') + 'py=1'
+            }
+            if (this.former && !this.haveTier) {
+                query += (query.length > 0 ? '&': '') + 'f=1'
+            }
+            return query.length > 0 ? '?' + query: '';
+        }
     }
+}
 </script>
 
 <style scoped>

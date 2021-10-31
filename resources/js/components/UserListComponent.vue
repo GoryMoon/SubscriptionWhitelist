@@ -157,19 +157,7 @@ import VuetablePagination from 'vuetable-3/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-3/src/components/VuetablePaginationInfo'
 import BootstrapCss from './bootstrap'
 import SearchBar from './SearchBarComponent'
-import ky from 'ky'
-
-const token = $('meta[name="csrf-token"]').attr('content');
-const api = ky.extend({
-    hooks: {
-        beforeRequest: [
-            request => {
-                request.headers.set('X-Requested-With', 'XMLHttpRequest');
-                request.headers.set('X-CSRF-TOKEN', token);
-            }
-        ]
-    }
-});
+import api from '../ky'
 
 
 Vue.use(Vuetable);
