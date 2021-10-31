@@ -44,6 +44,7 @@ class RequestStat extends Model
     /**
      * @param $base Builder|Relation
      * @param $hours int|null
+     *
      * @return array
      */
     public static function parseStats($base, ?int $hours): array
@@ -83,6 +84,7 @@ class RequestStat extends Model
             }
             $time->addRealHour();
         }
+
         return $data;
     }
 }
