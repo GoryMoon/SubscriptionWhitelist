@@ -22,14 +22,14 @@ class SyncMinecraftUuids implements ShouldQueue
     /**
      * @var MinecraftUser[]|Collection|null
      */
-    private ?array $users;
+    private $users;
 
     /**
      * Create a new job instance.
      *
      * @param MinecraftUser[]|Collection|null $users
      */
-    public function __construct(array $users = null)
+    public function __construct($users = null)
     {
         $this->users = $users;
     }
