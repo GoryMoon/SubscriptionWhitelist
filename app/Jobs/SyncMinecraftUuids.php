@@ -7,6 +7,7 @@ use App\Notifications\MCSyncDone;
 use App\Utils\MinecraftUtils;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -19,16 +20,16 @@ class SyncMinecraftUuids implements ShouldQueue
     use SerializesModels;
 
     /**
-     * @var null
+     * @var MinecraftUser[]|Collection|null
      */
-    private $users;
+    private ?array $users;
 
     /**
      * Create a new job instance.
      *
-     * @param null $users
+     * @param MinecraftUser[]|Collection|null $users
      */
-    public function __construct($users = null)
+    public function __construct(array $users = null)
     {
         $this->users = $users;
     }
@@ -49,7 +50,7 @@ class SyncMinecraftUuids implements ShouldQueue
         for ($i = 0; $i < count($this->users); ++$i) {
             $user = $this->users[$i];
             if ($requests >= 550) {
-                SyncMinecraftUuids::dispatch(array_slice($this->users, $i))->delay(now()->addMinutes(11));
+                SyncMinecraftUuids::dispatch($this->users->slice($i))->delay(now()->addMinutes(11));
                 break;
             }
 

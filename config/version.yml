@@ -4,10 +4,10 @@ current:
   label: v
   major: 1
   minor: 9
-  patch: 4
+  patch: 5
   prerelease: null
   buildmetadata: null
-  commit: a2b850
+  commit: 4fddda
   timestamp:
     year: 2020
     month: 6
