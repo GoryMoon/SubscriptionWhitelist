@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ApiController;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,4 +46,3 @@ Route::get('/', function () {
 Route::fallback(function () {
     return response(['message' => 'Not Found'], 404);
 });
-
