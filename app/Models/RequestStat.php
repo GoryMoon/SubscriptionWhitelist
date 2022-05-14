@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Database\Factories\RequestStatFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property \App\Models\Channel $channel
  *
- * @method static RequestStatFactory factory(...$parameters)
+ * @method static \Database\Factories\RequestStatFactory factory(...$parameters)
  * @method static Builder|RequestStat newModelQuery()
  * @method static Builder|RequestStat newQuery()
  * @method static Builder|RequestStat query()

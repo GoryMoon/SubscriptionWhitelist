@@ -47,7 +47,7 @@ class BroadcasterController extends Controller
             ];
         } else {
             $plans = [
-                //'prime' => in_array('Prime', $db_plans),
+                // 'prime' => in_array('Prime', $db_plans),
                 'tier1' => in_array('1000', $db_plans) || in_array('Prime', $db_plans),
                 'tier2' => in_array('2000', $db_plans),
                 'tier3' => in_array('3000', $db_plans),
@@ -131,7 +131,7 @@ class BroadcasterController extends Controller
         ]);
         $plans = $inputs['plan'];
         $new_plans = [];
-        //if ($plans['prime']) array_push($new_plans, 'Prime');
+        // if ($plans['prime']) array_push($new_plans, 'Prime');
         if ($plans['tier1']) {
             array_push($new_plans, '1000', 'Prime');
         }
