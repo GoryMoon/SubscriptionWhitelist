@@ -25,7 +25,7 @@ Route::get('/login/authorize', [TwitchController::class, 'authorizeTwitch'])->na
 Route::get('/token', [TwitchController::class, 'token'])->name('token');
 
 Route::get('/privacy-tos', [MainController::class, 'privacy'])->name('privacy');
-Route::get('/about', [MainController::class, 'about'])->name('about');
+Route::view('/about', 'about')->name('about');
 
 Route::middleware('twitch')->group(function () {
     Route::get('/dashboard', [MainController::class, 'dashboard'])->name('dashboard');

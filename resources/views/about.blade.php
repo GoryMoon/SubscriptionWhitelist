@@ -16,23 +16,12 @@
                     </p>
                     <h4>Site info</h4>
                     <h6>Version: @version('simple') (build <a href="https://github.com/GoryMoon/SubscriptionWhitelist/commit/@version('commit')">@version('commit')</a>)</h6>
-                    <h6>Source code:</h6>
-                    <ul>
-                        <li>
-                            Main: <a href="https://github.com/GoryMoon/SubscriptionWhitelist"><fa style="font-size: x-large" :icon="['fab','github']"></fa> SubscriberWhitelist</a>
-                        </li>
-                        <li>
-                            API: <a href="https://github.com/GoryMoon/SubscriptionWhitelistApi"><fa style="font-size: x-large" :icon="['fab','github']"></fa> SubscriberWhitelistAPI</a>
-                        </li>
-                    </ul>
+                    <h6>Source code: <a href="https://github.com/GoryMoon/SubscriptionWhitelist"><fa style="font-size: x-large" :icon="['fab','github']"></fa> SubscriberWhitelist</a></h6>
                     <h4>Libraries</h4>
                     <h5>PHP</h5>
                     <ul>
                         <li>
                             <a href="https://laravel.com/">Laravel</a>: Main page framework.
-                        </li>
-                        <li>
-                            <a href="https://lumen.laravel.com/">Lumen</a>: Api page framework.
                         </li>
                         <li>
                             <a href="https://horizon.laravel.com/">laravel/horizon</a>: Dashboard and code-driven configuration for Laravel queues.

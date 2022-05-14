@@ -84,12 +84,4 @@ class MainController extends Controller
             'home' => route('home'),
         ]);
     }
-
-    /**
-     * @return View
-     */
-    public function about(): View
-    {
-        return view('about');
-    }
 }

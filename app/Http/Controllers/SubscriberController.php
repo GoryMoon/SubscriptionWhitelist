@@ -78,11 +78,6 @@ class SubscriberController extends Controller
 
     // Route functions
 
-    public function index()
-    {
-        return view('home');
-    }
-
     public function subscriber(Request $request)
     {
         $user = $request->user()->load('steam');

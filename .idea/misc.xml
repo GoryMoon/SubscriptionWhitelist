@@ -3,7 +3,13 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="ES6" />
   </component>
+  <component name="SwUserDefinedSpecifications">
+    <option name="specTypeByUrl">
+      <map />
+    </option>
+  </component>
   <component name="WebPackConfiguration">
+    <option name="mode" value="MANUAL" />
     <option name="path" value="$PROJECT_DIR$/webpack.mix.js" />
   </component>
 </project>

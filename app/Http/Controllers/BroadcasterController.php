@@ -36,7 +36,7 @@ class BroadcasterController extends Controller
     {
         $channel = $request->user()->channel;
         $id = Hashids::encode($channel->id);
-        $base_url = route('home') . "/list/$id/";
+        $base_url = route('home') . "/api/$id/";
         $db_plans = json_decode($channel->valid_plans);
         if (is_null($db_plans)) {
             $plans = [
@@ -73,7 +73,7 @@ class BroadcasterController extends Controller
     {
         $channel = $request->user()->channel;
         $id = Hashids::encode($channel->id);
-        $base_url = route('home') . "/list/$id/";
+        $base_url = route('home') . "/api/$id/";
 
         $patreon = $request->user()->patreon;
         if ($request->ajax() && true == $request->query('patreon', false)) {
